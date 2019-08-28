@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="include/header::head(编辑产品)"></head>
+<body>
+    <!-- navBar -->
+    <div th:replace="include/navigator::adminNavigator"></div>
+    <!-- main page -->
+    <div class="container" id="container">
+        <!-- breadcrumb(route) -->
+        <nav class="my-3" aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="listCategory">所有分类</a></li>
+                <li class="breadcrumb-item text-muted"><a v-bind:href="'listProduct?id='+product.category.id+'&categoryName='+product.category.name">{{product.category.name}}</a></li>
+                <li class="breadcrumb-item text-muted"><a >{{product.name}}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">编辑产品</li>
+            </ol>
+        </nav>
+        <!-- list Container -->
+        <div class="card text-center w-75 mx-auto mb-5 max-width-720px">
+            <div class="card-header" v-text="product.name">产品值</div>
+            <div class="card-body">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon32">产品名称</span>
+                    </div>
+                    <input v-model="product.name" type="text" class="form-control admin-update-product" id="basic-url2" aria-describedby="basic-addon32">
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon33">产品小标题</span>
+                    </div>
+                    <input v-model="product.subTitle" type="text" class="form-control admin-update-product" id="basic-url3" aria-describedby="basic-addon33">
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon34">原价格</span>
+                    </div>
+                    <input v-model.number="product.originalPrice" type="text" class="form-control admin-update-product" id="basic-url4" aria-describedby="basic-addon34">
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon35">优惠价格</span>
+                    </div>
+                    <input v-model.number="product.promotePrice" type="text" class="form-control admin-update-product" id="basic-url5" aria-describedby="basic-addon35">
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon36">库存数量</span>
+                    </div>
+                    <input v-model.number="product.stock" type="text" class="form-control admin-update-product" id="basic-url6" aria-describedby="basic-addon36">
+                </div>
+            </div>
+            <div><button type="button" class="btn btn-primary mb-4" v-on:click="updateProduct">提交</button></div>
+        </div>
+    </div>
+    <!-- admin main.css -->
+    <link rel="stylesheet" th:href="@{/css/admin/main.css}" href="../../static/css/admin/main.css"/>
+    <!-- admin main.js -->
+    <script type="text/javascript" th:src="@{/js/utility/main.js}" src="../../static/js/utility/main.js"></script>
+    <!-- current page -->
+    <script type="text/javascript">
+        var vue =new Vue({
+            el:"#container",
+            data:{
+                pid:0,
+                product:{
+                    id:0,
+                    name:"",
+                    originalPrice:0.00,
+                    promotePrice:0.00,
+                    category:{
+                        id:0,
+                        name:""
+                    }
+                }
+            },
+            mounted:function(){
+                var urlParams = getPathParams();
+                this.pid = urlParams.pid;
+                this.getProduct();
+            },
+            methods:{
+                updateProduct:function(){
+                    $(".form-text-tip").text("");
+                    if(!notNull(this.product.name)){
+                        $("#basic-url2").attr("placeholder","名称不能为空");
+                        return;
+                    }
+                    if(!notNull(this.product.subTitle)){
+                        $("#basic-url3").attr("placeholder","小标题不能为空");
+                        return;
+                    }
+                    if(this.product.originalPrice < 1 || this.product.originalPrice > 9999999999.99){
+                        $("#basic-url4").attr("placeholder","原价格不能为0,最大价格99亿，最小价格0.01");
+                        return;
+                    }
+                    if(this.product.promotePrice < 1 || this.product.promotePrice > 9999999999.99){
+                        $("#basic-url5").attr("placeholder","打折价格不能为0,最大价格99亿，最小价格0.01");
+                        return;
+                    }
+                    if(this.product.stock < 1 || this.product.stock > 99999999999){
+                        $("#basic-url6").attr("placeholder","库存不能为0,最大库存999亿");
+                        return;
+                    }
+                    outs(JSON.stringify(vue.product));
+                    axios.put("products",this.product).then(function (value) {
+                        outs(value.data.message);
+                        if(value.data.code == 1) {//成功
+                            window.location.href = "listProduct?id="+vue.product.category.id+"&categoryName="+vue.product.category.name;
+                        }else {
+                            alert(value.data.message);
+                        }
+                    });
+                },
+                getProduct:function () {
+                    outs(this.pid);
+                    axios.get("products",{params:{pid:this.pid}}).then(function (value) {
+                        outs(value.data.message);
+                        vue.product = value.data.result;
+                        outs(JSON.stringify(vue.product));
+                    });
+                }
+            },
+            watch:{
+                "product.originalPrice":function (val) {
+                    outs("watch="+val);
+                    //强制规范价格参数
+                    this.product.originalPrice = parseFloat(val).toFixed(2);
+                },
+                "product.promotePrice":function (val) {
+                    outs("watch="+val);
+                    //强制规范价格参数
+                    this.product.promotePrice = parseFloat(val).toFixed(2);
+                },
+                "product.stock":function (val) {
+                    outs("watch="+val);
+                    //强制规范价格参数
+                    this.product.stock = parseFloat(val).toFixed(0);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

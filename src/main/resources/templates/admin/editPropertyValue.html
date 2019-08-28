@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!-- 引入依赖框架 -->
+<head th:replace="include/header::head('产品属性值管理')"></head>
+<body>
+    <!-- navBar -->
+    <div th:replace="include/navigator::adminNavigator"></div>
+    <!-- main page -->
+    <div class="container" id="container">
+        <!-- breadcrumb(route) -->
+        <nav class="my-3" aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="listCategory">所有分类</a></li>
+                <li class="breadcrumb-item text-muted"><a v-bind:href="'listProduct?id='+cid+'&categoryName='+categoryName">{{categoryName}}</a></li>
+                <li class="breadcrumb-item text-muted" v-text="productName"></li>
+                <li class="breadcrumb-item active" aria-current="page">产品属性值管理</li>
+            </ol>
+        </nav>
+        <!-- list Container -->
+        <div class="card text-center w-75 mx-auto max-width-720px">
+            <div class="card-header" v-text="productName+'属性值'">产品属性值</div>
+            <div class="card-body">
+                <div class="input-group mb-3 w-50 float-left min-width-150px" v-for="pt in properties">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon3">{{pt.name}}</span>
+                    </div>
+                    <input v-on:change="updatePropertyValue(pt)" v-model.trim="pt.propertyValue.value" type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3">
+                </div>
+            </div>
+            <div class="card-footer text-muted">鼠标焦点离开即可生效</div>
+        </div>
+    </div>
+    <!-- admin main.css -->
+    <link rel="stylesheet" th:href="@{/css/admin/main.css}" href="../../static/css/admin/main.css"/>
+    <!-- admin main.js -->
+    <script type="text/javascript" th:src="@{/js/utility/main.js}" src="../../static/js/utility/main.js"></script>
+    <!-- current page -->
+    <script type="text/javascript">
+        var vue = new Vue({
+            el:"#container",
+            data:{
+                cid:0,
+                categoryName:"分类名称",
+                pid:0,
+                productName:"产品名称",
+                properties:[]
+            },
+            mounted:function () {
+                var urlPrams = getPathParams();
+                this.cid = urlPrams.cid;
+                this.categoryName = window.decodeURI(urlPrams.categoryName);
+                this.pid = urlPrams.pid;
+                this.productName = window.decodeURI(urlPrams.productName);
+                //获取 属性值
+                this.getPropertyValue();
+            },
+            methods:{
+                updatePropertyValue:function(property){
+                    outs("property="+JSON.stringify(property));
+                    axios.put("propertyValues/"+this.pid,property).then(function (value) {
+                        outs(value.data.message);
+                        //获取 属性值
+                        vue.getPropertyValue();
+                    });
+                },
+                getPropertyValue:function () {
+                    axios.get("propertyValues",{params:{pid:this.pid}}).then(function (value) {
+                        outs(value.data.message);
+                        outs(JSON.stringify(value.data.result));
+                        vue.properties = value.data.result;
+                    });
+                }
+            }
+        });
+    </script>
+</body>
+</html>

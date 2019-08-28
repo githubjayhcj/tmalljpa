@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!-- 引入依赖框架 -->
+<head th:replace="include/header::head('天猫登录')"></head>
+<body>
+    <div id="container" class="container-fluid">
+        <div class="row">
+            <div class="col px-0">
+                <div class="mx-auto login-logo">
+                    <img width="190" src="image/site/TB1_Gn8RXXXX-380-54.png">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col px-0 position-relative login-container">
+                <div class="mx-auto position-relative">
+                    <img class="w-100" src="image/site/login-background.jpg">
+                    <a class="position-absolute" href="javascript:void (0);"></a>
+                </div>
+                <!-- login form -->
+                <div class="position-absolute login-form-container">
+                    <span class="d-block my-4">密码登录</span>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">
+                                <span class="oi oi-person" title="icon name" aria-hidden="true"></span>
+                            </span>
+                        </div>
+                        <input v-model="user.name" id="username" type="text" class="form-control" placeholder="会员/邮箱/手机号" aria-label="Username" aria-describedby="basic-addon1">
+                    </div>
+                    <small id="username-tip" class="form-text text-danger text-center mt-0"></small>
+                    <div class="input-group mt-2">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon2">
+                                <span class="oi oi-lock-locked login-icon-locked" title="icon name" aria-hidden="true"></span>
+                            </span>
+                        </div>
+                        <input v-model="user.password" id="password" type="password" class="form-control" placeholder="密码" aria-label="password" aria-describedby="basic-addon2">
+                    </div>
+                    <small id="password-tip" class="form-text text-danger text-center mt-0"></small>
+                    <button type="button" class="btn btn-primary btn-block mt-2" v-on:click="signIn">登录</button>
+                    <div class="w-100 mt-4">
+                        <a class="login-links float-right" href="register">免费注册</a>
+                        <a class="login-links float-right" href="javascript:alert('还没写，哈哈')">忘记会员名</a>
+                        <a class="login-links float-right" href="javascript:alert('还没写，哈哈')">忘记密码</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- footer legal message -->
+        <div class="row" th:insert="include/footer::footer"></div>
+    </div>
+    <!-- admin main.css -->
+    <link rel="stylesheet" th:href="@{/css/fore/main.css}" href="../../static/css/fore/main.css"/>
+    <!-- util main.js -->
+    <script type="text/javascript" th:src="@{/js/utility/main.js}" src="../../static/js/utility/main.js"></script>
+    <!-- fore  xx.js -->
+    <script type="text/javascript" th:src="@{/js/fore/login.js}" src="../../static/js/fore/login.js"></script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="include/header::head(分类编辑)"></head>
+<body>
+    <!-- navBar -->
+    <div th:replace="include/navigator::adminNavigator"></div>
+    <!-- main page -->
+    <div class="container" id="container">
+        <!-- header -->
+        <h6><small class="bg-info rounded my-3 mr-2 px-2 py-1 text-light d-inline-block">分类修改</small></h6>
+        <!-- breadcrumb(route) -->
+        <nav class="my-3" aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="listCategory">所有分类</a></li>
+                <li class="breadcrumb-item text-muted" v-text="categoryName">分类名称</li>
+                <li class="breadcrumb-item active" aria-current="page">分类名称</li>
+            </ol>
+        </nav>
+        <!-- 分类修改 -->
+        <div class="card text-center w-50 mx-auto">
+            <h5 class="card-header">分类修改</h5>
+            <div class="card-body">
+                <form >
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">分类名称</label>
+                        <input v-model="category.name" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="category Name">
+                        <small id="nameInfer" class="form-text text-danger"></small>
+                        <small class="form-text text-muted">分类名称需要简短，概要</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputPassword1">分类图片</label>
+                        <div class="custom-file">
+                            <input v-on:change="setCategoryImage(event)" accept="image/*" type="file" class="custom-file-input" id="exampleInputPassword1">
+                            <label class="custom-file-label" for="exampleInputPassword1">选择分类图片</label>
+                        </div>
+                        <small class="form-text text-muted">请选择本地图片 尺寸1600X160 为佳</small>
+                    </div>
+                    <button type="button" class="btn btn-primary" v-on:click="updateCategory">修改</button>
+                    <button type="reset" class="btn btn-primary">清空</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- admin main.css -->
+    <link rel="stylesheet" th:href="@{/css/admin/main.css}" href="../../static/css/admin/main.css"/>
+    <!-- admin main.js -->
+    <script type="text/javascript" th:src="@{/js/utility/main.js}" src="../../static/js/utility/main.js"></script>
+    <!-- current page -->
+    <script type="text/javascript">
+        var vue = new Vue({
+            el:"#container",//body 上设置的id 无效，vue对象不会初始化
+            data:{
+                categoryName:"分类名称",
+                category:{},
+                categoryImage:''
+            },
+            mounted:function () {//mounted　表示这个 Vue 对象加载成功了
+                var urlParams = getPathParams();
+                var id = urlParams.id;
+                this.categoryName = window.decodeURI(urlParams.categoryName);
+                axios.get("categories/"+id).then(function (value) {
+                    vue.category = value.data.result;
+                    //outs("category="+JSON.stringify(vue.category));
+                });
+            },
+            methods:{
+                setCategoryImage:function(event){
+                    this.categoryImage = event.target.files[0];
+                    outs("setCategoryImage");
+                },
+                updateCategory:function () {
+                    outs("updateCategory");
+                    this.category.name = strTrim(this.category.name);
+                    if(notNull(this.category.name)){
+                        var formData = new FormData();
+                        formData.append("id",this.category.id);//添加id 后台则为修改（源自jpa=》save）
+                        formData.append("name",this.category.name);
+                        formData.append("image",this.categoryImage);
+                        axios.post("categories",formData).then(function (response) {
+                            if(response.data.code==1){//成功
+                                outs("update successfal");
+                                //获取全部分类(分页)
+                                //跳转到分类页
+                                window.location.href="listCategory";
+                            }
+                        });
+                        //初始化提示框
+                        $("#imageInfer").text("");
+                        $("#nameInfer").text("");
+                    }else {
+                        $("#nameInfer").text("名称不能为空");
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

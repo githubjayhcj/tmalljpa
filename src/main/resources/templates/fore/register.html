@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!-- 引入依赖框架 -->
+<head th:replace="include/header::head('天猫注册')"></head>
+<body>
+    <div id="container" class="container-fluid">
+        <div class="row">
+            <div class="col d-flex" th:insert="include/registerHead::registerHead(true)"></div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <!-- point -->
+                <div class="row mt-5">
+                    <div class="col d-flex">
+                        <div class="mx-auto d-flex register-item set-username">
+                            <span class="d-flex align-items-center justify-content-end pr-3 point-tip">设置会员名</span>
+                            <span></span>
+                        </div>
+                    </div>
+                </div>
+                <!-- username -->
+                <div class="row mt-4">
+                    <div class="col d-flex">
+                        <div class="mx-auto d-flex register-item">
+                            <span class="d-flex align-items-center justify-content-end pr-3">登录名</span>
+                            <input id="username" type="text" placeholder="会员名一旦设置成功，无法修改" v-model="user.name" v-on:change="validateUserName"/>
+                        </div>
+                    </div>
+                </div>
+                <!-- point -->
+                <div class="row mt-4">
+                    <div class="col d-flex">
+                        <div class="mx-auto d-flex mt-4 register-item">
+                            <span class="d-flex align-items-center justify-content-end pr-3 point-tip">请设置登录密码</span>
+                            <span>登录时验证，保护账号信息</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- password -->
+                <div class="row mt-4">
+                    <div class="col d-flex">
+                        <div class="mx-auto d-flex register-item">
+                            <span class="d-flex align-items-center justify-content-end pr-3">登录密码</span>
+                            <input id="password" type="password" placeholder="设置你的登录密码" v-model="passwordFirst" v-on:change="validatePasswordFirst"/>
+                        </div>
+                    </div>
+                </div>
+                <!-- password  confirm-->
+                <div class="row mt-4">
+                    <div class="col d-flex">
+                        <div class="mx-auto d-flex register-item">
+                            <span class="d-flex align-items-center justify-content-end pr-3">密码确认</span>
+                            <input id="passwordAgain" type="password" placeholder="再次输入你的登录密码" v-model="passwordAgain" v-on:change="validatePasswordAgain"/>
+                        </div>
+                    </div>
+                </div>
+                <!-- button -->
+                <div class="row my-4">
+                    <div class="col d-flex">
+                        <div class="mx-auto d-flex mt-4 mb-5 register-item">
+                            <span class="d-flex align-items-center justify-content-end pr-3"></span>
+                            <span>
+                                <a href="javascript:void (0);" class="btn btn-primary " role="button" aria-disabled="true" v-on:click="signUp">提交</a>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- admin main.css -->
+    <link rel="stylesheet" th:href="@{/css/fore/main.css}" href="../../static/css/fore/main.css"/>
+    <!-- util main.js -->
+    <script type="text/javascript" th:src="@{/js/utility/main.js}" src="../../static/js/utility/main.js"></script>
+    <!-- fore home.js -->
+    <script type="text/javascript" th:src="@{/js/fore/register.js}" src="../../static/js/fore/register.js"></script>
+</body>
+</html>

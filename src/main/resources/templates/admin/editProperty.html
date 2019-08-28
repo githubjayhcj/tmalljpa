@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="include/header::head(属性编辑)"></head>
+<body>
+    <!-- navBar -->
+    <div th:replace="include/navigator::adminNavigator"></div>
+    <!-- main page -->
+    <div class="container" id="container">
+        <!-- breadcrumb(route) -->
+        <nav class="my-3" aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="listCategory">所有分类</a></li>
+                <li class="breadcrumb-item text-muted"><a v-bind:href="'listProperty?id='+categoryId">{{categoryName}}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">属性管理</li>
+            </ol>
+        </nav>
+        <!-- header -->
+        <h6><small class="bg-info rounded my-3 mr-2 px-2 py-1 text-light d-inline-block">属性修改</small></h6>
+        <div class="card text-center w-50 mx-auto">
+            <h5 class="card-header">属性名称修改</h5>
+            <div class="card-body">
+                <form >
+                    <div class="form-group">
+                        <label for="exampleInputEmail1" v-text="categoryName+'的属性名称'">属性名称</label>
+                        <input v-model="property.name" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="category Name">
+                        <small id="nameInfer" class="form-text text-danger"></small>
+                        <small v-text="property.name" class="form-text text-muted">属性名称需要简短，概要</small>
+                    </div>
+                    <button v-on:click="updateProperty" type="button" class="btn btn-primary">修改</button>
+                    <button type="reset" class="btn btn-primary">清空</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- admin main.css -->
+    <link rel="stylesheet" th:href="@{/css/admin/main.css}" href="../../static/css/admin/main.css"/>
+    <!-- admin main.js -->
+    <script type="text/javascript" th:src="@{/js/utility/main.js}" src="../../static/js/utility/main.js"></script>
+    <!-- current page -->
+    <script type="text/javascript">
+        var vue = new Vue({
+            el:"#container",
+            data:{
+                property:{},
+                categoryName:"分类名称",
+                categoryId:0,
+                propertyId:0
+            },
+            mounted:function () {
+                var param = getPathParams();
+                this.propertyId = param.id;
+                this.categoryId = param.cid;
+                this.categoryName = window.decodeURI(param.categoryName);
+                axios.get("properties",{params:{id:this.propertyId}}).then(function (value) {
+                    vue.property = value.data.result;
+                    outs("property="+JSON.stringify(vue.property));
+                });
+            },
+            methods:{
+                updateProperty:function () {
+                    outs("updateProperty");
+                    this.property.name = strTrim(this.property.name);
+                    if(notNull(this.property.name)){
+                        //var formData = new FormData("property",this.property);
+                        axios.put("properties",this.property).then(function (value) {
+                            if(value.data.code==1){//成功
+                                outs(value.data.message);
+                                //获取全部分类(分页)
+                                //跳转到分类页
+                                window.location.href="listProperty?id="+vue.categoryId;
+                            }
+                        });
+                        //初始化提示框
+                        $("#imageInfer").text("");
+                        $("#nameInfer").text("");
+                    }else {
+                        $("#nameInfer").text("名称不能为空");
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

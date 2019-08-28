@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!-- 引入依赖框架 -->
+<head th:replace="include/header::head('天猫注册')"></head>
+<body>
+    <div id="container" class="container-fluid">
+        <div class="row">
+            <div class="col d-flex" th:insert="include/registerHead::registerHead(false)"></div>
+        </div>
+        <div class="row my-5">
+            <div class="col d-flex justify-content-center">
+                <div class="alert alert-success register-successful" role="alert">
+                    <h4 class="alert-heading text-center">恭喜您注册成功!</h4>
+                    <hr>
+                    <p class="text-center">
+                        <span>将在{{seconds}}秒后返回</span>
+                        <a href="home">天猫首页...</a>
+                        <span>
+                        或前往
+                        <a href="login">登录</a>
+                        界面
+                    </span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- admin main.css -->
+    <link rel="stylesheet" th:href="@{/css/fore/main.css}" href="../../static/css/fore/main.css"/>
+    <!-- util main.js -->
+    <script type="text/javascript" th:src="@{/js/utility/main.js}" src="../../static/js/utility/main.js"></script>
+    <!-- fore  xx.js -->
+    <script type="text/javascript" th:src="@{/js/fore/registerSuccessful.js}" src="../../static/js/fore/registerSuccessful.js"></script>
+</body>
+</html>

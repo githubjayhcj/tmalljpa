@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>globalExcptionPage</title>
+</head>
+<body>
+    globalExcptionPage
+    <br/>
+    异常：<p th:text="${e}"></p><br>
+    原因：<p th:text="${e.printStackTrace()}"></p><br>
+    信息：<p th:text="${e.getMessage()}"></p><br>
+</body>
+</html>

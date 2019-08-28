@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!-- 引入依赖框架 -->
+<head th:replace="include/header::head('天猫tmall.com--理想生活上天猫')"></head>
+<body>
+    <div class="container-fluid" id="container">
+        <!-- static navigation -->
+        <div class="row">
+            <div class="col px-0">
+                <nav id="fixed-nav" class="navbar navbar-expand-lg navbar-light fixed-top" style="display: none;">
+                    <a class="navbar-brand px-md-4" href="#">TMALL 天猫</a>
+                    <button class="navbar-toggler bg-white" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <form class="form-inline my-2 my-lg-0 w-100">
+                            <input class="form-control mr-sm-2 form-control-sm" type="search" placeholder="搜索 天猫 商品/名牌/店铺" aria-label="Search">
+                            <button class="btn my-2 my-sm-0 btn-sm" type="submit">搜索</button>
+                        </form>
+                    </div>
+                </nav>
+            </div>
+        </div>
+        <!-- head nav -->
+        <div class="row">
+            <div class="col px-0">
+                <!-- 首页置顶导航 -->
+                <nav class="navbar navbar-expand-md navbar-light bg-light py-0 px-5 head-nav">
+                    <span class="navbar-brand"><h6><small class="text-muted">喵，欢迎来天猫</small></h6></span>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse justify-content-between py-1" id="navbarNav">
+                        <ul th:if="${session.user != null}" class="navbar-nav py-0">
+                            <li class="nav-item py-0">
+                                <a class="nav-link py-0" href="signOut"><h6><small>天猫首页</small></h6></a>
+                            </li>
+                            <li class="nav-item py-0">
+                                <a class="nav-link py-0" href="javascript:void(0);"><h6><small th:text="${session.user.name}">用户名</small></h6><span class="sr-only">(username)</span></a>
+                            </li>
+                            <li class="nav-item py-0">
+                                <a class="nav-link py-0" href="signOut"><h6><small>退出</small></h6></a>
+                            </li>
+                        </ul>
+                        <ul th:if="${session.user == null}" class="navbar-nav py-0">
+                            <li class="nav-item py-0">
+                                <a class="nav-link py-0 d-flex" href="signOut">
+                                    <span class="oi oi-home" title="icon name" aria-hidden="true"></span>
+                                    <h6><small>天猫首页</small></h6>
+                                </a>
+                            </li>
+                            <li class="nav-item py-0">
+                                <a class="nav-link py-0" href="login"><h6><small>请登录</small></h6><span class="sr-only">(current)</span></a>
+                            </li>
+                            <li class="nav-item py-0">
+                                <a class="nav-link py-0" href="register"><h6><small>免费注册</small></h6></a>
+                            </li>
+                        </ul>
+                        <!-- 右侧项 -->
+                        <ul class="navbar-nav py-0">
+                            <li class="nav-item py-0">
+                                <a class="nav-link py-0" href="#"><h6><small>我的订单</small></h6><span class="sr-only">(current)</span></a>
+                            </li>
+                            <li class="nav-item py-0">
+                                <a class="nav-link py-0" href="#"><h6><small>购物车0件</small></h6></a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-3 home-login-col px-0 px-md-5">
+                <img class="home-login"  src="../../static/image/site/tmalllogo.png" th:src="@{/image/site/tmalllogo.png}">
+            </div>
+            <div class="col-6 align-self-center">
+                <form>
+                    <!-- search item -->
+                    <div class="input-group">
+                        <input type="text" class="form-control search-input" placeholder="搜索 天猫 商品/名牌/店铺" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                        <div class="input-group-append">
+                            <button class="btn search-button" type="button">搜索</button>
+                        </div>
+                    </div>
+                </form>
+                <!-- hot key search -->
+                <ul class="nav"><!-- 根据屏幕宽度，固定显示个数 -->
+                    <template v-for="index in 5">
+                        <li  class="nav-item float-left">
+                            <a v-if="index%2 == 0" class="hot-search-link" href="javascript:void(0)">{{categories[index-1].name}}</a>
+                            <a v-else class="hot-search-link-red" href="javascript:void(0)">{{categories[index-1].name}}</a>
+                        </li>
+                        <span v-if="index < 5" class="mx-3 hot-search-seprator float-left">|</span>
+                    </template>
+                </ul>
+            </div>
+            <div class="col-3 placeholder-div"></div>
+        </div>
+        <div class="row">
+            <div class="col px-0 px-md-5">
+                <!-- carousel -->
+                <ul class="nav category-menu">
+                    <!--<span class="oi oi-map" title="icon name" aria-hidden="true"></span>-->
+                    <li class="nav-item category-menu-name">
+                        <span class="oi oi-list float-left px-3" title="icon name" aria-hidden="true"></span>
+                        <span>商品分类</span>
+                    </li>
+                    <li class="nav-item px-2">
+                        <a href="javascript:void(0)">
+                            <img class="category-menu-chaoshi-guoji" src="../../static/image/site/tmallchaoshi.png" th:src="@{/image/site/tmallchaoshi.png}">
+                        </a>
+                    </li>
+                    <li class="nav-item px-2">
+                        <a href="javascript:void(0)">
+                            <img class="category-menu-chaoshi-guoji" src="../../static/image/site/tmallguoji.png" th:src="@{/image/site/tmallguoji.png}">
+                        </a>
+                    </li>
+                    <li class="nav-item px-2 recommend-category-link">
+                        <a class="category-menu-a" href="javascript:void(0)">
+                            <span>天猫会员</span>
+                        </a>
+                    </li>
+                    <li class="nav-item px-2 recommend-category-link">
+                        <a class="category-menu-a" href="javascript:void(0)">
+                            <span>电器城</span>
+                        </a>
+                    </li>
+                    <li class="nav-item px-2 recommend-category-link">
+                        <a class="category-menu-a" href="javascript:void(0)">
+                            <span>喵鲜生</span>
+                        </a>
+                    </li>
+                    <li class="nav-item px-2 recommend-category-link">
+                        <a class="category-menu-a" href="javascript:void(0)">
+                            <span>医药馆</span>
+                        </a>
+                    </li>
+                    <li class="nav-item px-2 recommend-category-link">
+                        <a class="category-menu-a" href="javascript:void(0)">
+                            <span>营业厅</span>
+                        </a>
+                    </li>
+                    <li class="nav-item px-2 recommend-category-link">
+                        <a class="category-menu-a" href="javascript:void(0)">
+                            <span>魅力惠</span>
+                        </a>
+                    </li>
+                    <li class="nav-item px-2 recommend-category-link">
+                        <a class="category-menu-a" href="javascript:void(0)">
+                            <span>飞猪旅行</span>
+                        </a>
+                    </li>
+                    <li class="nav-item px-2 recommend-category-link">
+                        <a class="category-menu-a" href="javascript:void(0)">
+                            <span>苏宁易购</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col px-0">
+                <!-- red line -->
+                <div class="red-line"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 px-0 d-flex carousel-col">
+                <!-- carousel   -->
+                <div id="homeCarousel" class="carousel slide mx-auto" data-ride="carousel">
+                    <ol class="carousel-indicators">
+                        <li data-target="#homeCarousel" data-slide-to="0" class="active"></li>
+                        <li data-target="#homeCarousel" data-slide-to="1" class="carousel-index-bg"></li>
+                        <li data-target="#homeCarousel" data-slide-to="2" class="carousel-index-bg"></li>
+                        <li data-target="#homeCarousel" data-slide-to="3" class="carousel-index-bg"></li>
+                        <li data-target="#homeCarousel" data-slide-to="4" class="carousel-index-bg"></li>
+                    </ol>
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <a href="javascript:void(0)">
+                                <img class="d-block w-100" th:src="@{/image/carousel/1.jpg}" alt="First slide">
+                            </a>
+                        </div>
+                        <div class="carousel-item">
+                            <a href="javascript:void(0)">
+                                <img class="d-block w-100" th:src="@{/image/carousel/2.jpg}" alt="Second slide">
+                            </a>
+                        </div>
+                        <div class="carousel-item">
+                            <a href="javascript:void(0)">
+                                <img class="d-block w-100" th:src="@{/image/carousel/3.jpg}" alt="Third slide">
+                            </a>
+                        </div>
+                        <div class="carousel-item">
+                            <a href="javascript:void(0)">
+                                <img class="d-block w-100" th:src="@{/image/carousel/4.jpg}" alt="Third slide">
+                            </a>
+                        </div>
+                        <div class="carousel-item">
+                            <a href="javascript:void(0)">
+                                <img class="d-block w-100" th:src="@{/image/carousel/5.jpg}" alt="Third slide">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <!-- left category menu -->
+                <div class=" mx-md-5 position-absolute left-category-menu">
+                    <ul class="list-group category-menu-list">
+                        <li v-for="c in categories" class="list-group-item p-0 category-menu-item category-tab-show" v-bind="{id:c.id , href:'#tab-content-'+c.id}"  role="tab" aria-controls="category products subtitle">
+                            <span class="oi oi-link-intact mr-2" title="icon name" aria-hidden="true"></span>
+                            <span>{{c.name}}</span>
+                        </li>
+                    </ul>
+                </div>
+                <!-- category menu tab -->
+                <div class="position-absolute bg-white mx-md-5 category-menu-tab">
+                    <!-- tab-content -->
+                    <div class="tab-content h-100" id="nav-tabContent">
+                        <div v-for="c in categories" class="tab-pane px-4 py-3 tab-pane-item category-tab-show h-100" v-bind="{id:'tab-content-'+c.id, 'aria-labelledby':c.id}" role="tabpanel" >
+                            <template v-for="p in productsMap[c.id]">
+                                <template v-for="(title ,index) in subTitleList(p.subTitle)">
+                                    <a href="javascript:void(0)" class="subTitle">{{title}}</a>
+                                    <a href="javascript:void(0)" class="subTitle" v-if="Math.round(Math.random()*3)<2">{{title}}</a>
+                                    <a href="javascript:void(0)" class="high-color subTitle" v-else >{{title}}</a>
+                                </template>
+                                <div class="title-separator"></div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- category and product -->
+        <div class="row">
+            <div class="col px-0 px-md-5 products-container py-4">
+                <!-- foreach  product and category name item -->
+                <template v-for="c in categories">
+                    <!-- category name -->
+                    <div  class="row mt-4">
+                        <div class="col px-0">
+                            <!-- category name -->
+                            <div class="col d-flex align-items-center">
+                                <i class="category-mark mr-3"></i>
+                                <span v-text="c.name">分类名称</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- product -->
+                    <div class="row m-0 justify-content-between">
+                        <div v-for="p in productsMap[c.id]" class="col p-0 m-0 d-flex justify-content-center product-card-item-col">
+                            <a href="javascript:void (0);" class="card my-2 p-3 rounded-0">
+                                <img class="card-img-top" v-bind:src="'image/productSingle_middle/'+productImageMap[p.id].id+'.jpg'" alt="Card image cap">
+                                <div class="card-body p-0 text-center">
+                                    <p class="card-text">{{p.name}}</p>
+                                    <h5 class="card-title" v-text="'￥'+p.originalPrice">price</h5>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+
+        <!-- footer page -->
+        <div class="row footer-row">
+            <div class="col w-100 m-0 p-0">
+                <!-- 优七特帮 -->
+                <div class="row mx-0 justify-content-between p-md-5">
+                    <!-- 优 -->
+                    <div class="col p-0">
+                        <div class="d-flex m-auto type-box justify-content-center">
+                            <div class="d-flex justify-content-center align-items-center">优</div>
+                            <div class="d-flex flex-column ml-3">
+                                <span>品质保障</span>
+                                <span class="text-muted">品质护航 购物无忧</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 七 -->
+                    <div class="col p-0">
+                        <div class="d-flex m-auto type-box justify-content-center">
+                            <div class="d-flex justify-content-center align-items-center">七</div>
+                            <div class="d-flex flex-column ml-3">
+                                <span>七天无理由退换货</span>
+                                <span class="text-muted">为您提供售后无忧保障</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 特 -->
+                    <div class="col p-0">
+                        <div class="d-flex m-auto type-box justify-content-center">
+                            <div class="d-flex justify-content-center align-items-center">特</div>
+                            <div class="d-flex flex-column ml-3">
+                                <span>特色服务体验</span>
+                                <span class="text-muted">为您呈现不一样的服务</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 帮 -->
+                    <div class="col p-0">
+                        <div class="d-flex m-auto type-box justify-content-center">
+                            <div class="d-flex justify-content-center align-items-center">帮</div>
+                            <div class="d-flex flex-column ml-3">
+                                <span>帮助中心</span>
+                                <span class="text-muted">您的购物指南</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 购物指南  ... -->
+                <div class="row mx-0">
+                    <div class="col mx-md-auto d-flex shoping-detail">
+                        <div class="mx-auto">
+                            <div class="row justify-content-around mt-4">
+                                <div class="d-flex flex-column mx-4">
+                                    <dt>购物指南</dt>
+                                    <dd class="d-flex flex-column">
+                                        <a href="javascript:void (0)">免费注册</a>
+                                        <a href="javascript:void (0)">开通支付宝</a>
+                                        <a href="javascript:void (0)">支付宝充值</a>
+                                    </dd>
+                                </div>
+                                <div class="d-flex flex-column mx-4">
+                                    <dt>天猫保障</dt>
+                                    <dd class="d-flex flex-column">
+                                        <a href="javascript:void (0)">发票保障</a>
+                                        <a href="javascript:void (0)">售后规则</a>
+                                        <a href="javascript:void (0)">缺货赔付</a>
+                                    </dd>
+                                </div>
+                                <div class="d-flex flex-column mx-4">
+                                    <dt>支付方式</dt>
+                                    <dd class="d-flex flex-column">
+                                        <a href="javascript:void (0)">快捷支付</a>
+                                        <a href="javascript:void (0)">信用卡</a>
+                                        <a href="javascript:void (0)">余额宝</a>
+                                        <a href="javascript:void (0)">蚂蚁花呗</a>
+                                        <a href="javascript:void (0)">货到付款</a>
+                                    </dd>
+                                </div>
+                                <div class="d-flex flex-column mx-4">
+                                    <dt>商家服务</dt>
+                                    <dd class="d-flex flex-column">
+                                        <a href="javascript:void (0)">天猫规则</a>
+                                        <a href="javascript:void (0)">商家入驻</a>
+                                        <a href="javascript:void (0)">商家中心</a>
+                                        <a href="javascript:void (0)">天猫智库</a>
+                                        <a href="javascript:void (0)">物流服务</a>
+                                        <a href="javascript:void (0)">喵言喵语</a>
+                                        <a href="javascript:void (0)">运营服务</a>
+                                    </dd>
+                                </div>
+                                <div class="d-flex flex-column mx-4">
+                                    <dt>手机天猫</dt>
+                                    <dd class="d-flex flex-column">
+                                        <a href="javascript:void (0)">
+                                            <img width="105" src="image/site/shoujitianmaoerweima.png">
+                                        </a>
+                                    </dd>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                 <!--tmallhead-->
+                <div class="row mx-0 tmall-head-image">
+                    <div class="col">
+                        <img width="68" src="image/site/tmallhead-bottom.png">
+                    </div>
+                </div>
+                <!-- red line-->
+                <div class="row mx-0">
+                    <div class="col px-0">
+                        <!-- red line -->
+                        <div class="red-line"></div>
+                    </div>
+                </div>
+                <!-- legal message-->
+                <div class="row mx-0" th:insert="include/footer::footer"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- admin main.css -->
+    <link rel="stylesheet" th:href="@{/css/fore/main.css}" href="../../static/css/fore/main.css"/>
+    <!-- util main.js -->
+    <script type="text/javascript" th:src="@{/js/utility/main.js}" src="../../static/js/utility/main.js"></script>
+    <!-- fore home.js -->
+    <script type="text/javascript" th:src="@{/js/fore/home.js}" src="../../static/js/fore/home.js"></script>
+</body>
+</html>

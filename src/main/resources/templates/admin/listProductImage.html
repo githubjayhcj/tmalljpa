@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!-- 引入依赖框架 -->
+<head th:replace="include/header::head('产品图片管理')"></head>
+<body>
+    <!-- navBar -->
+    <div th:replace="include/navigator::adminNavigator"></div>
+    <!-- main page -->
+    <div class="container" id="container">
+        <!-- breadcrumb(route) -->
+        <nav class="my-3" aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="listCategory">所有分类</a></li>
+                <li class="breadcrumb-item text-muted"><a v-bind:href="'listProduct?id='+cid+'&categoryName='+categoryName">{{categoryName}}</a></li>
+                <li class="breadcrumb-item text-muted">{{productName}}</li>
+                <li class="breadcrumb-item active" aria-current="page">产品图片管理</li>
+            </ol>
+        </nav>
+        <div class="row">
+            <div class="col-sm">
+                <!-- single image cotainer -->
+                <div class="add-product-image-container mx-auto">
+                    <!-- card -->
+                    <div class="card border-info border-info mb-3 mx-auto">
+                        <div class="card-header text-center text-info">新增产品<b class="text-danger">单个</b>图片</div>
+                        <div class="card-body text-info">
+                            <form>
+                                <div class="form-group">
+                                    <label for="exampleFormControlFile1"><small>请选择本地图片 尺寸400X400 为佳</small></label>
+                                    <input v-on:change="imageChanged(event)" accept="image/*" type="file" class="form-control-file" id="exampleFormControlFile1">
+                                </div>
+                                <small id="single" class="form-text text-danger form-text-tip"></small>
+                                <button v-on:click="addImage('single')" type="button" class="btn btn-primary submit-button single" disabled>上传</button>
+                                <button v-on:click="resetEvent" type="reset" class="btn btn-primary">重置</button>
+                            </form>
+                        </div>
+                    </div>
+                    <!-- table -->
+                    <table class="table table-striped table-bordered table-hover">
+                        <caption>List of product single image</caption>
+                        <thead>
+                            <tr class="table-info">
+                                <th scope="col">ID</th>
+                                <th scope="col">单个图片缩略图</th>
+                                <th scope="col">删除</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="pi in productsSingle">
+                                <td v-text="pi.id">id</td>
+                                <td class="text-center">
+                                    <a title="点击查看原图" v-bind:href="'image/productSingle/'+pi.id+'.jpg'"><img class="prodcut-list-image" v-bind:src="'image/productSingle_small/'+pi.id+'.jpg'" alt="singleImage"></a>
+                                </td>
+                                <td>
+                                    <a href="javascript:void(0)" v-on:click="deleteProductImage(pi.id,'single')">
+                                        <span class="oi oi-trash" title="icon name" aria-hidden="true"></span>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-sm">
+                <!-- detail image cotainer -->
+                <div class="add-product-image-container mx-auto">
+                    <!-- card -->
+                    <div class="card border-info border-warning mb-3 mx-auto">
+                        <div class="card-header text-center text-warning">新增产品<b class="text-danger">详情</b>图片</div>
+                        <div class="card-body text-info">
+                            <form>
+                                <div class="form-group">
+                                    <label for="exampleFormControlFile2"><small>请选择本地图片 宽度790 为佳</small></label>
+                                    <input v-on:change="imageChanged(event)" accept="image/*" type="file" class="form-control-file" id="exampleFormControlFile2">
+                                </div>
+                                <small id="detail" class="form-text text-danger form-text-tip"></small>
+                                <button v-on:click="addImage('detail')" type="button" class="btn btn-primary submit-button detail" disabled>上传</button>
+                                <button v-on:click="resetEvent" type="reset" class="btn btn-primary">重置</button>
+                            </form>
+                        </div>
+                    </div>
+                    <!-- table -->
+                    <table class="table table-striped table-bordered table-hover">
+                        <caption>List of product detail image</caption>
+                        <thead>
+                            <tr class="table-warning">
+                                <th scope="col">ID</th>
+                                <th scope="col">详细图片缩略图</th>
+                                <th scope="col">删除</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="pi in productsDetail">
+                            <td v-text="pi.id">id</td>
+                            <td class="text-center">
+                                <a title="点击查看原图" v-bind:href="'image/productDetail/'+pi.id+'.jpg'"><img class="prodcut-list-image" v-bind:src="'image/productDetail/'+pi.id+'.jpg'" alt="detailImage"></a>
+                            </td>
+                            <td>
+                                <a href="javascript:void(0);" v-on:click="deleteProductImage(pi.id,'detail')">
+                                    <span class="oi oi-trash" title="icon name" aria-hidden="true"></span>
+                                </a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <hr/>
+    </div>
+    <!-- admin main.css -->
+    <link rel="stylesheet" th:href="@{/css/admin/main.css}" href="../../static/css/admin/main.css"/>
+    <!-- admin main.js -->
+    <script type="text/javascript" th:src="@{/js/utility/main.js}" src="../../static/js/utility/main.js"></script>
+    <!-- current page -->
+    <script type="text/javascript">
+        var vue = new Vue({
+            el:"#container",
+            data:{
+                productsSingle:[],
+                productsDetail:[],
+                categoryName:"分类名称",
+                productName:"产品名称",
+                pid:0,
+                cid:0,
+                singleImage:{},
+                detailImage:{}
+            },
+            mounted:function () {
+                var urlPrams = getPathParams();
+                this.categoryName = window.decodeURI(urlPrams.categoryName);
+                this.productName = window.decodeURI(urlPrams.productName);
+                this.pid = urlPrams.id;
+                this.cid = urlPrams.cid;
+                //获取singleImage数据
+                this.getProdcutImages({type:"single"});
+                //获取detailImage数据
+                this.getProdcutImages({type:"detail"});
+            },
+            methods:{
+                deleteProductImage:function(id,type){
+                    var params = {};
+                    params.id = id;
+                    params.type = type;
+                    axios.delete("productImages",{params:params}).then(function (value) {
+                        outs(value.data.message);
+                        outs(value.data.result);
+                        if(value.data.result === "single"){
+                            //获取singleImage数据
+                            vue.getProdcutImages({type:"single"});
+                        }
+                        if (value.data.result === "detail"){
+                            //获取detailImage数据
+                            vue.getProdcutImages({type:"detail"});
+                        }
+                    });
+                },
+                getProdcutImages:function(params){
+                    axios.get("productImages/"+this.pid,{params:params}).then(function (value) {
+                        //vue.productsSingle = value.data.result.content;
+                        outs("vue.products="+JSON.stringify(value.data.result));
+                        if(value.data.code == 1){
+                            if(value.data.result.type === "single"){
+                                vue.productsSingle = value.data.result.productImages;
+                            }
+                            if(value.data.result.type === "detail"){
+                                vue.productsDetail = value.data.result.productImages;
+                            }
+                        }
+                    });
+                },
+                imageChanged:function(event){
+                    outs("imageChanged");
+                    var sbumitButtons = $(".submit-button");
+                    sbumitButtons.attr("disabled","disabled");
+                    sbumitButtons.each(function (index,el) {//注意each this 指代 当前遍历元素
+                        outs("each");
+                        if(event.target.id === "exampleFormControlFile1" && $(el).attr("class").includes("single")){//single
+                            outs("single button");
+                            vue.singleImage = event.target.files[0];
+                            if(vue.singleImage !== undefined){//图片不为空
+                                $(el).removeAttr("disabled");
+                            }
+                        }
+                        if(event.target.id === "exampleFormControlFile2" && $(el).attr("class").includes("detail")){//detail
+                            outs("detail button");
+                            vue.detailImage = event.target.files[0];
+                            if(vue.detailImage !== undefined) {//图片不为空
+                                $(el).removeAttr("disabled");
+                            }
+                        }
+                    });
+                    outs("singleImage="+this.singleImage);
+                    outs("detailImage="+this.detailImage);
+                },
+                addImage:function (type) {
+                    $(".form-text-tip").text("");//初始化提示框
+                    $("form").each(function (index,el) {//双表单重置
+                        el.reset();
+                    });
+                    var sbumitButtons = $(".submit-button");
+                    sbumitButtons.attr("disabled","disabled");//提交按钮重置（不可用）
+                    var image = {};
+                    if(type === "single"){//single
+                        outs("single");
+                        if(this.singleImage !== undefined){//图片不为空
+                            image = this.singleImage;
+                        }else {
+                            $("#single").text("单个图片不能为空");
+                            return;
+                        }
+                    }
+                    if(type === "detail"){//detail
+                        outs("detail");
+                        if(this.detailImage !== undefined){//图片不为空
+                            image = this.detailImage;
+                        }else {
+                            $("#detail").text("详细图片不能为空");
+                            return;
+                        }
+                    }
+                    var formData = new FormData();
+                    formData.append("image",image);
+                    formData.append("type",type);
+                    formData.append("pid",this.pid);
+                    axios.post("productImages",formData).then(function (value) {
+                        outs(value.data.message);
+                        //获取singleImage数据
+                        vue.getProdcutImages({type:"single"});
+                        //获取detailImage数据
+                        vue.getProdcutImages({type:"detail"});
+                    });
+                },
+                resetEvent:function () {
+                    outs("resetEvent");
+                    var sbumitButtons = $(".submit-button");
+                    sbumitButtons.attr("disabled","disabled");//提交按钮重置（不可用）
+                }
+            }
+        });
+    </script>
+</body>
+</html>

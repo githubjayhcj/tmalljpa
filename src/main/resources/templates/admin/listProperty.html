@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <!-- 引入依赖框架 -->
+    <head th:replace="include/header::head('属性管理')"></head>
+    <body>
+        <!-- navBar -->
+        <div th:replace="include/navigator::adminNavigator"></div>
+        <!-- main page -->
+        <div class="container" id="container">
+            <!-- breadcrumb(route) -->
+            <nav class="my-3" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="listCategory">所有分类</a></li>
+                    <li class="breadcrumb-item text-muted" v-text="categoryName">分类名称</li>
+                    <li class="breadcrumb-item active" aria-current="page">属性管理</li>
+                </ol>
+            </nav>
+            <!-- category table -->
+            <table class="table table-striped table-bordered table-hover table-sm">
+                <thead>
+                <tr class="table-primary">
+                    <th scope="col">序号</th>
+                    <th scope="col">ID</th>
+                    <th scope="col">属性名称</th>
+                    <th scope="col">编辑</th>
+                    <th scope="col">删除</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="(p,index) in properties">
+                    <td v-text="index">序号</td>
+                    <td v-text="p.id">id</td>
+                    <td v-text="p.name">name</td>
+                    <td>
+                        <a v-bind:href="'editProperty?id='+p.id+'&categoryName='+p.category.name+'&cid='+p.category.id">
+                            <span class="oi oi-pencil" title="icon name" aria-hidden="true"></span>
+                        </a>
+                    </td>
+                    <td>
+                        <a href="#" v-on:click="remove(p.id)">
+                            <span class="oi oi-trash" title="icon name" aria-hidden="true"></span>
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <!-- 分页导航 -->
+            <div th:insert="include/pagination::pagination"></div>
+            <!-- 新增属性 -->
+            <div class="card text-center w-50 mx-auto">
+                <h5 class="card-header">新增属性</h5>
+                <div class="card-body">
+                    <form >
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">属性名称</label>
+                            <input v-model="propertyName" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="property Name">
+                            <small id="nameInfer" class="form-text text-danger"></small>
+                            <small class="form-text text-muted">属性名称需要简短，概要</small>
+                        </div>
+                        <button type="button" class="btn btn-primary" v-on:click="addProperty">新增</button>
+                        <button id="reset" type="reset" class="btn btn-primary">清空</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- admin main.css -->
+        <link rel="stylesheet" th:href="@{/css/admin/main.css}" href="../../static/css/admin/main.css"/>
+        <!-- admin main.js -->
+        <script type="text/javascript" th:src="@{/js/utility/main.js}" src="../../static/js/utility/main.js"></script>
+        <!-- current page -->
+        <script type="text/javascript">
+            var vue = new Vue({
+                el:"#container",
+                data:{
+                    categoryId:0,
+                    propertyName:"",
+                    properties:[],
+                    page:{},
+                    categoryName:"分类名称"
+                },
+                mounted:function () {
+                    this.categoryId = getPathParams().id;
+                    //获取当前分类的全部属性
+                    this.getProperties();
+                },
+                methods:{
+                    remove:function(pid){
+                        axios.delete("properties/"+pid).then(function (value) {
+                            outs(value.data.message);
+                            //获取当前分类的全部属性
+                            vue.getProperties();
+                        });
+                    },
+                    pageTurning:function(pageKey){
+                        outs("pageKey="+pageKey);
+                        //获取当前分类的全部属性
+                        this.getProperties(pageKey);
+                    },
+                    getProperties:function (pageKey) {
+                        axios.get("properties/"+this.categoryId,{params:{start:pageKey}}).then(function (value) {
+                            outs(value.data.message);
+                            outs(JSON.stringify(value.data.result.navigatorPage));
+                            vue.properties = value.data.result.navigatorPage.content;
+                            vue.page = value.data.result.navigatorPage;
+                            vue.categoryName = value.data.result.category.name;
+                        });
+                    },
+                    addProperty:function () {
+                        this.propertyName = strTrim(this.propertyName);
+                        if(notNull(this.propertyName)){
+                            var formData = new FormData();
+                            formData.append("name",this.propertyName);
+                            axios.post("properties/"+this.categoryId,formData).then(function (value) {//axios 直接传对象（{id:12}）后台无法获取值
+                                if(value.data.code==1){//成功
+                                    outs(value.data.message);
+                                    //清空输入框
+                                    vue.propertyName = "";
+                                    //获取当前分类的全部属性
+                                    vue.getProperties();
+                                }else {
+                                    outs(value.data.message);
+                                }
+                            });
+                            //初始化提示框
+                            $("#nameInfer").text("");
+                        }else {
+                            $("#nameInfer").text("名称不能为空");
+                        }
+                    }
+                }
+            });
+        </script>
+    </body>
+</html>
