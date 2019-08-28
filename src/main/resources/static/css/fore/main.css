@@ -1,4 +1,10 @@
 /* home html */
+.go-home-logo{
+    font-size: 13px;
+    color: #FF0036;
+    margin-right: 4px;
+    margin-top: 2px;
+}
 #fixed-nav{
     background-color: #fd0c40;
 }
