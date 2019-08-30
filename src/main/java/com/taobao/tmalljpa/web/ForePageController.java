@@ -37,4 +37,9 @@ public class ForePageController {
         return "redirect:home";
     }
 
+    @RequestMapping("item")
+    public String item(){
+        return "fore/item";
+    }
+
 }

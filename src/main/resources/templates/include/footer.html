@@ -1,6 +1,109 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <body>
+    <!-- help detail -->
+    <template th:fragment="helpDetail">
+        <!-- 优七特帮 -->
+        <div class="row mx-0 justify-content-between p-md-5">
+            <!-- 优 -->
+            <div class="col p-0">
+                <div class="d-flex m-auto type-box justify-content-center">
+                    <div class="d-flex justify-content-center align-items-center">优</div>
+                    <div class="d-flex flex-column ml-3">
+                        <span>品质保障</span>
+                        <span class="text-muted">品质护航 购物无忧</span>
+                    </div>
+                </div>
+            </div>
+            <!-- 七 -->
+            <div class="col p-0">
+                <div class="d-flex m-auto type-box justify-content-center">
+                    <div class="d-flex justify-content-center align-items-center">七</div>
+                    <div class="d-flex flex-column ml-3">
+                        <span>七天无理由退换货</span>
+                        <span class="text-muted">为您提供售后无忧保障</span>
+                    </div>
+                </div>
+            </div>
+            <!-- 特 -->
+            <div class="col p-0">
+                <div class="d-flex m-auto type-box justify-content-center">
+                    <div class="d-flex justify-content-center align-items-center">特</div>
+                    <div class="d-flex flex-column ml-3">
+                        <span>特色服务体验</span>
+                        <span class="text-muted">为您呈现不一样的服务</span>
+                    </div>
+                </div>
+            </div>
+            <!-- 帮 -->
+            <div class="col p-0">
+                <div class="d-flex m-auto type-box justify-content-center">
+                    <div class="d-flex justify-content-center align-items-center">帮</div>
+                    <div class="d-flex flex-column ml-3">
+                        <span>帮助中心</span>
+                        <span class="text-muted">您的购物指南</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 购物指南  ... -->
+        <div class="row mx-0">
+            <div class="col mx-md-auto d-flex shoping-detail">
+                <div class="mx-auto">
+                    <div class="row justify-content-around mt-4">
+                        <div class="d-flex flex-column mx-4">
+                            <dt>购物指南</dt>
+                            <dd class="d-flex flex-column">
+                                <a href="javascript:void (0)">免费注册</a>
+                                <a href="javascript:void (0)">开通支付宝</a>
+                                <a href="javascript:void (0)">支付宝充值</a>
+                            </dd>
+                        </div>
+                        <div class="d-flex flex-column mx-4">
+                            <dt>天猫保障</dt>
+                            <dd class="d-flex flex-column">
+                                <a href="javascript:void (0)">发票保障</a>
+                                <a href="javascript:void (0)">售后规则</a>
+                                <a href="javascript:void (0)">缺货赔付</a>
+                            </dd>
+                        </div>
+                        <div class="d-flex flex-column mx-4">
+                            <dt>支付方式</dt>
+                            <dd class="d-flex flex-column">
+                                <a href="javascript:void (0)">快捷支付</a>
+                                <a href="javascript:void (0)">信用卡</a>
+                                <a href="javascript:void (0)">余额宝</a>
+                                <a href="javascript:void (0)">蚂蚁花呗</a>
+                                <a href="javascript:void (0)">货到付款</a>
+                            </dd>
+                        </div>
+                        <div class="d-flex flex-column mx-4">
+                            <dt>商家服务</dt>
+                            <dd class="d-flex flex-column">
+                                <a href="javascript:void (0)">天猫规则</a>
+                                <a href="javascript:void (0)">商家入驻</a>
+                                <a href="javascript:void (0)">商家中心</a>
+                                <a href="javascript:void (0)">天猫智库</a>
+                                <a href="javascript:void (0)">物流服务</a>
+                                <a href="javascript:void (0)">喵言喵语</a>
+                                <a href="javascript:void (0)">运营服务</a>
+                            </dd>
+                        </div>
+                        <div class="d-flex flex-column mx-4">
+                            <dt>手机天猫</dt>
+                            <dd class="d-flex flex-column">
+                                <a href="javascript:void (0)">
+                                    <img width="105" src="image/site/shoujitianmaoerweima.png">
+                                </a>
+                            </dd>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- legal message -->
     <div th:fragment="footer" class="col px-0 legal-tedail-message">
         <!-- line - 1 -->
         <div class="row mx-0">
