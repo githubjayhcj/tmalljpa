@@ -223,27 +223,7 @@
             </div>
         </div>
         <!-- footer page -->
-        <div class="row footer-row">
-            <div class="col w-100 m-0 p-0">
-                <!-- footer help detail -->
-                <template th:insert="include/footer::helpDetail"></template>
-                 <!--tmallhead-->
-                <div class="row mx-0 tmall-head-image">
-                    <div class="col">
-                        <img width="68" th:src="@{image/site/tmallhead-bottom.png}" src="../../static/image/site/tmallhead-bottom.png">
-                    </div>
-                </div>
-                <!-- red line-->
-                <div class="row mx-0">
-                    <div class="col px-0">
-                        <!-- red line -->
-                        <div class="red-line"></div>
-                    </div>
-                </div>
-                <!-- legal message-->
-                <div class="row mx-0" th:insert="include/footer::footer"></div>
-            </div>
-        </div>
+        <div class="row" th:replace="include/footer::footerDetail"></div>
     </div>
     <!-- admin main.css -->
     <link rel="stylesheet" th:href="@{/css/fore/main.css}" href="../../static/css/fore/main.css"/>
