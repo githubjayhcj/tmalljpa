@@ -12,6 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -133,5 +134,51 @@ public class ForeRestController {
         httpSession.removeAttribute("user");
         return new Response("loginOut successful");
     }*/
+
+    // signIn
+    @GetMapping("getItemData")
+    public Response getItemData(@RequestParam(value = "pid")int pid,HttpSession httpSession){
+        ToolClass.out("getItemData");
+        ToolClass.out(pid);
+        if(pid <= 0){
+            return new Response(Response.FAIL,"find product failed id ="+pid);
+        }
+        Product product = productService.findById(pid);
+        ToolClass.out(product);
+        if(product == null){
+            return new Response(Response.FAIL,"ont find product by id ="+pid);
+        }
+        List<ProductImage> productImages = productImageService.findByProductId(pid);
+        ToolClass.out(productImages);
+        List<ProductImage> productSingle = new ArrayList<>();
+        List<ProductImage> productDetail = new ArrayList<>();
+        for(ProductImage productImage : productImages){
+            if(productImage.getType().equals(ProductImage.SINGLE_TYPE)){
+                productSingle.add(productImage);
+            }
+            if(productImage.getType().equals(ProductImage.DETAIL_TYPE)){
+                productDetail.add(productImage);
+            }
+        }
+        ToolClass.out(productSingle);
+        ToolClass.out(productDetail);
+        List<Property> properties = propertyService.findByCategoryId(product.getCategory().getId());
+        ToolClass.out(properties);
+        if(properties.size() <=0){
+            return new Response(Response.FAIL,"ont find Properties by category id ="+product.getCategory().getId());
+        }
+        List<PropertyValue> propertyValues = propertyValueService.findByPid(product.getId());
+        ToolClass.out(propertyValues);
+        //填充property 的 propertyValue值
+        propertyService.setPropertiesvalue(properties,propertyValues);
+        ToolClass.out(properties);
+        Map<String,Object> map = new HashMap<>();
+        map.put("product",product);
+        map.put("productSingle",productSingle);
+        map.put("productDetail",productDetail);
+        map.put("properties",properties);
+        httpSession.setAttribute("product",product);
+        return new Response<Map<String,Object>>(map);
+    }
 
 }

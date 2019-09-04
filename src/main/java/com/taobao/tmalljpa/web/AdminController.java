@@ -86,7 +86,8 @@ public class AdminController {
                     List<PropertyValue> propertyValues = propertyValueService.findByPid(product.getId());
                     ToolClass.out("propertyValues size="+propertyValues.size());
                     //填充property 的 propertyValue值
-                    List<PropertyValue> lastedPropertyValues = new ArrayList<>(propertyValues);
+                    propertyService.setPropertiesvalue(properties,propertyValues);
+                    /*List<PropertyValue> lastedPropertyValues = new ArrayList<>(propertyValues);
                     for (Property property : properties){
                         for (int i = 0;i<lastedPropertyValues.size();i++){
                             if (property.getId() == lastedPropertyValues.get(i).getProperty().getId()){
@@ -101,9 +102,8 @@ public class AdminController {
                         if(property.getPropertyValue() == null){
                             property.setPropertyValue(new PropertyValue());
                         }
-                    }
+                    }*/
                     ToolClass.out("propertyValues size="+properties.size());
-                    ToolClass.out("lastedPropertyValues size="+lastedPropertyValues.size());
                     return new Response<List<Property>>("get propertyValues successful",properties);
                 }else {
                     return new Response(Response.FAIL,"get propertyValues failed , Property not find by category id ="+product.getCategory().getId());

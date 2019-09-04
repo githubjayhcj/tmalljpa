@@ -1,26 +1,166 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <!-- 引入依赖框架 -->
-<head th:replace="include/header::head('天猫tmall.com--理想生活上天猫')"></head>
+<head th:replace="include/header::head('过滤器session.product.name')"></head>
 <body>
     <div class="container-fluid" id="container">
         <!-- head nav -->
         <div class="row">
             <div class="col px-0" th:insert="include/foreNavigator::navigator(true)"></div>
         </div>
+        <div class="row mx-md-5">
+            <div class="col px-md-2 pt-3 pb-4">
+                <div class="d-inline-block item-head-detail">
+                    <div class="d-flex">
+                        <a class="item-head-logo" href="#">TMALL天猫</a>
+                        <div class="seller-detail">
+                            <div class="d-flex">
+                                <a href="javascript:void (0);">官方旗舰店</a>
+                            </div>
+                            <div>品牌直销</div>
+                            <a href="javascript:void (0);"></a>
+                        </div>
+                        <div class="server-score d-inline-block">
+                            <span class="server-score-name">描 述</span>
+                            <span class="server-score-name">服 务</span>
+                            <span class="server-score-name">物 流</span>
+                            <br>
+                            <span class="server-score-content">4.8</span>
+                            <span class="oi oi-arrow-top server-score-content" title="icon name" aria-hidden="true"></span>
+                            <span class="server-score-content">4.8</span>
+                            <span class="oi oi-arrow-top server-score-content" title="icon name" aria-hidden="true"></span>
+                            <span class="server-score-content">4.8</span>
+                            <span class="oi oi-arrow-top server-score-content" title="icon name" aria-hidden="true"></span>
+                        </div>
+                    </div>
+                </div>
+                <!-- search -->
+                <div class="float-right item-search-group">
+                    <div class="input-group input-group-sm">
+                        <input type="text" class="form-control" placeholder="搜索 天猫 商品/名牌/店铺" aria-label="Recipient's username with two button addons" aria-describedby="button-addon4">
+                        <div class="input-group-append" id="button-addon4">
+                            <button type="button">搜天猫</button>
+                            <button type="button">搜本店</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- head-bottom-line -->
         <div class="row">
+            <div class="col px-0">
+                <div class="head-bottom-line"></div>
+            </div>
+        </div>
+        <!-- category image -->
+        <div class="row">
+            <div class="col px-0">
+                <img class="mx-auto d-block" height="89" src="image/category/1.jpg">
+            </div>
+        </div>
+        <!-- item content -->
+        <div class="row mt-4">
             <div class="col">
-
+                <div class="mx-auto item-main-container">
+                    <div class="d-flex item-main-content">
+                        <div class="item-main-img-col">
+                            <div class="mx-auto images-container">
+                                <template v-for="(pi,index) in productSingle">
+                                    <img v-if="index == 0" v-bind:src="'image/productSingle/'+pi.id+'.jpg'">
+                                    <img v-else v-bind:src="'image/productSingle/'+pi.id+'.jpg'" class="display-none">
+                                </template>
+                            </div>
+                            <!-- image list -->
+                            <div class="w-100 mt-4 d-flex justify-content-center">
+                                <img v-for="(pi,index) in productSingle" v-bind:src="'image/productSingle_small/'+pi.id+'.jpg'" v-if="index < 5" class="mx-2" width="60" height="60" />
+                            </div>
+                        </div>
+                        <div class="item-main-message-col">
+                            <div class="w-100">
+                                <span v-text="product.name"></span>
+                            </div>
+                            <div class="w-100">
+                                <span v-text="product.subTitle"></span>
+                            </div>
+                            <div class="w-100 mt-3">
+                                <div class="w-100">
+                                    <span class="deal-title">价格</span>
+                                    <span>¥</span>
+                                    <del v-text="product.originalPrice"></del>
+                                </div>
+                                <div class="w-100">
+                                    <span class="deal-title">促销价</span>
+                                    <span>¥</span>
+                                    <span v-text="product.promotePrice"></span>
+                                    <span>惊喜价</span>
+                                </div>
+                                <div class="w-100 pb-1">
+                                    <span class="deal-title">本店活动</span>
+                                    <span>满349元,包邮,送10元店铺优惠券</span>
+                                </div>
+                            </div>
+                            <div class="w-100 row m-0 mt-4 py-2">
+                                <div class="col text-center">
+                                    <span>月销量</span>
+                                    <span class="ml-1 font-weight-bold font-red">20</span>
+                                </div>
+                                <div class="col text-center">
+                                    <span>累计评价</span>
+                                    <span class="ml-1 font-weight-bold font-red">140</span>
+                                </div>
+                            </div>
+                            <div class="w-100 mt-4">
+                                <span class="deal-title">数量</span>
+                                <div class="d-inline-block">
+                                    <div class="d-flex">
+                                        <input type="text" />
+                                        <div class="ml-1 d-flex flex-wrap align-content-between">
+                                            <a class="d-flex justify-content-center align-content-center" href="#">
+                                                <img class="m-auto" th:src="@{image/site/increase.png}" src="../../static/image/site/increase.png">
+                                            </a>
+                                            <a class="d-flex justify-content-center align-content-center" href="#">
+                                                <img class="m-auto" th:src="@{image/site/increase.png}" src="../../static/image/site/decrease.png">
+                                            </a>
+                                        </div>
+                                        <span class="deal-title d-flex align-items-center">件</span>
+                                        <span class="deal-title d-flex align-items-center ml-4">
+                                            <span>库存</span>
+                                            <span v-text="product.stock">16</span>
+                                            <span>件</span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="w-100 mt-5 text-center">
+                                <a href="#" >立刻购买</a>
+                                <a class="ml-2" href="#" >
+                                    <span class="oi oi-cart" title="icon name" aria-hidden="true"></span>
+                                    加入购物车
+                                </a>
+                            </div>
+                            <div class="w-100 mt-5">
+                                <span class="deal-title">服务承诺</span>
+                                <div>
+                                    <span>七天无理由退</span>
+                                    <span>七天无理由退</span>
+                                    <span>七天无理由退</span>
+                                    <span>七天无理由退</span>
+                                    <span>七天无理由退</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <!-- footer page -->
-        <div class="row" th:replace="include/footer::footerDetail"></div>
+        <div class="row mx-0" th:replace="include/footer::footerDetail"></div>
     </div>
     <!-- admin main.css -->
     <link rel="stylesheet" th:href="@{/css/fore/main.css}" href="../../static/css/fore/main.css"/>
     <!-- util main.js -->
-    <!--<script type="text/javascript" th:src="@{/js/utility/main.js}" src="../../static/js/utility/main.js"></script>-->
+    <script type="text/javascript" th:src="@{/js/utility/main.js}" src="../../static/js/utility/main.js"></script>
     <!-- fore home.js -->
-    <!--<script type="text/javascript" th:src="@{/js/fore/home.js}" src="../../static/js/fore/home.js"></script>-->
+    <script type="text/javascript" th:src="@{/js/fore/item.js}" src="../../static/js/fore/item.js"></script>
 </body>
 </html>
