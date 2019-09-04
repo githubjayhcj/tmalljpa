@@ -562,6 +562,10 @@
 .item-main-img-col{
     width: 460px;
 }
+.tm-store-up{
+    color: #999;
+    font-size: 12px;
+}
 .images-container{
     width: 420px;
     height: 420px;
@@ -677,4 +681,48 @@
 }
 .item-main-message-col > div:nth-of-type(6) > a:hover{
     text-decoration: none;
+}
+.item-main-message-col > div:nth-of-type(7) > div{
+    width: 432px;
+}
+.item-main-message-col > div:nth-of-type(7) > div > span{
+    display: inline-block;
+}
+.text-decoration-none:hover{
+    text-decoration: none;
+}
+.item-main-message-col > div:nth-of-type(7) > div > span >a{
+    color: #666;
+    font-size: 12px;
+    margin-right: 26px;
+}
+.right-other-product {
+    width: 200px;
+}
+.right-other-product > div > i{
+    display: inline-block;
+    width: 30px;
+    border-top: 1px #c9c9c9 dotted;
+}
+.text-main-type{
+    color: #999;
+    font-size: 12px;
+}
+.other-product-item > a:first-child{
+    display: block;
+    width: 140px;
+}
+.other-product-item > a:first-child > span{
+    bottom: 0;
+    background-color: rgba(255,255,255,.8);
+    text-align: center;
+    font-size: 12px;
+}
+.other-product-item > a:first-child > img{
+    cursor: pointer;
+}
+.other-product-item > a:last-child{
+    text-align: center;
+    color: #62574e;
+    font-size: 12px;
 }

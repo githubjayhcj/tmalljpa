@@ -83,4 +83,9 @@ public class ProductService {
             return new Response(Response.FAIL,"delete product , not find product by id="+id);
         }
     }
+
+    //根据分页获取
+    public Page<Product> findAll(Pageable pageable){
+        return productDao.findAll(pageable);
+    };
 }

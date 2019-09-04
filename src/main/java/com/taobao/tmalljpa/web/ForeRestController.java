@@ -6,6 +6,7 @@ import com.taobao.tmalljpa.util.ToolClass;
 
 import com.taobao.tmalljpa.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -172,11 +173,26 @@ public class ForeRestController {
         //填充property 的 propertyValue值
         propertyService.setPropertiesvalue(properties,propertyValues);
         ToolClass.out(properties);
+        //推荐产品列表，随机10个
+        Sort sort = new Sort(Sort.Direction.DESC,"id");
+        Pageable pageable = PageRequest.of(2,10,sort);
+        List<Product> products = productService.findAll(pageable).getContent();
+        Map<String,ProductImage> productImageMap = new HashMap();
+        for(Product p : products){
+            List<ProductImage> pis = productImageService.findByProductIdAndType(p.getId(),ProductImage.SINGLE_TYPE);
+            if(pis.size()>0){
+                productImageMap.put(String.valueOf(p.getId()),pis.get(0));
+            }else {
+                productImageMap.put(String.valueOf(p.getId()),new ProductImage());
+            }
+        }
         Map<String,Object> map = new HashMap<>();
         map.put("product",product);
         map.put("productSingle",productSingle);
         map.put("productDetail",productDetail);
         map.put("properties",properties);
+        map.put("products",products);
+        map.put("productImageMap",productImageMap);
         httpSession.setAttribute("product",product);
         return new Response<Map<String,Object>>(map);
     }

@@ -61,7 +61,7 @@
         <!-- item content -->
         <div class="row mt-4">
             <div class="col">
-                <div class="mx-auto item-main-container">
+                <div class="mx-auto d-flex item-main-container">
                     <div class="d-flex item-main-content">
                         <div class="item-main-img-col">
                             <div class="mx-auto images-container">
@@ -73,6 +73,13 @@
                             <!-- image list -->
                             <div class="w-100 mt-4 d-flex justify-content-center">
                                 <img v-for="(pi,index) in productSingle" v-bind:src="'image/productSingle_small/'+pi.id+'.jpg'" v-if="index < 5" class="mx-2" width="60" height="60" />
+                            </div>
+                            <!-- 举报收藏商品 （1200人气）     举报 -->
+                            <div class="w-100 mt-4 px-5">
+                                <span class="oi oi-star tm-store-up" title="icon name" aria-hidden="true"></span>
+                                <a class="text-decoration-none tm-store-up" href="javascript:void (0);">收藏商品</a>
+                                <span class="ml-2 tm-store-up">(1200人气)</span>
+                                <a class="float-right text-decoration-none tm-store-up" href="javascript:void (0);">举报</a>
                             </div>
                         </div>
                         <div class="item-main-message-col">
@@ -113,13 +120,13 @@
                                 <span class="deal-title">数量</span>
                                 <div class="d-inline-block">
                                     <div class="d-flex">
-                                        <input type="text" />
+                                        <input type="text" value="1"/>
                                         <div class="ml-1 d-flex flex-wrap align-content-between">
-                                            <a class="d-flex justify-content-center align-content-center" href="#">
+                                            <a class="d-flex justify-content-center align-content-center" href="javascript:void (0);">
                                                 <img class="m-auto" th:src="@{image/site/increase.png}" src="../../static/image/site/increase.png">
                                             </a>
-                                            <a class="d-flex justify-content-center align-content-center" href="#">
-                                                <img class="m-auto" th:src="@{image/site/increase.png}" src="../../static/image/site/decrease.png">
+                                            <a class="d-flex justify-content-center align-content-center" href="javascript:void (0);">
+                                                <img class="m-auto" th:src="@{image/site/decrease.png}" src="../../static/image/site/decrease.png">
                                             </a>
                                         </div>
                                         <span class="deal-title d-flex align-items-center">件</span>
@@ -132,23 +139,63 @@
                                 </div>
                             </div>
                             <div class="w-100 mt-5 text-center">
-                                <a href="#" >立刻购买</a>
-                                <a class="ml-2" href="#" >
+                                <a href="javascript:void (0);" >立刻购买</a>
+                                <a class="ml-2" href="javascript:void (0);" >
                                     <span class="oi oi-cart" title="icon name" aria-hidden="true"></span>
                                     加入购物车
                                 </a>
                             </div>
                             <div class="w-100 mt-5">
-                                <span class="deal-title">服务承诺</span>
-                                <div>
-                                    <span>七天无理由退</span>
-                                    <span>七天无理由退</span>
-                                    <span>七天无理由退</span>
-                                    <span>七天无理由退</span>
-                                    <span>七天无理由退</span>
+                                <span class="float-left deal-title">服务承诺</span>
+                                <div class="float-left">
+                                    <span title="全国联保">
+                                        <a href="javascript:void (0);" class="text-decoration-none">全国联保</a>
+                                    </span>
+                                    <span title="商品支持正品保障服务">
+                                        <a href="javascript:void (0);" class="text-decoration-none">正品保证</a>
+                                    </span>
+                                    <span title="天猫电器延保服务，全国联保结束后天猫为电器继续延长服务保障期，为影响正常使用的性能故障提供维修">
+                                        <a href="javascript:void (0);" class="text-decoration-none">延保服务</a>
+                                    </span>
+                                    <span title="极速退款是为诚信会员提供的退款退货流程的专享特权，额度是根据每个用户当前的信誉评级情况而定">
+                                        <a href="javascript:void (0);" class="text-decoration-none">急速退款</a>
+                                    </span>
+                                    <span title="卖家为您购买的商品投保退货运费险（保单生效以下单显示为准）">
+                                        <a href="javascript:void (0);" class="text-decoration-none">赠运费险</a>
+                                    </span>
+                                    <span title="七天无理由退换">
+                                        <a href="javascript:void (0);" class="text-decoration-none">七天无理由退换</a>
+                                    </span>
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <!-- right 看了又看 container -->
+                    <div class="right-other-product">
+                        <div class="w-100 d-flex align-items-center justify-content-center">
+                            <i></i>
+                            <span class="mx-3 text-main-type">看了又看</span>
+                            <i></i>
+                        </div>
+                        <div class="w-100 d-flex mb-3 align-items-center mt-2 flex-column other-product-item" v-for="(p,index) in products">
+                            <template v-if="index < 3">
+                                <a class="position-relative">
+                                    <span class="w-100 d-block position-absolute">¥799.00</span>
+                                    <img class="w-100" v-bind:src="'image/productSingle_middle/'+productImageMap[p.id].id+'.jpg'" v-on:click="item(p.id)"><!-- onclick -->
+                                </a>
+                                <a class="d-block text-truncate mt-1 w-100 px-3" href="javascript:void (0);" v-text="p.name" v-on:click="item(p.id)"></a>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 详情 ， 评论 ， 服务 （栏） -->
+        <div class="row mt-4">
+            <div class="col">
+                <div class="mx-auto d-flex item-main-container">
+                    <div class="d-flex item-main-content">
+                        asdasds
                     </div>
                 </div>
             </div>

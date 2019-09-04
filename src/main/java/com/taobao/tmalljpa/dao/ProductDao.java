@@ -18,4 +18,6 @@ public interface ProductDao extends JpaRepository<Product,Integer> {
     void deleteAllByCategory(Category category);
 
     Product findByName(String name);
+
+    Page<Product> findAll(Pageable pageable);
 }
