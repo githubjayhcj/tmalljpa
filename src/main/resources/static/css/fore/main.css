@@ -726,3 +726,86 @@
     color: #62574e;
     font-size: 12px;
 }
+.shop-info-left-content{
+    width: 190px;
+
+}
+.shop-info-left-content > div:first-child{
+    background: linear-gradient(to right,#b32ff2 0,#7a3ce9 100%);
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+}
+.shop-info-left-content > div:nth-of-type(2){
+    border: 1px solid #e5e5e5;
+}
+.shop-info-left-content > div:nth-of-type(2) > div:nth-of-type(1) > a:first-child{
+    color: #333;
+    font-size: 12px;
+    font-weight: bold;
+}
+.shop-info-left-content > div:nth-of-type(2) > div:nth-of-type(1) > a:last-child{
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background-image: url(../../image/site/aliwanwan.gif);
+    background-position: -80px 0;
+}
+.shop-info-left-content > div:nth-of-type(2) > div:nth-of-type(2) >span:first-child{
+    display: inline-block;
+    width: 18px;
+    background-color: #f04343;
+    color: #ffd800;
+    text-align: center;
+    font-size: 12px;
+}
+.shop-info-left-content > div:nth-of-type(2) > div:nth-of-type(2) >span:last-child{
+    font-weight: 700;
+    font-size: 12px;
+    color: #999;
+}
+.shop-info-left-content > div:nth-of-type(2) > div:nth-of-type(4) > div:nth-of-type(1){
+    width: 57px;
+    height: 57px;
+    border: 1px solid #e5e5e5;
+    left: 50%;
+    margin-left: -28.5px;
+    background-color: #fff;
+    padding: 8px;
+    top: -14px;
+}
+.border-main-type{
+    border-color: #E5E5E5;
+    border-style: solid;
+    border-width: 1px;
+}
+.shop-info-left-content > div:nth-of-type(3) > span:first-child{
+    color: #333333;
+    font-weight: normal;
+    font-size: 12px;
+    font-family: 宋体;
+}
+.shop-info-left-content > div:nth-of-type(3) > a{
+    color: #666;
+    font-size: 12px;
+}
+.shop-info-left-content > div:nth-of-type(4) > div > div > a{
+    color: #343434;
+    font-size: 12px;
+    display: block;
+    line-height: 135%;
+}
+.card-body-promote-price{
+    font-size: 12px;
+    color: #f40;
+    font-weight: 700;
+}
+.card-body-original-price{
+    font-size: 12px;
+    color: #999;
+    text-decoration: line-through;
+}
+
+.shop-info-right-content{
+    width: 790px;
+}
