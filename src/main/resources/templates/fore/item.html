@@ -253,7 +253,84 @@
                             </div>
                             <!-- 店铺主（右）内容区 -->
                             <div class="shop-info-right-content">
-                                <div style="width: 100%;height: 300px;"></div>
+                                <!-- 切换栏 -->
+                                <div class="tab-button-list">
+                                    <ul class="d-flex m-0 p-0 tm-list-group cursor-point">
+                                        <li id="product-detail-tab" data-index="0" class="position-relative list-group-custom tab-active-li-style"><!-- tab-active-li-style -->
+                                            <div class="position-absolute list-group-arrow"></div><!-- display-none -->
+                                            <span class="tab-active-span-style ">商品详情</span><!-- tab-active-span-style -->
+                                        </li>
+                                        <li id="user-review-tab" data-index="1" class="position-relative list-group-custom">
+                                            <div class="position-absolute list-group-arrow display-none"></div><!-- display-none -->
+                                            <span class="tm-list-group-right-border">
+                                                <span>累计评价</span>
+                                                <span>1232</span>
+                                            </span>
+                                        </li>
+                                        <li id="service-detail-tab" data-index="2" class="position-relative list-group-custom">
+                                            <div class="position-absolute list-group-arrow display-none"></div><!-- display-none -->
+                                            <span class="tm-list-group-right-border">服务详情</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <!-- tab content -->
+                                <div class="w-100">
+                                    <!-- Tab panes -->
+                                    <div class="tab-content" id="nav-tabContent">
+                                        <!-- 商品详情 -->
+                                        <div class="tab-pane-custom">
+                                            <div class="w-100 d-flex align-items-center">
+                                                <img class="mr-4" width="120" th:src="@{image/site/TB1DFjbXQH0gN.jpg}" src="../../static/image/site/TB1DFjbXQH0gN.jpg">
+                                                <div >
+                                                    <p  class="tm-font-style-default" style="color: #666;font-weight: 400;">
+                                                        该商品参与了公益宝贝计划，卖家承诺每笔成交将为<span style="color: #c40000;font-weight: 400;">情暖少数民族女孩</span>捐赠<span style="color: #c40000;font-weight: 400;">0.02元</span>。该商品已累积捐赠<span style="color: #c40000;font-weight: 400;">10笔</span>。
+                                                    </p>
+                                                    <p class="tm-font-style-default">
+                                                        善款用途简介：该项目由海南成美慈善基金会自2011年起发起，主要目标在于资助和培养少数民族地区大龄女童（14-18岁左右）发展，通过助学金、靓志奖学金、靓...
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="w-100 p-4 main-content-border">
+                                                <div class="tm-font-min">
+                                                    <span class="tm-font-color-1">品牌名称：</span>
+                                                    <span class="tm-font-color-2" v-text="product.name">Philips/飞利浦</span>
+                                                </div>
+                                                <div class="mt-4 tm-font-min tm-font-color-3 tm-font-bold">
+                                                    <span>产品参数：</span>
+                                                </div>
+                                                <div class="w-100 mt-3">
+                                                    <span class="d-inline-block text-truncate mr-4 mt-1 tm-font-min tm-font-color-1 product-properties-item" v-for="pt in properties" v-text="pt.name+' : '+pt.propertyValue.value" v-bind:title="pt.propertyValue.value">
+                                                        产品名称：Philips/飞利浦 S6550Philips/飞利浦 S6550Philips/飞利浦 S6550Philips/飞利浦 S6550
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="w-100 mt-3">
+                                                <img class="w-100" th:src="@{image/site/TB1tqFIxpzXa-790-180.png}" src="../../static/image/site/TB1tqFIxpzXa-790-180.png">
+                                            </div>
+                                            <!--延保服务-->
+                                            <div class="w-100 d-flex align-items-start  tm-protected-service">
+                                                <img th:src="@{image/site/TB1RxklfH81-36.png}" src="../../static/image/site/TB1RxklfH81-36.png">
+                                                <div class="d-inline-block">
+                                                    <span class="d-block mt-3">延保服务</span>
+                                                    <p class="mt-2 tm-font-min tm-font-color-1">购买天猫商品时选择购买“延保服务”后，在服务保障期内如消费者购买的商品发生故障，由天猫负责委派第三方服务商在消费者的服务保障额度范围内为消费者提供维修的保障服务项目。</p>
+                                                    <div class="w-100 mb-3">
+                                                        <span class="tm-font-min tm-font-color-3">本服务由浙江天猫供应链管理有限公司提供</span>
+                                                        <a class="tm-font-min tm-font-color-3 tm-font-bold" href="javascript:void(0);">查看执照</a>
+                                                        <img width="20" th:src="@{image/site/wananbei.png}" src="../../static/image/site/wananbei.png">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- detail image list -->
+                                            <div class="w-100 mt-4">
+                                                <img class="w-100" v-for="pd in productDetail" v-bind:src="'image/productDetail/'+pd.id+'.jpg'">
+                                            </div>
+                                        </div>
+                                        <!-- 累计评价 -->
+                                        <div class="bg-secondary tab-pane-custom display-none">..22222.</div>
+                                        <!-- 服务详情 -->
+                                        <div class="bg-primary tab-pane-custom display-none">.333333..</div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 

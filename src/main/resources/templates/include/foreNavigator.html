@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <nav th:fragment="navigator(show)" class="navbar navbar-expand-md navbar-light bg-light py-0 px-5 head-nav">
+        <span class="navbar-brand"><h6><small class="text-muted">喵，欢迎来天猫</small></h6></span>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-between py-1" id="navbarNav">
+            <ul th:if="${session.user != null}" class="navbar-nav py-0">
+                <li class="nav-item py-0" th:classappend="${show} ? '' : 'd-none'">
+                    <a class="nav-link py-0 d-flex" href="signOut">
+                        <!--<img src="../../static/css/open-iconic-master/svg/home.svg" th:src="@{/css/open-iconic-master/svg/home.svg}" alt="icon name">-->
+                        <span class="oi oi-home go-home-logo" title="icon name" aria-hidden="true"></span>
+                        <h6><small>天猫首页</small></h6>
+                    </a>
+                </li>
+                <li class="nav-item py-0">
+                    <a class="nav-link py-0" href="javascript:void(0);"><h6><small th:text="${session.user.name}">用户名</small></h6><span class="sr-only">(username)</span></a>
+                </li>
+                <li class="nav-item py-0">
+                    <a class="nav-link py-0" href="signOut"><h6><small>退出</small></h6></a>
+                </li>
+            </ul>
+            <ul th:if="${session.user == null}" class="navbar-nav py-0">
+                <li class="nav-item py-0" th:classappend="${show} ? '' : 'd-none'">
+                    <a class="nav-link py-0 d-flex" href="signOut">
+                        <!--<img src="../../static/css/open-iconic-master/svg/home.svg" th:src="@{/css/open-iconic-master/svg/home.svg}" alt="icon name">-->
+                        <span class="oi oi-home go-home-logo" title="icon name" aria-hidden="true"></span>
+                        <h6><small>天猫首页</small></h6>
+                    </a>
+                </li>
+                <li class="nav-item py-0">
+                    <a class="nav-link py-0" href="login"><h6><small>请登录</small></h6><span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item py-0">
+                    <a class="nav-link py-0" href="register"><h6><small>免费注册</small></h6></a>
+                </li>
+            </ul>
+            <!-- 右侧项 -->
+            <ul class="navbar-nav py-0">
+                <li class="nav-item py-0">
+                    <a class="nav-link py-0" href="#"><h6><small>我的订单</small></h6><span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item py-0">
+                    <a class="nav-link py-0" href="#"><h6><small>购物车0件</small></h6></a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</body>
+</html>
