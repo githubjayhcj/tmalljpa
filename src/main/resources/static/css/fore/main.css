@@ -685,9 +685,6 @@
 .item-main-message-col > div:nth-of-type(7) > div > span{
     display: inline-block;
 }
-.text-decoration-none:hover{
-    text-decoration: none;
-}
 .item-main-message-col > div:nth-of-type(7) > div > span >a{
     color: #666;
     font-size: 12px;
@@ -873,4 +870,45 @@
 }
 .tm-protected-service > div > div{
     border-top: 1px solid #e5e5e5;
+}
+
+/* 服务详情 */
+.tab-pane-custom:nth-of-type(3) > div{
+    border-bottom: 1px solid #285fad;
+}
+.tab-pane-custom:nth-of-type(3) > div > span{
+    color: #124ca4;
+    border-bottom: 3px solid #124ca4;
+    width: 200px;
+    display: inline-block;
+    padding: 20px 40px;
+}
+/* 猜你喜欢 */
+.guess-you-like{
+    background-color: #fafafa;
+}
+.guess-you-like > span{
+    height: 30px;
+    line-height: 30px;
+    padding-left: 16px;
+    background-color: #FF0036;
+    color: #fff;
+}
+.guess-you-like > a > span{
+    bottom: 0;
+    background-color: rgba(255,255,255,0.7);
+    padding: 5px 15px;
+}
+/* 安全提示 */
+.safety-tip{
+    padding: 10px;
+    background-color: #ffffe5;
+    border: 1px solid #ffcc7f;
+}
+.safety-tip > div:nth-of-type(2){
+    border-bottom: 1px solid #ffe8ca;
+    margin: 10px 0;
+}
+.safety-tip > div > div > p{
+    line-height: 26px;
 }
