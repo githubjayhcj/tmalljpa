@@ -64,15 +64,44 @@
                 <div class="mx-auto d-flex item-main-container">
                     <div class="d-flex item-main-content">
                         <div class="item-main-img-col">
-                            <div class="mx-auto images-container">
+                            <!-- current-product-img -->
+                            <div class="mx-auto position-relative images-container">
+                                <!-- scanning-dom -->
+                                <!--<div id="scanning-dom" class="position-absolute display-none"></div>-->
+                                <!-- monitor canvas -->
+                                <canvas id="monitor-canvas" class="position-absolute display-none"></canvas>
+                                <!-- current product imgs -->
                                 <template v-for="(pi,index) in productSingle">
-                                    <img v-if="index == 0" v-bind:src="'image/productSingle/'+pi.id+'.jpg'">
-                                    <img v-else v-bind:src="'image/productSingle/'+pi.id+'.jpg'" class="display-none">
+                                    <div class="w-100 h-100 img-parent" v-if="index == 0">
+                                        <div class="d-flex w-100 h-100 justify-content-center align-items-center">
+                                            <div class="preview-img-parent">
+                                                <!-- scanning-dom -->
+                                                <div class="position-absolute display-none"></div>
+                                                <img v-bind:id="pi.id"  v-bind:src="'image/productSingle/'+pi.id+'.jpg'">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="w-100 h-100 img-parent display-none" v-else>
+                                        <div class="d-flex w-100 h-100 justify-content-center align-items-center">
+                                            <div class="preview-img-parent">
+                                                <!-- scanning-dom -->
+                                                <div class="position-absolute display-none"></div>
+                                                <img class="preview-img" v-bind:id="pi.id"  v-bind:src="'image/productSingle/'+pi.id+'.jpg'">
+                                            </div>
+                                        </div>
+                                    </div>
                                 </template>
                             </div>
                             <!-- image list -->
                             <div class="w-100 mt-4 d-flex justify-content-center">
-                                <img v-for="(pi,index) in productSingle" v-bind:src="'image/productSingle_small/'+pi.id+'.jpg'" v-if="index < 5" class="mx-2" width="60" height="60" />
+                                <template v-for="(pi,index) in productSingle">
+                                    <div v-bind:data-href="pi.id" class="d-flex mx-2 justify-content-center align-items-center product-img-list-item img-border cursor-point"  v-if="index < 5 && index===0">
+                                        <img  v-bind:src="'image/productSingle_small/'+pi.id+'.jpg'"/>
+                                    </div>
+                                    <div v-bind:data-href="pi.id" class="d-flex mx-2 justify-content-center align-items-center product-img-list-item cursor-point"  v-else-if="index < 5">
+                                        <img  v-bind:src="'image/productSingle_small/'+pi.id+'.jpg'"/>
+                                    </div>
+                                </template>
                             </div>
                             <!-- 举报收藏商品 （1200人气）     举报 -->
                             <div class="w-100 mt-4 px-5">
@@ -194,6 +223,7 @@
         <div class="row mt-4">
             <div class="col">
                 <div class="mx-auto d-flex item-main-container">
+                    <!-- 主内容区，包含左侧信息列 -->
                     <div class="item-main-content">
                         <img class="w-100 mb-1" th:src="@{image/site/jingkouxiaotieshi.png}" src="../../static/image/site/jingkouxiaotieshi.png"/>
                         <div class="d-flex justify-content-between">
@@ -237,7 +267,7 @@
                                     <span class="ml-2">宝贝推荐</span>
                                     <a href="javascript:void(0);">更多</a>
                                 </div>
-                                <!-- 跟多列表 -->
+                                <!-- 更多列表 -->
                                 <div class="w-100 mt-2">
                                     <div class="card w-100 p-1 rounded-0" v-for="(p,index) in products" v-if="index<5">
                                         <img v-bind:src="'image/productSingle_middle/'+productImageMap[p.id].id+'.jpg'" class="card-img-top rounded-0 cursor-point" alt="product img">
@@ -326,7 +356,45 @@
                                             </div>
                                         </div>
                                         <!-- 累计评价 -->
-                                        <div class="bg-secondary tab-pane-custom display-none">..22222.</div>
+                                        <div class="tab-pane-custom display-none">
+                                            <div class="row review-item" v-for="i in 10">
+                                                <div class="col-7 d-flex flex-column">
+                                                    <div class="row">
+                                                        <div class="col tm-font-min tm-font-color-2">
+                                                            剃须动力：还可以 充电时间：1小时很快 剃须效果：还不错 剃须速度：还好 外观做工：手感细腻舒适
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mt-4">
+                                                        <div class="col tm-font-min tm-font-color-2">
+                                                            <img class="mr-2" v-for="index in 3" width="40" height="40" th:src="@{image/reviewImage/O1CNg_40x40.jpg}" src="../../static/image/reviewImage/O1CNg_40x40.jpg">
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mt-4">
+                                                        <div class="col tm-font-min tm-font-color-3">
+                                                           8-10
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-3 d-flex align-items-center tm-font-min">
+                                                    <span class="tm-font-color-1">套餐类型：</span>
+                                                    <span class="tm-font-color-3">官方标配</span>
+                                                </div>
+                                                <div class="col-2 d-flex align-items-center tm-font-min">
+                                                    <span class="tm-font-color-1">红***缘</span>
+                                                    <span class="tm-font-color-3">（匿名）</span>
+                                                </div>
+                                            </div>
+                                            <!-- review page -->
+                                            <div class="review-page">
+                                                <nav class="d-inline-block" aria-label="Page navigation example">
+                                                    <ul class="pagination">
+                                                        <li class="page-item disabled"><a class="page-link" href="#">&#60;&#60;上一页</a></li>
+                                                        <li class="page-item disabled"><a class="page-link" href="#">1</a></li>
+                                                        <li class="page-item disabled"><a class="page-link" href="#">下一页&gt;&gt;</a></li>
+                                                    </ul>
+                                                </nav>
+                                            </div>
+                                        </div>
                                         <!-- 服务详情 -->
                                         <div class="tab-pane-custom display-none">
                                             <div class="w-100 text-center">
@@ -352,7 +420,7 @@
                                         <!-- 猜你喜欢 -->
                                         <div class="w-100 mt-5 guess-you-like">
                                             <span class="d-inline-block w-100 tm-font-min tm-font-bold">猜你喜欢</span>
-                                            <a class="position-relative d-inline-block ml-4 mt-4 text-decoration-none" v-for="index in Math.floor(products.length/3*3)" href="#">
+                                            <a class="position-relative d-inline-block ml-4 mt-4 text-decoration-none" v-for="index in Math.floor(products.length/3*3)" href="javascript:void(0);" v-on:click="item(products[index-1].id)">
                                                 <!-- vue 表达式无法用 “ - ”号  -->
                                                 <template v-if="index<Math.floor(products.length/3*3)">
                                                     <span class="position-absolute d-inline-block w-100 tm-font-min tm-font-bold tm-color-red" v-text="'¥'+products[index-1].promotePrice">¥58</span>
@@ -396,7 +464,24 @@
                                 </div>
                             </div>
                         </div>
-
+                    </div>
+                    <!-- 右侧列 -->
+                    <!-- right 看了又看 container -->
+                    <div class="right-other-product">
+                        <div class="w-100 d-flex align-items-center justify-content-center mt-5">
+                            <i></i>
+                            <span class="mx-3 text-main-type">本店同类好评商品</span>
+                            <i></i>
+                        </div>
+                        <div class="w-100 d-flex mb-3 align-items-center mt-2 flex-column other-product-item" v-for="(p,index) in products">
+                            <template v-if="index < 3">
+                                <a class="position-relative">
+                                    <span class="w-100 d-block position-absolute">¥799.00</span>
+                                    <img class="w-100" v-bind:src="'image/productSingle_middle/'+productImageMap[p.id].id+'.jpg'" v-on:click="item(p.id)"><!-- onclick -->
+                                </a>
+                                <a class="d-block text-truncate mt-1 w-100 px-3" href="javascript:void (0);" v-text="p.name" v-on:click="item(p.id)"></a>
+                            </template>
+                        </div>
                     </div>
                 </div>
             </div>

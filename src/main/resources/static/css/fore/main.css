@@ -571,9 +571,42 @@
     height: 420px;
     border: 1px solid rgba(0,0,0,.05);
 }
-.images-container > img{
-    width: 100%;
-    height: auto;
+.preview-img-parent{
+    max-width: 100%;
+    max-height: 100%;
+}
+.preview-img-parent > div{
+    width: 0;
+    height: 0;
+    background-image: url("../../image/site/T12pdtXXX-2-2.png");
+    background-repeat: repeat;
+}
+.preview-img-parent > img{
+    max-width: 100%;
+    max-height: 498px;/* 固定值，img 才会将溢出部分，自适应回去 */
+}
+#monitor-canvas{
+    /*width: 100px;
+    height: 100px;*/
+    width: 0;
+    height: 0;
+    left: 100%;
+    margin-left: 12px;
+    border: 1px solid #CCC;
+    box-sizing: border-box;
+    z-index: 1;
+}
+.product-img-list-item{
+    width: 60px;
+    height: 60px;
+}
+.img-border{
+    border: 2px solid #000;
+ }
+.img-it
+.product-img-list-item > img{
+    max-width: 100%;
+    max-height: 100%;
 }
 .item-main-message-col{
     width: 530px;
@@ -911,4 +944,18 @@
 }
 .safety-tip > div > div > p{
     line-height: 26px;
+}
+.review-item{
+    padding:16px 30px 16px 7px;
+    border-bottom: 1px solid #e3e3e3;
+}
+.review-item > div:nth-of-type(1) > div:nth-of-type(2) > div > img{
+    border: 2px solid #f2f2f2;
+    padding: 2px;
+}
+.review-page{
+    margin-top: 20px;
+    text-align: right;
+    padding: 20px 0 10px;
+    margin-right: 30px;
 }

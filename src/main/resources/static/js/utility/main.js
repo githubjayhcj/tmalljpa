@@ -1,4 +1,4 @@
-console.log("main.js load");
+//console.log("main.js load");
 var outs = function (string) {
     console.log(string);
 };

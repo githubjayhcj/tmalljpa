@@ -1,10 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-
-</head>
+<!-- 引入依赖框架 -->
+<head th:replace="include/header::head('过滤器session.product.name')"></head>
 <body>
     index thymeleaf html
     <ul >
@@ -13,6 +10,13 @@
         <li th:text="${user.password}">name</li>
         <li th:text="${user.salt}">name</li>
         <img alt="image" src="image/14004_dccc16e912.jpg">
+        <div style="width: 400px;height: 500px;border: 1px solid black;display: flex;align-items:center; justify-content:center; ">
+            <div class="d-flex w-100 h-100 justify-content-center align-items-center">
+                <div style="max-width: 100%;max-height: 100%;">
+                    <img style="max-width: 100%;max-height: 498px;" th:src="@{image/productSingle/5.jpg}" src="../static/image/productSingle/5.jpg">
+                </div>
+            </div>
+        </div>
     </ul>
 </body>
 </html>
