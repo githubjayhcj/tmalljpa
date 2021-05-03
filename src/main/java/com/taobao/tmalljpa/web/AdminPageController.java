@@ -1,6 +1,7 @@
 package com.taobao.tmalljpa.web;
 
 import com.taobao.tmalljpa.dao.UserDao;
+import com.taobao.tmalljpa.service.UserService;
 import com.taobao.tmalljpa.util.ToolClass;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,13 +13,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class AdminPageController {
 
     @Autowired
-    private UserDao userDao;
+    private UserService userService;
 
     @RequestMapping("index")
     public String index(Model model) {
         ToolClass.out(" index start ......");
 
-        model.addAttribute("user",userDao.findById(1).get());
+        model.addAttribute("user",userService.findById(1));
 
         ToolClass.out(" index end ......");
 
@@ -30,6 +31,12 @@ public class AdminPageController {
     public String globalExcptionPage(){
         return "excption/globalExcptionPage";
     }*/
+
+    //后台主页
+    @RequestMapping("admin")
+    public String admin(){
+        return "admin/listCategory";
+    }
 
     //分类页
     @RequestMapping("listCategory")
@@ -78,5 +85,17 @@ public class AdminPageController {
     @RequestMapping("editProduct")
     public String editProduct(){
         return "admin/editProduct.html";
+    }
+
+    //用户管理
+    @RequestMapping("listUser")
+    public String listUser(){
+        return "admin/listUser";
+    }
+
+    //订单管理
+    @RequestMapping("listOrder")
+    public String listOrder(){
+        return "admin/listOrder";
     }
 }

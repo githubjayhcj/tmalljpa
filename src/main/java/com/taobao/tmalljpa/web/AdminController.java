@@ -4,6 +4,7 @@ package com.taobao.tmalljpa.web;
 import com.taobao.tmalljpa.entity.*;
 import com.taobao.tmalljpa.util.ImageUtil;
 import com.taobao.tmalljpa.util.NavigatorPage;
+import com.taobao.tmalljpa.util.OrderStatus;
 import com.taobao.tmalljpa.util.ToolClass;
 
 import com.taobao.tmalljpa.service.*;
@@ -37,6 +38,13 @@ public class AdminController {
     private ProductImageService productImageService;
     @Autowired
     private PropertyValueService propertyValueService;
+    @Autowired
+    private OrderService orderService;
+    @Autowired
+    private OrderItemService orderItemService;
+    //order 状态类
+//    @Autowired
+//    private OrderStatus orderStatus;
 
     /*
     *  tip : javax.persistence.Transient;
@@ -466,5 +474,84 @@ public class AdminController {
             }
 
         }
+    }
+
+    //get user list by page 进行分页查询用户数据
+    @GetMapping("users")
+    public Response<NavigatorPage<User>> users(@RequestParam(value = "start",defaultValue = "0")int start, @RequestParam(value = "size",defaultValue = "3")int size){
+        ToolClass.out(" user list by page");
+        Sort sort = new Sort(Sort.Direction.ASC,"id");
+        Pageable pageable = PageRequest.of(start,size,sort);//页码基0
+        Page<User> page = userService.findAll(pageable);
+        NavigatorPage<User> userNavigatorPage = new NavigatorPage<User>(page,5);//显示页码数量
+        ToolClass.out(userNavigatorPage.toString());
+        Response<NavigatorPage<User>> response = new Response<>("userPageNavigator",userNavigatorPage);
+        //response.getResult().
+        return response;
+    }
+
+    //get order by page 进行分页查询用户数据
+    @GetMapping("orders")
+    public Response<NavigatorPage<Order>> orders (@RequestParam(value = "start",defaultValue = "0")int start,@RequestParam(value = "size",defaultValue = "3")int size){
+        ToolClass.out("orders ");
+        //按id 排序 正序
+        Sort sort = new Sort(Sort.Direction.ASC,"id");
+        // 分页对象
+        Pageable pageable = PageRequest.of(start,size,sort);
+        Page<Order> page = orderService.findAll(pageable);
+        // 自定义分页对象(整理成自己需要的数据字段，方便取值显示)
+        NavigatorPage<Order> navigatorPage = new NavigatorPage<Order>(page,5);
+
+//        ToolClass.out(navigatorPage.toString());
+//        List<Order> orders = orderService.findAll();
+//        ToolClass.out(orders.toString());
+
+        //根据order  查询 orderitem
+        List<OrderItem> orderItems = orderItemService.findByOrderIn(navigatorPage.getContent());
+        //获取产品封面图
+        List<Product> products = new ArrayList<>();
+        for (OrderItem oi : orderItems){
+            products.add(oi.getProduct());
+        }
+        List<ProductImage> productImages = productImageService.findByProductInAndType(products,ProductImage.SINGLE_TYPE);
+        // 为 product 添加 productimage
+        productService.setProductImage(products,productImages);
+        // 为order 对象注入 orderitem   ,并计算参数值
+        orderService.setOrderItems(navigatorPage.getContent(),orderItems);
+        //去除笛卡尔积，对象相互绑定(内存溢出)
+        orderService.setOrderNull(navigatorPage.getContent());
+        ToolClass.out(" --- --- - - - - - - - ");
+        ToolClass.out(page.getContent().toString());
+        ToolClass.out(orderItems.toString());
+        return new Response<NavigatorPage<Order>>(navigatorPage);
+    }
+
+    //发货
+    @PostMapping("postGoods")
+    public Response<String> orders(@RequestBody Order order){
+        ToolClass.out(order.toString());
+        order.setStatus(OrderStatus.WAIT_CONFIRM);
+        order.setPostTime(new Date());
+        ToolClass.out(order.toString());
+        orderService.save(order);
+        Response response = new Response(Response.SUCCESS);
+        response.setResult(order);
+        return response;
+    }
+
+    // 数据测试路径
+    //@GetMapping("test")
+    public void test(){
+        ToolClass.out("test---------------------");
+        //ToolClass.out(OrderStatus.WAIT_PAY);
+        List<Order> orders = orderService.findAll();
+        for (Order o : orders){
+            o.setStatus(OrderStatus.WAIT_DELIVERY);
+        }
+        orders.get(0).setStatus(OrderStatus.WAIT_DELIVERY);
+        ToolClass.out(orders.toString());
+        ToolClass.out(orders.get(0).getStatus());
+        orderService.saveAll(orders);
+
     }
 }

@@ -39,6 +39,7 @@ public class PropertyService {
         return propertyDao.findByCategoryId(cid,pageable);
     }
 
+
     public void delete(Property property){
         propertyDao.delete(property);
     }
@@ -70,7 +71,7 @@ public class PropertyService {
             for (int i = 0;i<lastedPropertyValues.size();i++){
                 if (property.getId() == lastedPropertyValues.get(i).getProperty().getId()){
                     // 对象重叠，形成笛卡尔积，报错： Method threw 'java.lang.StackOverflowError' exception. Cannot evaluate Property.toString()
-                    lastedPropertyValues.get(i).setProperty(new Property());//去掉内存轮回
+                    lastedPropertyValues.get(i).setProperty(new Property());//去掉内存轮回(两个对象中的属性相互包含)
                     property.setPropertyValue(lastedPropertyValues.get(i));//深度复制对象
                     //lastedPropertyValues.remove(i);//移除
                     break;

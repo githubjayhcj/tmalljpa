@@ -42,4 +42,40 @@ public class ForePageController {
         return "fore/item";
     }
 
+    @RequestMapping("productSort")
+    public String producSort(){
+        return "fore/productSort";
+    }
+
+    @RequestMapping("shopCart")
+    public String shopCart(){
+        return "fore/shopCart";
+    }
+
+    @RequestMapping("orderDetail")
+    public String orderDetail(){
+        return "fore/orderDetail";
+    }
+
+    @RequestMapping("payPage")
+    public String payPage(){
+        return "fore/payPage";
+    }
+
+    @RequestMapping("myOrderList")
+    public String myOrderList(){
+        return "fore/myOrderList";
+    }
+
+    @RequestMapping("comment")
+    public String comment(){
+        return "fore/comment";
+    }
+
+    //test
+    @RequestMapping("test")
+    public String test(){
+        return "fore/test";
+    }
+
 }

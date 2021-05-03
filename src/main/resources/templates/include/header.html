@@ -1,33 +1,48 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-    <!-- fore header -->
-    <head th:fragment="head(title)">
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-        <title th:text="${title}"></title>
-        <link rel="icon" type="image/x-icon" th:href="@{/image/site/ico/tmail.ico}"href="../../static/image/site/ico/tmail.ico"/>
+<!-- fore header -->
+<head th:fragment="head(title,links,scripts)">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title th:replace="${title}">天猫商城</title>
+    <!-- ico -->
+    <link rel="icon" type="image/x-icon" th:href="@{/image/site/ico/tmail.ico}"href="../../static/image/site/ico/tmail.ico"/>
 
-        <!-- th: src @{} 应用上下文地址，需要从classpath 定义的开放路径，开始的绝对路径 , src 作用，文件直接地址，打开本地文件依然能显示效果-->
-        <!-- jquery -->
-        <script type="text/javascript" th:src="@{/js/jquery/jquery-3.4.1.min.js}" src="../../static/js/jquery/jquery-3.4.1.min.js"></script>
-        <!-- popper -->
-        <script type="text/javascript" th:src="@{/js/popper/popper.min.js}" src="../../static/js/popper/popper.min.js"></script>
-        <!-- boostrap -->
-        <link rel="stylesheet" th:href="@{/css/bootstrap/bootstrap.min.css}" href="../../static/css/bootstrap/bootstrap.min.css"/>
-        <script type="text/javascript" th:src="@{/js/bootstrap/bootstrap.min.js}" src="../../static/js/bootstrap/bootstrap.min.js"></script>
-        <!-- open-iconic,bootstrap 第三方 icon 库 -->
-        <link rel="stylesheet" th:href="@{/css/open-iconic-master/font/css/open-iconic-bootstrap.css}" href="../../static/css/open-iconic-master/font/css/open-iconic-bootstrap.css">
-        <!-- vue -->
-        <script type="text/javascript" th:src="@{/js/vue/vue.min.js}" src="../../static/js/vue/vue.min.js"></script>
-        <!-- ajax  axios -->
-        <script type="text/javascript" th:src="@{/js/ajax/axios.min.js}" src="../../static/js/ajax/axios.min.js"></script>
-        <!-- 网站基本样式，自定义 -->
-        <link rel="stylesheet" th:href="@{/css/TMcustom/customStyle.css}" href="../../static/css/TMcustom/customStyle.css"/>
-        <!-- admin main.js -->
-        <!--<script type="text/javascript" th:src="@{/js/admin/main.js}" src="../../static/js/admin/main.js"></script>-->
-    </head>
+    <!-- th: src @{} 应用上下文地址，需要从classpath 定义的开放路径，开始的绝对路径 , src 作用，文件直接地址，打开本地文件依然能显示效果-->
+    <!-- jquery -->
+    <script type="text/javascript" th:src="@{/js/jquery/jquery-3.4.1.min.js}" src="../../static/js/jquery/jquery-3.4.1.min.js"></script>
 
-    <!--<head th:fragment="head(title)">
-        <title th:text="${title}"></title>
-    </head>-->
+    <!-- popper -->
+    <script type="text/javascript" th:src="@{/js/popper/popper.min.js}" src="../../static/js/popper/popper.min.js"></script>
+
+    <!-- boostrap -->
+    <link rel="stylesheet" th:href="@{/css/bootstrap/bootstrap.min.css}" href="../../static/css/bootstrap/bootstrap.min.css"/>
+    <!--<script type="text/javascript" th:src="@{/js/bootstrap/bootstrap.js}" src="../../static/js/bootstrap/bootstrap.js"></script>-->
+    <script type="text/javascript" th:src="@{/js/bootstrap/bootstrap.min.js}" src="../../static/js/bootstrap/bootstrap.min.js"></script>
+    <!-- bootstrap 4.6 -->
+    <!--<link rel="stylesheet" th:href="@{/css/bootstrap/4.6/bootstrap.css}" href="../../static/css/bootstrap/4.6/bootstrap.css"/>-->
+    <!--<script type="text/javascript" th:src="@{/js/bootstrap/4.6/bootstrap.js}" src="../../static/js/bootstrap/4.6/bootstrap.js"></script>-->
+
+    <!-- open-iconic,bootstrap 第三方 icon 库 -->
+    <link rel="stylesheet" th:href="@{/css/open-iconic-master/font/css/open-iconic-bootstrap.css}" href="../../static/css/open-iconic-master/font/css/open-iconic-bootstrap.css">
+
+    <!-- bootstrap icons offical  -->
+    <link rel="stylesheet" th:href="@{/css/bootstrap/bootstrap-icons-1.4.1.css}" href="../../static/css/bootstrap/bootstrap-icons-1.4.1.css">
+
+    <!-- ajax  axios -->
+    <script type="text/javascript" th:src="@{/js/ajax/axios.min.js}" src="../../static/js/ajax/axios.min.js"></script>
+
+    <!-- vue -->
+    <script type="text/javascript" th:src="@{/js/vue/vue.min.js}" src="../../static/js/vue/vue.min.js"></script>
+
+    <!-- 网站基本样式，自定义 -->
+    <link rel="stylesheet" th:href="@{/css/TMcustom/customStyle.css}" href="../../static/css/TMcustom/customStyle.css"/>
+    <!-- admin main.js -->
+    <!--<script type="text/javascript" th:src="@{/js/admin/main.js}" src="../../static/js/admin/main.js"></script>-->
+
+    <!--当前网页依赖 css-->
+    <th:block th:replace="${links}"/>
+    <!--当前网页依赖 js-->
+    <th:block th:replace="${scripts}"/>
+</head>
 
 </html>

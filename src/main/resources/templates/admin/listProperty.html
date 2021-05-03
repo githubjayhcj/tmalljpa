@@ -1,7 +1,12 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
     <!-- 引入依赖框架 -->
-    <head th:replace="include/header::head('属性管理')"></head>
+    <head th:replace="include/header :: head(~{::title},~{::link},~{::script})">
+        <title>属性管理</title>
+        <!-- admin main.css -->
+        <link rel="stylesheet" th:href="@{/css/admin/main.css}" href="../../static/css/admin/main.css"/>
+        <!-- util   main.js -->
+        <script type="text/javascript" th:src="@{/js/utility/main.js}" src="../../static/js/utility/main.js"></script>
     <body>
         <!-- navBar -->
         <div th:replace="include/navigator::adminNavigator"></div>
@@ -63,10 +68,6 @@
                 </div>
             </div>
         </div>
-        <!-- admin main.css -->
-        <link rel="stylesheet" th:href="@{/css/admin/main.css}" href="../../static/css/admin/main.css"/>
-        <!-- admin main.js -->
-        <script type="text/javascript" th:src="@{/js/utility/main.js}" src="../../static/js/utility/main.js"></script>
         <!-- current page -->
         <script type="text/javascript">
             var vue = new Vue({

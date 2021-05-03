@@ -1,6 +1,7 @@
 package com.taobao.tmalljpa.service;
 
 import com.taobao.tmalljpa.dao.ProductImageDao;
+import com.taobao.tmalljpa.entity.Product;
 import com.taobao.tmalljpa.entity.ProductImage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -34,5 +35,10 @@ public class ProductImageService {
     public void deleteById(int id){
         productImageDao.deleteById(id);
     }
+
+    public List<ProductImage> findByProductInAndType(List<Product> products,String type){
+        return productImageDao.findByProductInAndType( products, type);
+    }
+
 
 }

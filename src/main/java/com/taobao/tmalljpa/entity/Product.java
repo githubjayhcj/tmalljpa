@@ -3,6 +3,7 @@ package com.taobao.tmalljpa.entity;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "product_")
@@ -35,6 +36,14 @@ public class Product {
 
     @Column(name = "createDate")
     private Date createDate;
+
+    //前端数据需求产品封面
+    @Transient
+    private ProductImage productImage;
+
+    //前端数据需求产品封面
+    @Transient
+    private List<ProductImage> productImages;
 
     public Product() {
     }
@@ -128,17 +137,35 @@ public class Product {
         this.createDate = createDate;
     }
 
+    public ProductImage getProductImage() {
+        return productImage;
+    }
+
+    public void setProductImage(ProductImage productImage) {
+        this.productImage = productImage;
+    }
+
+    public List<ProductImage> getProductImages() {
+        return productImages;
+    }
+
+    public void setProductImages(List<ProductImage> productImages) {
+        this.productImages = productImages;
+    }
+
     @Override
     public String toString() {
         return "Product{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", subtitle='" + subTitle + '\'' +
+                ", subTitle='" + subTitle + '\'' +
                 ", originalPrice=" + originalPrice +
                 ", promotePrice=" + promotePrice +
                 ", stock=" + stock +
                 ", category=" + category +
                 ", createDate=" + createDate +
+                ", productImage=" + productImage +
+                ", productImages=" + productImages +
                 '}';
     }
 }

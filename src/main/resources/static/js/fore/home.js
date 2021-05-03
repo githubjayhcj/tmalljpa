@@ -69,10 +69,8 @@ var categoryShowAndHiddenTab = function (){
 
 
 $(function () {
-
     //页面滚动事件,显示或隐藏置顶菜单
     bodyScrollEvent();
-
 });
 
 var vue = new Vue({
@@ -86,7 +84,11 @@ var vue = new Vue({
             {name:""}
         ],
         productsMap:{},
-        productImageMap:{}
+        productImageMap:{},
+        user:{
+            name:"",
+            password:""
+        }
     },
     mounted:function(){
         this.homeData();
@@ -126,6 +128,26 @@ var vue = new Vue({
                 return subTitls;
             }
 
+        },
+        signIn:function () {
+            var value = signIn(this.user);
+            //value = JSON.stringify(value);
+            outs("home value2="+value.code);
+            if (value.code === 1) {
+                //登录成功 ,返回首页
+                outs(" go home");
+                window.location.href="home";
+            }
+        },
+        //购物车
+        goShoppingCart:function () {
+            outs(" shoppig cart ");
+            shoppingCart();
+        },
+        //我的订单
+        orderList:function () {
+            outs(" my order list ");
+            orderList();
         }
     }
 });

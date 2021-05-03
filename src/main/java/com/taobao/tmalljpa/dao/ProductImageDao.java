@@ -18,4 +18,6 @@ public interface ProductImageDao extends JpaRepository<ProductImage,Integer> {
 
     void deleteAllByProduct(Product product);
 
+    public List<ProductImage> findByProductInAndType(List<Product> products,String type);
+
 }

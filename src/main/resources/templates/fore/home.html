@@ -1,9 +1,15 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <!-- 引入依赖框架 -->
-<head th:replace="include/header::head('天猫tmall.com--理想生活上天猫')"></head>
+<head th:replace="include/header :: head(~{::title},~{::link},~{::script})">
+    <meta charset="UTF-8">
+    <title>天猫tmall.com--理想生活上天猫</title>
+</head>
 <body>
     <div class="container-fluid" id="container">
+        <!-- login Modal -->
+        <div th:replace="~{include/loginModal :: loginModal}"></div>
+
         <!-- static navigation -->
         <div class="row">
             <div class="col px-0">
@@ -21,10 +27,12 @@
                 </nav>
             </div>
         </div>
+
         <!-- head nav -->
         <div class="row">
             <div class="col px-0" th:insert="include/foreNavigator::navigator(false)"></div>
         </div>
+        <!-- search and  logo -->
         <div class="row">
             <div class="col-3 home-login-col px-0 px-md-5">
                 <img class="home-login"  src="../../static/image/site/tmalllogo.png" th:src="@{/image/site/tmalllogo.png}">
@@ -163,8 +171,10 @@
                 <div class=" mx-md-5 position-absolute left-category-menu">
                     <ul class="list-group category-menu-list">
                         <li v-for="c in categories" class="list-group-item p-0 category-menu-item category-tab-show" v-bind="{id:c.id , href:'#tab-content-'+c.id}"  role="tab" aria-controls="category products subtitle">
-                            <span class="oi oi-link-intact mr-2" title="icon name" aria-hidden="true"></span>
-                            <span>{{c.name}}</span>
+                            <a class="font-color-5 text-decoration-none" v-bind:href="'productSort?cid='+c.id">
+                                <span class="oi oi-link-intact mr-2" title="icon name" aria-hidden="true"></span>
+                                <span>{{c.name}}</span>
+                            </a>
                         </li>
                     </ul>
                 </div>
@@ -203,15 +213,7 @@
                     </div>
                     <!-- product -->
                     <div class="row m-0 justify-content-between">
-                        <div v-for="p in productsMap[c.id]" class="col p-0 m-0 d-flex justify-content-center product-card-item-col">
-                            <a v-bind:href="'item?pid='+p.id" class="card my-2 p-3 rounded-0">
-                                <img class="card-img-top" v-bind:src="'image/productSingle_middle/'+productImageMap[p.id].id+'.jpg'" alt="Card image cap">
-                                <div class="card-body p-0 text-center">
-                                    <p class="card-text">{{p.name}}</p>
-                                    <h5 class="card-title" v-text="'￥'+p.originalPrice">price</h5>
-                                </div>
-                            </a>
-                        </div>
+                        <div th:replace="~{include/productItem :: productItem}"></div>
                     </div>
                 </template>
                 <!-- end logo -->
