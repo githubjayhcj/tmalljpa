@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!-- 引入依赖框架 -->
+<head th:replace="include/header :: head(~{::title},~{::link},~{::script})">
+    <meta charset="UTF-8">
+    <title>订单管理</title>
+    <!-- admin main.css -->
+    <link rel="stylesheet" th:href="@{/css/admin/main.css}" href="../../static/css/admin/main.css"/>
+    <!-- util   main.js -->
+    <script type="text/javascript" th:src="@{/js/utility/main.js}" src="../../static/js/utility/main.js"></script>
+    <!--current page js-->
+    <script>
+        $(function () {
+            //日期过滤器
+            Vue.filter('dateFormat',function (date,template) {
+                var newDate = new Date(date);
+                var tempDate = "";
+                //日期最多7个单位
+                template = template.split("");
+                // 年月日时分秒毫秒
+                if (template.length  > 0){
+                        tempDate+=newDate.getFullYear();
+                        tempDate+=template[0];
+                }
+                if(template.length > 1){
+                    tempDate+=(newDate.getMonth()+1);
+                    tempDate+=template[1];
+                }
+                if(template.length > 2){
+                    tempDate+=newDate.getDate();
+                    tempDate+=template[2];
+                }
+                if(template.length > 3){
+                    tempDate+=newDate.getHours();
+                    tempDate+=template[3];
+                }
+                if(template.length > 4){
+                    tempDate+=(newDate.getMinutes()+1);
+                    tempDate+=template[4];
+                }
+                if(template.length > 5){
+                    tempDate+=(newDate.getSeconds()+1);
+                    tempDate+=template[5];
+                }
+                if(template.length > 6){
+                    tempDate+=(newDate.getMilliseconds()+1);
+                    tempDate+=template[6];
+                }
+                return tempDate;
+            });
+
+            new Vue({
+                el:"#container",
+                data:{
+                    response:{},
+                    orders:[],
+                    page:[]
+                },
+                mounted:function () {
+                    this.getOrdersByPage();
+                },
+                methods:{
+                    getOrdersByPage:function (params) {
+                        var vue = this;
+                        axios.get("orders",{params:params}).then(function (value) {
+                            vue.response = value.data.result;
+                            vue.orders = vue.response.content;
+                            vue.page = vue.response;
+                            outs(JSON.stringify(value.data.result.content));
+                        });
+                        //设置菜单导航高亮
+                        toggleClass($(".nav-item"),$(".nav-item").eq(2),"active");
+                    },
+                    postGoods:function (order,e) {
+                        $(e.target).attr("disabled","disabled");
+                        axios.post("postGoods",order).then(function (value) {
+                            //var targ = $(".orderStatus"+value.data.result.id);
+                            //outs(value.data.result.id);
+                            if (value.data.code == 1){
+                                $(".orderStatus"+value.data.result.id).text(value.data.result.statusDesc);
+                                $(e.target).text("已发货");
+                                $(".orderPostTime"+value.data.result.id).text(dataFormat(value.data.result.postTime,"--- "));// utility main.js
+                            }
+                        });
+                    },
+                    pageTurning:function(pageKey){
+                        //alert(pageKey);
+                        //获取全部分类(分页)
+                        this.getOrdersByPage({start:pageKey});
+                    }
+                    //  日期处理函数
+                    // dateFormat:function (date) {
+                    //     var newDate = new Date(date);
+                    //     return newDate.getMonth();
+                    // }
+                }
+            });
+        })
+    </script>
+</head>
+<body>
+    <!-- navBar -->
+    <div th:replace="include/navigator::adminNavigator"></div>
+    <!-- main page -->
+    <div class="container" id="container">
+        <!-- header -->
+        <h6><small class="bg-info rounded my-3 mr-2 px-2 py-1 text-light d-inline-block">订单管理</small></h6>
+        <!-- category table -->
+        <table class="table table-striped table-bordered table-hover mb-5">
+            <thead>
+                <tr class="table-primary">
+                    <th scope="col" >ID</th>
+                    <th scope="col">状态</th>
+                    <th scope="col">金额</th>
+                    <th scope="col">商品数量</th>
+                    <th scope="col">用户名</th>
+                    <th scope="col">创建时间</th>
+                    <th scope="col">支付时间</th>
+                    <th scope="col">发货时间</th>
+                    <th scope="col">确认收货时间</th>
+                    <th scope="col">操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <template v-for="(order , index) in orders">
+                <tr>
+                    <td  v-text="order.id">ID</td>
+                    <td  v-text="order.statusDesc" v-bind:class="'orderStatus'+order.id">状态</td>
+                    <td  v-text="'￥'+order.totalPrice">金额</td>
+                    <td v-text="order.totalCount">商品数量</td>
+                    <td v-text="order.user.name">用户名</td>
+                    <!--<td v-text="dateFormat(order.createTime)">创建时间</td>-->
+                    <td >{{order.createTime | dateFormat('-- ')}}</td>
+                    <td>{{order.paymentTime | dateFormat('-- ')}}</td>
+                    <td v-bind:class="'orderPostTime'+order.id">{{order.postTime | dateFormat('-- ')}}</td>
+                    <td>{{order.checkOutTime | dateFormat('-- ')}}</td>
+                    <td >
+                        <!--<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#multiCollapseExample2" aria-expanded="false" aria-controls="multiCollapseExample2">Toggle second element</button>-->
+                        <button class="btn btn-primary btn-sm" type="button" data-toggle="collapse" v-bind:data-target="'#collapseExample'+index" aria-expanded="false" v-bind:aria-controls="'collapseExample'+index">
+                            查看详情
+                        </button>
+                        <button v-on:click="postGoods(order,$event)" v-if="order.status == 'waitDelivery'" class="btn btn-primary btn-sm m-2" type="button">
+                            发货
+                        </button>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="10"class="p-0">
+                        <div class="collapse multi-collapse" v-bind:id="'collapseExample'+index">
+                            <div class="card card-body">
+                                <div class="container">
+                                    <div class="row py-2" v-for="oi in order.orderItems">
+                                        <div class="col-2 d-flex align-items-center">
+                                            <img alt="product image" v-bind:src="'image/productSingle_small/'+oi.product.productImage.id+'.jpg'">
+                                        </div>
+                                        <div class="col-6 d-flex align-items-center" ><a v-text="oi.product.name" v-bind:href="'item?pid='+oi.product.id">产品名称</a></div>
+                                        <div class="col-2 d-flex align-items-center" v-text="oi.count+'个'">产品数量</div>
+                                        <div class="col-2 d-flex align-items-center" v-text="'￥'+oi.product.promotePrice">产品单价</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                </template>
+            </tbody>
+        </table>
+        <!-- 分页导航 -->
+        <div th:insert="include/pagination::pagination"></div>
+    </div>
+
+</body>
+</html>

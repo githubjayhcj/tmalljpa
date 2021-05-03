@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div th:fragment="productSortHead" class="row px-5 font-size-0 mt-3 sticky-top">
+        <div class="col my-height-34 my-padding-5 my-bg-color1">
+            <!---->
+            <div class="d-flex my-height-24">
+                <div class="font-size-0 d-flex">
+                    <a href="#" class="my-height-24 font-size-12 font-color-3 my-border8 hover-type-1 my-padding-x-5 d-flex align-items-center current-product-sort">综合
+                        <span class="oi oi-arrow-thick-bottom font-size-10 my-padding-3" title="icon name" aria-hidden="true"></span><!-- open-iconic -->
+                    </a>
+                    <a href="#" class="my-height-24 font-size-12 font-color-3 my-border8 hover-type-1 my-padding-x-5 d-flex align-items-center">人气
+                        <span class="oi oi-arrow-thick-bottom font-size-10 my-padding-3" title="icon name" aria-hidden="true"></span><!-- open-iconic -->
+                    </a>
+                    <a href="#" class="my-height-24 font-size-12 font-color-3 my-border8 hover-type-1 my-padding-x-5 d-flex align-items-center">新品
+                        <span class="oi oi-arrow-thick-bottom font-size-10 my-padding-3" title="icon name" aria-hidden="true"></span><!-- open-iconic -->
+                    </a>
+                    <a href="#" class="my-height-24 font-size-12 font-color-3 my-border8 hover-type-1 my-padding-x-5 d-flex align-items-center">销量
+                        <span class="oi oi-arrow-thick-bottom font-size-10 my-padding-3" title="icon name" aria-hidden="true"></span><!-- open-iconic -->
+                    </a>
+                    <a href="#" class="my-height-24 font-size-12 font-color-3 my-border9 hover-type-1 my-padding-x-5 d-flex align-items-center">价格
+                        <div class="d-flex flex-column justify-content-center h-100 my-padding-3">
+                            <span class="oi oi-caret-top font-size-8" title="icon name"aria-hidden="true"></span>
+                            <span class="oi oi-caret-bottom font-size-8 triangle-site1" title="icon name" aria-hidden="true"></span>
+                        </div><!-- open-iconic -->
+                    </a>
+                </div>
+                <!---->
+                <div class="font-size-0 d-flex pl-1">
+                    <div class="my-height-24 font-size-12 font-color-2 my-border8 my-padding-y-3 my-padding-x-5 bg-light d-inline-block">收货地：</div>
+                    <div href="#" class="my-height-24 font-size-12 font-color-3 my-border10 my-padding-y-3 my-padding-x-11 d-inline-block">杭州
+                        <div class="triangle-1 d-inline-block position-relative triangle-site"></div>
+                    </div>
+                </div>
+                <!---->
+                <div class="font-size-0 d-flex pl-1">
+                    <input class="my-width font-size-12 my-border8" type="text" placeholder="￥请输入最低金额" />
+                    <div class="bg-light my-border11 font-color-2 font-size-12 d-flex align-items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="9" height="9" fill="currentColor" class="bi bi-dash" viewBox="0 0 16 16">
+                            <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z"/>
+                        </svg>
+                    </div>
+                    <input class="my-width font-size-12 my-border8" type="text" placeholder="￥请输入最高金额" />
+                </div>
+                <!---->
+                <div class="font-size-0 d-flex pl-1">
+                    <div class="my-border9 p-1 d-flex">
+                        <div class="form-group form-check font-size-12 font-color-3">
+                            <input type="checkbox" class="form-check-input margin-top-1" id="exampleCheck1">
+                            <label class="form-check-label position-relative my-top-2" for="exampleCheck1">包邮</label>
+                        </div>
+                        <div class="form-group form-check font-size-12 font-color-3 my-margin-left-5">
+                            <input type="checkbox" class="form-check-input margin-top-1" id="exampleCheck2">
+                            <label class="form-check-label position-relative my-top-2" for="exampleCheck2">折扣</label>
+                        </div>
+                        <div class="form-group form-check font-size-12 font-color-3 my-margin-left-5 mr-5">
+                            <input type="checkbox" class="form-check-input margin-top-1" id="exampleCheck3">
+                            <label class="form-check-label position-relative my-top-2" for="exampleCheck3">细节实拍</label>
+                        </div>
+                        <a href="#" class="font-size-12 font-color-3 hover-type-1 text-decoration-none">更多
+                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                <!---->
+                <div class="font-size-0 d-flex pl-1">
+                    <a href="#" class="my-border8 p-1 text-decoration-none hover-type-1 font-color-3 p-1 font-size-12 my-padding-x-5 d-flex align-items-center">
+                        <span class="oi oi-vertical-align-center font-size-9 my-margin-right-3" title="icon name" aria-hidden="true"></span>
+                        店铺
+                    </a>
+                    <a href="#" class="my-border9 p-1 text-decoration-none hover-type-1 font-color-3 p-1 font-size-12 my-padding-x-5 d-flex align-items-center current-product-sort">
+                        <span class="oi oi-grid-two-up font-size-9 my-margin-right-3" title="icon name" aria-hidden="true"></span>
+                        大图
+                    </a>
+                </div>
+                <!---->
+                <div class="font-size-0 d-flex mr-0 align-items-center ml-auto">
+                    <div class="my-height-20 d-flex align-items-center">
+                        <span class="font-size-12 font-color-2">1/80</span>
+                        <a href="#" class="font-color-3 my-border9 div-icon1 ml-1 my-disabled1 disabled">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="font-color-3 my-border9 div-icon1 ml-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

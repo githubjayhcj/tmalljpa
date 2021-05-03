@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div th:fragment="login" class="login-box">
+        <span class="d-block my-4">密码登录</span>
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1">
+                    <span class="oi oi-person" title="icon name" aria-hidden="true"></span>
+                </span>
+            </div>
+            <input v-model="user.name" id="username" type="text" class="form-control" placeholder="会员/邮箱/手机号" aria-label="Username" aria-describedby="basic-addon1">
+        </div>
+        <small id="username-tip" class="form-text text-danger text-center mt-0"></small>
+        <div class="input-group mt-2">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon2">
+                    <span class="oi oi-lock-locked login-icon-locked" title="icon name" aria-hidden="true"></span>
+                </span>
+            </div>
+            <input v-model="user.password" id="password" type="password" class="form-control" placeholder="密码" aria-label="password" aria-describedby="basic-addon2">
+        </div>
+        <small id="password-tip" class="form-text text-danger text-center mt-0"></small>
+        <button type="button" class="btn btn-primary btn-block mt-2" v-on:click="signIn">登录</button>
+        <div class="w-100 mt-4">
+            <a class="login-links float-right" href="register">免费注册</a>
+            <a class="login-links float-right" href="javascript:alert('还没写，哈哈')">忘记会员名</a>
+            <a class="login-links float-right" href="javascript:alert('还没写，哈哈')">忘记密码</a>
+        </div>
+    </div>
+</body>
+</html>

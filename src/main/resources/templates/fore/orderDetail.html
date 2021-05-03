@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!-- 引入依赖框架 -->
+<head th:replace="include/header :: head(~{::title},~{::link},~{::script})">
+    <meta charset="UTF-8">
+    <title>确认订单</title>
+    <!-- admin main.css -->
+    <link rel="stylesheet" th:href="@{/css/fore/main.css}" href="../../static/css/fore/main.css"/>
+    <!-- util main.js -->
+    <script type="text/javascript" th:src="@{/js/utility/main.js}" src="../../static/js/utility/main.js"></script>
+    <!-- current page .js -->
+    <script type="text/javascript" th:src="@{/js/fore/orderDetail.js}" src="../../static/js/fore/orderDetail.js"></script>
+</head>
+    <body>
+        <div class="container-fluid" id="container">
+            <!-- head nav -->
+            <div class="row">
+                <div class="col px-0" th:insert="include/foreNavigator::navigator(true)"></div>
+            </div>
+            <!-- shop step  -->
+            <div class="row justify-content-center mt-4">
+                <div class="my-width-1000">  <!-- 约束元素-->
+                    <div th:replace="~{include/shopStep :: shopStep(1)}"></div>
+                </div>
+            </div>
+            <!-- xxxxx  -->
+            <div class="row justify-content-center mt-5 bg-color-5">
+                <div class="my-width-1000 font-size-12 font-color-1 py-3">
+                    <div>
+                        <span id="anchor-point" class="font-size-14 font-color-8 font-weight-700">填写收货地址</span>
+                    </div>
+                    <div class="d-flex ml-3 mt-4">
+                        <span class="align-items-start">详细地址</span>
+                        <span class="font-color-7">*</span>
+                        <div id="address" tabindex="0" data-toggle="tooltip" title="Disabled tooltip" data-placement="right" >   <!-- tooltip-->
+                            <textarea class="ml-4" v-on:focus="closeTooltip($event)" v-model="order.address" placeholder="请如实填写您的详细地址" required maxlength="50" rows="3" cols="70"></textarea>
+                        </div>
+                    </div>
+                    <div class="ml-3 mt-4">
+                        <span>邮政编码</span>
+                        <input class="my-type-12" type="text" placeholder="如您不清楚本地邮编，可填0000" maxlength="10"/>
+                    </div>
+                    <div class="ml-3 mt-4">
+                        <span>收件人姓名</span>
+                        <span class="font-color-7">*</span>
+                        <div id="receiver" class="d-inline-block" tabindex="0" data-toggle="tooltip" title="Disabled tooltip" data-placement="right" >   <!-- tooltip-->
+                            <input class="my-type-13" v-on:focus="closeTooltip($event)" v-model="order.receiver" type="text" placeholder="长度不超过20字符" maxlength="20"/>
+                        </div>
+                    </div>
+                    <div class="ml-3 mt-4">
+                        <span>手机号码</span>
+                        <span class="font-color-7">*</span>
+                        <div id="mobile" class="d-inline-block" tabindex="0" data-toggle="tooltip" title="Disabled tooltip" data-placement="right" >   <!-- tooltip-->
+                            <input class="my-type-14" v-on:focus="closeTooltip($event)" v-model="order.mobile" type="text" pattern="[0-9]" placeholder="请输入11位手机号码" maxlength="11"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- xxxxx  -->
+            <div class="row justify-content-center mt-5 mb-5">
+                <div class="my-width-1000 font-size-12 font-color-1">
+                    <div>
+                        <span class="font-size-14 font-color-8 font-weight-700">确认订单信息</span>
+                    </div>
+                    <div class="mt-3">
+                        <div class="font-size-12 font-color-13">
+                            <span class="my-type-15">店铺宝贝</span>
+                            <span class="my-type-16">商品属性</span>
+                            <span class="my-type-17">单价</span>
+                            <span class="my-type-18">数量</span>
+                            <span class="float-right mr-3">小计</span>
+                        </div>
+                        <div class="separator-line-1"></div>
+                    </div>
+                    <div class="mt-3">  <!-- order item list box-->
+                        <div class="separator-line-3"></div>
+                        <template v-for="(oi ,index) in orderItems">
+                            <div class="bg-color-5 mt-2 d-flex justify-content-between">
+                                <img class="my-width-80 ml-4" v-bind:src="'image/productSingle_middle/'+oi.product.productImage.id+'.jpg'"/>
+                                <div class="d-inline-block my-swidth-186 d-flex flex-column justify-content-between">
+                                    <a href="javascrip:void(0);" class="font-color-8 my-type-21" v-text="oi.product.subTitle">富光双层家用带盖玻璃杯男女学生水杯便携泡茶杯透明杯子随手杯</a>
+                                    <div class="">
+                                        <img th:src="@{/image/site/xcard.png}">
+                                        <a href="javascrip:void(0);">
+                                            <img th:src="@{/image/site/T1Vyl6FCBlXXaSQP_X-16-16.png}">
+                                        </a>
+                                        <a href="javascrip:void(0);">
+                                            <img th:src="@{/image/site/T1BCidFrNlXXaSQP_X-16-16.png}">
+                                        </a>
+                                    </div>
+                                </div>
+                                <span class="font-color-2 ml-4 mr-2">颜色分类：格调咖色500ml</span>
+                                <span class="d-block font-weight-bold ml-5" v-text="'￥'+oi.product.promotePrice">￥32.90</span>
+                                <span class="d-block font-weight-bold ml-5" v-text="oi.count">1</span>
+                                <span class="d-block font-weight-bold mr-1 font-color-7" v-text="'￥'+oi.product.promotePrice*oi.count">29.00</span>
+                            </div>
+                            <div class="separator-line-3 my-4"></div>
+                        </template>
+                    </div>
+                    <div class="font-size-12 font-color-8 bg-color-6">
+                        <div class="border-width border-t-w-1 border-style-solid border-color-3 pb-2">
+                            <div class="d-inline-block hover-type-3 mt-3 ml-3 mr-5">
+                                <input type="checkbox" name="sex" id="male4" />
+                                <label for="male4">开具发票</label>
+                            </div>
+                            <div class="d-inline-block mt-3 my-type-19">
+                                <span>运送方式：</span>
+                                <span>普通配送 快递 免邮</span>
+                            </div>
+                            <div class="d-inline-block float-right font-color-7 mt-3 mr-1">
+                                0.00
+                            </div>
+                        </div>
+                        <div class="border-width border-t-w-1 border-style-solid border-color-3 pb-3">
+                            <div class="d-inline-block mt-3 ml-3">
+                                <div class="d-flex">
+                                    <span class="align-items-start">给卖家留言：</span>
+                                    <textarea class="ml-4" v-model="order.userMessage" placeholder="选填，请和商家协商一致" required maxlength="50" rows="3" cols="70"></textarea>
+                                </div>
+                            </div>
+                            <div class="d-inline-block my-type-20">
+                                <span>运费险：</span>
+                                <input class="ml-2" type="checkbox" name="sex" id="male5" />
+                                <label for="male5" class="font-color-5 bg-color-7">运费险</label>
+                                <span>￥2.37购买</span>
+                            </div>
+                            <div class="d-inline-block float-right mt-3 mr-1">
+                                <span>2.37</span>
+                            </div>
+                        </div>
+                        <div class="text-align-right border-width border-t-w-1 border-style-solid border-color-3">
+                            <div class="py-3 mr-1 font-size-14">
+                                <span >商品合计(含运费)</span>
+                                <span class="font-color-7 font-weight-700 ml-2 mr-1" v-text="'￥'+totalPrice">￥62.80</span>
+                            </div>
+                        </div>
+                        <div class="separator-line-2"></div>
+
+                    </div>
+                    <div class="text-align-right pt-3 pb-2">
+                        <div class="">
+                            <div class="d-inline-block">
+                                <input type="checkbox" name="sex" id="male6" />
+                                <label for="male6">朋友代付</label>
+                            </div>
+                            <div class="d-inline-block mr-1 ml-5">
+                                <input type="checkbox" name="sex" id="male7" checked/>
+                                <label for="male7">匿名购买</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="separator-line-3"></div>
+                    <div class="text-align-right mt-3">
+                        <div class="d-inline-block">
+                            <div class="border-style-solid border-color-2 border-t-w-1 border-r-w-1 border-b-w-1 border-l-w-1">
+                                <div class="font-color-8 mt-3 mb-4 ml-4 mr-2">
+                                    <div class="text-align-right font-weight-700">
+                                        <span class="font-color-8">实付款：</span>
+                                        <span class="font-color-9 font-size-30 ml-1">¥</span>
+                                        <span class="font-color-7 font-size-30 ml-1" v-text="totalPrice">62.80</span>
+                                    </div>
+                                    <div class="text-align-right mt-2">
+                                        <span class="font-weight-700 font-color-8 mr-1">寄送至：</span>
+                                        <span v-text="order.address">浙江 杭州 西湖 古荡 文一路益乐新村南1区52号楼</span>
+                                    </div>
+                                    <div class="text-align-right mt-1">
+                                        <span class="font-weight-700 font-color-8 mr-1">收货人：</span>
+                                        <span class="mr-1" v-text="order.receiver">天猫客户</span>
+                                        <span v-text="order.mobile">15088659562</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mx-0">
+                                <div class="col d-flex justify-content-center">
+                                    <div class="font-color-11 hover-type-2 hover-type-3 d-flex align-items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-reply-fill mr-1" viewBox="0 0 16 16">
+                                            <path d="M5.921 11.9 1.353 8.62a.719.719 0 0 1 0-1.238L5.921 4.1A.716.716 0 0 1 7 4.719V6c1.5 0 6 0 7 8-2.5-4.5-7-4-7-4v1.281c0 .56-.606.898-1.079.62z"/>
+                                        </svg>
+                                        <span v-on:click="goShoppingCart">返回购物车</span>
+                                    </div>
+                                </div>
+                                <div class="col bg-color-4">
+                                    <div class="bg-color-0 w-100 h-100 font-color-5 font-size-14 text-align-center hover-type-3 py-2" v-on:click="confirmOrderItem">提交订单</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- need pt-3  -->
+            <div class="row mx-0 pt-3"></div>
+            <!-- footer page -->
+            <div th:replace="include/footer::footerDetail"></div>
+
+        </div>
+    </body>
+</html>

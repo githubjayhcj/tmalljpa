@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div th:fragment="search" class="bg-color-3 w-100 d-flex justify-content-center">
+        <div class="w-50">
+            <form class="py-3">
+                <!-- search item -->
+                <div class="input-group">
+                    <input type="text" class="form-control search-input" placeholder="搜索 天猫 商品/名牌/店铺" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                    <div class="input-group-append">
+                        <button class="btn search-button" type="button">搜索</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

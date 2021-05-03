@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!-- 引入依赖框架 -->
+<head th:replace="include/header :: head(~{::title},~{::link},~{::script})">
+    <meta charset="UTF-8">
+    <title>支付界面</title>
+    <!-- admin main.css -->
+    <link rel="stylesheet" th:href="@{/css/fore/main.css}" href="../../static/css/fore/main.css"/>
+    <!-- util main.js -->
+    <script type="text/javascript" th:src="@{/js/utility/main.js}" src="../../static/js/utility/main.js"></script>
+    <!-- current page .js -->
+    <script type="text/javascript" th:src="@{/js/fore/payPage.js}" src="../../static/js/fore/payPage.js"></script>
+</head>
+<body>
+    <div class="container-fluid" id="container">
+        <!-- shop step  -->
+        <div class="row justify-content-center mt-5">
+            <div class="my-width-1000">  <!-- 约束元素-->
+                <div th:replace="~{include/shopStep :: shopStep(2)}"></div>
+            </div>
+        </div>
+        <!-- xxxxx  -->
+        <div class="row justify-content-center mt-3 mb-5">
+            <div class="mt-5 d-flex flex-column justify-content-center">
+                <span class="font-size-12 mt-3 text-align-center">扫一扫付款(元)</span>
+                <span class="font-size-20 font-color-7 mt-3 text-align-center" v-text="'￥'+order.totalPrice">￥1024</span>
+                <img class="mt-4" th:src="@{/image/site/webwxgetmsgimg.jpg}" style="width:200px;">
+                <button type="button" class="btn btn-primary btn-lg mt-5" v-on:click.once="payMoney">确认支付</button>
+            </div>
+        </div>
+        <!-- footer page -->
+        <div th:replace="include/footer::footerDetail"></div>
+    </div>
+</body>
+</html>

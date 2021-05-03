@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!-- 引入依赖框架 -->
+<head th:replace="include/header :: head(~{::title},~{::link},~{::script})">
+    <meta charset="UTF-8">
+    <title>评论界面</title>
+    <!-- admin main.css -->
+    <link rel="stylesheet" th:href="@{/css/fore/main.css}" href="../../static/css/fore/main.css"/>
+    <!-- util main.js -->
+    <script type="text/javascript" th:src="@{/js/utility/main.js}" src="../../static/js/utility/main.js"></script>
+    <!-- current page .js -->
+    <script type="text/javascript" th:src="@{/js/fore/comment.js}" src="../../static/js/fore/comment.js"></script>
+</head>
+<body>
+    <div class="container-fluid" id="container">
+        <!-- head nav -->
+        <div class="row">
+            <div class="col px-0" th:insert="include/foreNavigator::navigator(true)"></div>
+        </div>
+        <!-- shop step  -->
+        <div class="row justify-content-center mt-5">
+            <div class="my-width-1000">  <!-- 约束元素-->
+                <div th:replace="~{include/shopStep :: shopStep(4)}"></div>
+            </div>
+        </div>
+        <!-- footer search-->
+        <div class="row px-5 mt-5 mb-5" >
+            <div th:replace="~{include/bottomSearch :: search}"></div>
+        </div>
+        <!---->
+        <div class="row mt-5 mb-5 font-size-12 font-color-8 justify-content-center comment-container" v-for="(oi,index) in order.orderItems">
+            <div class="border-color-6 border-style-solid border-t-w-1 border-r-w-1 border-b-w-1 border-l-w-1 box-shadow-type-1">
+                <div class="bg-color-10 py-2 px-2">
+                    <span class="font-size-14 font-weight-700 ml-2">商品动态评分</span>
+                    <div class="float-right mr-2">
+                        <input type="checkbox" id="check1" />
+                        <label for="check1">匿名评论</label>
+                    </div>
+                </div>
+                <div class="d-flex">
+                    <div class="col-8 d-flex font-color-9 pr-3 pb-5">
+                        <div>
+                            <img class="my-width-80" src="">
+                        </div>
+                        <div class="mt-5">
+                            <div>
+                                <span class="font-size-15 font-color-8 font-weight-700" v-text="oi.product.subTitle">浙江移动 手机 话费充值 50元 快充直充 24小时自动充值 快速到账</span>
+                            </div>
+                            <div class="mt-3">
+                                <span class="mr-5">价格</span>
+                                <span class="font-color-3 mr-1">共</span>
+                                <span class="font-weight-700 font-size-20 font-color-7" v-text="oi.allPrice">42.00</span>
+                                <span class="font-color-3 ml-1">元</span>
+                            </div>
+                            <div class="mt-3">
+                                <span class="mr-5">配送</span>
+                                <span class="font-color-3">快递:</span>
+                                <span class="font-color-3 ml-2">0.00</span>
+                            </div>
+                            <div class="mt-3">
+                                <span class="mr-5">评价</span>
+                                <span>
+                                    <div class="d-inline-block"></div>
+                                </span>
+                                <span class="font-color-3 ml-1">4.7分</span>
+                                <span class="ml-1">(累计评价 4331 )</span>
+                            </div>
+                            <div class="mt-5 font-color-3">
+                                <span class="mr-5">规格</span>
+                                <span>驼色[Y21</span>
+                            </div>
+                            <div class="mt-3">
+                                <span class="mr-5">数量</span>
+                                <span class="font-color-3" v-text="oi.count">1</span>
+                                <span class="font-color-3 ml-2">个</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-4 pl-4 bg-color-10 font-color-9">
+                        <div class="mt-5 pb-2 border-width border-style-solid border-color-4 border-b-w-1">
+                            <div class="d-inline-block">
+                                <span class="font-color-7 mr-1">*</span>
+                                <span class="mr-2">描述相符</span>
+                            </div>
+                            <div class="d-inline-block">
+                                <div class="position-relative my-type-26">
+                                    <!-- star score-->
+                                    <div th:replace="~{include/starScore :: starScore}"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <span class="font-color-7 mr-1">*</span>
+                            <span class="mr-2">卖家服务</span>
+                            <div class="d-inline-block">
+                                <div class="position-relative my-type-26">
+                                    <!-- star score-->
+                                    <div th:replace="~{include/starScore :: starScore}"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <span class="font-color-7 mr-1">*</span>
+                            <span class="mr-2">物流服务</span>
+                            <div class="d-inline-block">
+                                <div class="position-relative my-type-26">
+                                    <!-- star score-->
+                                    <div th:replace="~{include/starScore :: starScore}"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- comment -->
+                <div class="bg-color-10 pb-5">
+                    <div>
+                        <span class="ml-5 py-4 font-size-16 font-weight-700 font-color-1 d-inline-block">其他买家，需要你的建议哦！</span>
+                    </div>
+                    <div class="d-flex bg-color-10">
+                        <div class="ml-5 bg-color-11 d-flex align-items-center">
+                            <span class="px-2 comment-popover" data-toggle="popover">评价商品</span>
+                        </div>
+                        <div class="mr-5">
+                            <textarea class="resize-none" rows="6" cols="100" maxlength="400" v-on:focus="removePopover($event)"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <!---->
+                <div class="text-align-center">
+                    <div>
+                        <div class="px-2 py-2 bg-color-9 font-color-5 my-3 d-inline-block hover-type-6 hover-type-3" v-on:click="postComment($event)">提交评价</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!-- footer page -->
+        <div th:replace="include/footer::footerDetail"></div>
+
+    </div>
+</body>
+</html>

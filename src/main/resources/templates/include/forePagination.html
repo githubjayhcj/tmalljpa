@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <nav th:fragment="pagination" class="d-table mx-auto" aria-label="Page navigation example">
+        <ul class="pagination">
+            <li class="page-item" v-bind:class="{disabled:page.first}">
+                <a v-if="!page.first" class="page-link" href="#" aria-label="first" v-on:click="pageTurning(0)">
+                    <span aria-hidden="true">&laquo;</span>
+                    <span class="sr-only">&laquo;</span>
+                </a>
+                <span v-else class="page-link">
+                    &laquo;
+                    <span class="sr-only">(first)</span>
+                </span>
+            </li>
+            <li class="page-item" v-bind:class="{disabled:!page.hasPrevious}">
+                <a v-if="page.hasPrevious" class="page-link" href="#" tabindex="-1" v-on:click="pageTurning(page.number-1)">上一页</a>
+                <span v-else class="page-link">
+                    上一页
+                    <span class="sr-only">(previous)</span>
+                </span>
+            </li>
+            <li class="page-item" v-bind:class="{active:page.number == p}" v-for="p in page.pageElements">
+                <a v-if="page.number != p" class="page-link" href="#" v-on:click="pageTurning(p)">{{p+1}}</a>
+                <span v-else class="page-link">
+                    {{p+1}}
+                    <span class="sr-only">(current)</span>
+                </span>
+            </li>
+            <li class="page-item" v-bind:class="{disabled:!page.hasNext}">
+                <a v-if="page.hasNext" class="page-link" href="#" v-on:click="pageTurning(page.number+1)">下一页</a>
+                <span v-else class="page-link">
+                    下一页
+                    <span class="sr-only">(next)</span>
+                </span>
+            </li>
+            <li class="page-item" v-bind:class="{disabled:page.last}">
+                <a v-if="!page.last" class="page-link" href="#" aria-label="Last" v-on:click="pageTurning(page.totalPages-1)">
+                    <span aria-hidden="true">&raquo;</span>
+                    <span class="sr-only">Last</span>
+                </a>
+                <span v-else class="page-link">
+                    &raquo;
+                    <span class="sr-only">(first)</span>
+                </span>
+            </li>
+        </ul>
+    </nav>
+</body>
+</html>
