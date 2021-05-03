@@ -21,6 +21,9 @@ salt varchar(255) default null,
 primary key(id)
 )engine = InnoDB default charset=utf8;
 
+--   drop table user_;
+
+select * from user_;
 
 create table category_(
 id int(11) not null auto_increment,
@@ -67,43 +70,48 @@ CREATE TABLE product_image_ (
   CONSTRAINT fk_productimage_product FOREIGN KEY (pid) REFERENCES product_ (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE review_ (
+CREATE TABLE order_ (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  status varchar(255) DEFAULT NULL,
+  order_code varchar(255) DEFAULT NULL,
+  uid int(11) DEFAULT NULL,
+-- oiid int(11) DEFAULT NULL,
+  create_time datetime DEFAULT NULL,
+  payment_time datetime DEFAULT NULL,
+  post_time datetime DEFAULT NULL,
+  check_out_time datetime DEFAULT NULL,
+  address varchar(255) DEFAULT NULL,
+  receiver varchar(255) DEFAULT NULL,
+  mobile varchar(255) DEFAULT NULL,
+  user_message varchar(255) DEFAULT NULL,
+  PRIMARY KEY (id),
+  CONSTRAINT fk_order_user FOREIGN KEY (uid) REFERENCES user_ (id)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+
+-- alter table order_ drop column oiid;
+-- alter table order_ drop foreign key fk_order_user;
+
+-- drop table order_;
+select * from order_;
+desc order_;
+
+CREATE TABLE order_item_ (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  pid int(11) DEFAULT NULL,
+  oid int(11) DEFAULT NULL,
+  count int(11) DEFAULT NULL,
+  PRIMARY KEY (id),
+  CONSTRAINT fk_orderitem_product FOREIGN KEY (pid) REFERENCES product_ (id),
+  CONSTRAINT fk_orderitem_order FOREIGN KEY (oid) REFERENCES order_ (id)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+
+CREATE TABLE comment_ (
   id int(11) NOT NULL AUTO_INCREMENT,
   content varchar(4000) DEFAULT NULL,
   uid int(11) DEFAULT NULL,
   pid int(11) DEFAULT NULL,
   create_date datetime DEFAULT NULL,
   PRIMARY KEY (id),
-  CONSTRAINT fk_review_product FOREIGN KEY (pid) REFERENCES product_ (id),
-  CONSTRAINT fk_review_user FOREIGN KEY (uid) REFERENCES user_ (id)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
-
-CREATE TABLE order_ (
-  id int(11) NOT NULL AUTO_INCREMENT,
-  order_code varchar(255) DEFAULT NULL,
-  address varchar(255) DEFAULT NULL,
-  post varchar(255) DEFAULT NULL,
-  receiver varchar(255) DEFAULT NULL,
-  mobile varchar(255) DEFAULT NULL,
-  user_message varchar(255) DEFAULT NULL,
-  create_date datetime DEFAULT NULL,
-  pay_date datetime DEFAULT NULL,
-  delivery_date datetime DEFAULT NULL,
-  confirm_date datetime DEFAULT NULL,
-  uid int(11) DEFAULT NULL,
-  status varchar(255) DEFAULT NULL,
-  PRIMARY KEY (id),
-  CONSTRAINT fk_order_user FOREIGN KEY (uid) REFERENCES user_ (id)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
-
-CREATE TABLE order_item_ (
-  id int(11) NOT NULL AUTO_INCREMENT,
-  pid int(11) DEFAULT NULL,
-  oid int(11) DEFAULT NULL,
-  uid int(11) DEFAULT NULL,
-  number int(11) DEFAULT NULL,
-  PRIMARY KEY (id),
-  CONSTRAINT fk_orderitem_user FOREIGN KEY (uid) REFERENCES user_ (id),
-  CONSTRAINT fk_orderitem_product FOREIGN KEY (pid) REFERENCES product_ (id),
-  CONSTRAINT fk_orderitem_order FOREIGN KEY (oid) REFERENCES order_ (id)
+  CONSTRAINT fk_comment_product FOREIGN KEY (pid) REFERENCES product_ (id),
+  CONSTRAINT fk_comment_user FOREIGN KEY (uid) REFERENCES user_ (id)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
