@@ -1,9 +1,53 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <!-- 引入依赖框架 -->
-<head th:replace="include/header::head('过滤器session.product.name')"></head>
+<head th:replace="include/header :: head(~{::title},~{::link},~{::script})">
+    <meta charset="UTF-8">
+    <title th:text="${session.currentProduct.name}">产品名称</title>
+    <!-- admin main.css -->
+    <link rel="stylesheet" th:href="@{/css/fore/main.css}" href="../../static/css/fore/main.css"/>
+    <!-- util main.js -->
+    <script type="text/javascript" th:src="@{/js/utility/main.js}" src="../../static/js/utility/main.js"></script>
+    <!-- fore home.js -->
+    <script type="text/javascript" th:src="@{/js/fore/item.js}" src="../../static/js/fore/item.js"></script>
+</head>
 <body>
+    <!-- contaier -->
     <div class="container-fluid" id="container">
+
+        <!-- light window -->
+        <div class="light-window position-absolute d-none" style="left: 50%;top:540px;margin-left: -10%;z-index: 20;">
+            <div class="d-flex my-border9 bg-white pt-3 pb-3 pl-2 pr-1" style="width:300px;">
+                <div class="d-flex align-items-center">
+                    <div class=" rounded-circle border border-success rounded-circle text-success mr-2" style="width: 22px;height: 22px;padding: 2px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
+                            <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div>
+                    <span class="d-block font-size-16 font-color-2">成功加入购物车！</span>
+                    <span class="d-block font-size-12 font-color-9">
+                    您可以
+                    <a href="#">购物车结算，</a>
+                    或先使用
+                    <a href="#" class="font-color-7">天猫APP</a>
+                    领取新用户福利礼包
+                    <a href="#">立刻下载天猫APP</a>
+                </span>
+                </div>
+                <div>
+                    <a href="javascrip:void(0);" class="d-block font-color-2" style="margin-top: -10px;" onclick="closeLightWindow()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- login Modal -->
+        <div th:replace="~{include/loginModal :: loginModal}"></div>
         <!-- head nav -->
         <div class="row">
             <div class="col px-0" th:insert="include/foreNavigator::navigator(true)"></div>
@@ -145,16 +189,16 @@
                                     <span class="ml-1 font-weight-bold font-red">140</span>
                                 </div>
                             </div>
-                            <div class="w-100 mt-4">
-                                <span class="deal-title">数量</span>
+                            <div class="w-100 mt-4 d-flex ">
+                                <span class="deal-title d-flex align-items-center">数量</span>
                                 <div class="d-inline-block">
                                     <div class="d-flex">
-                                        <input type="text" value="1"/>
+                                        <input type="text" v-model.number="orderItem.count" value="1" pattern="[0-9]" v-on:input="manualInputCount"/>
                                         <div class="ml-1 d-flex flex-wrap align-content-between">
-                                            <a class="d-flex justify-content-center align-content-center" href="javascript:void (0);">
+                                            <a class="d-flex justify-content-center align-content-center" href="javascript:void (0);"v-on:click="addCount">
                                                 <img class="m-auto" th:src="@{image/site/increase.png}" src="../../static/image/site/increase.png">
                                             </a>
-                                            <a class="d-flex justify-content-center align-content-center" href="javascript:void (0);">
+                                            <a class="d-flex justify-content-center align-content-center" href="javascript:void (0);"v-on:click="subCount">
                                                 <img class="m-auto" th:src="@{image/site/decrease.png}" src="../../static/image/site/decrease.png">
                                             </a>
                                         </div>
@@ -168,14 +212,14 @@
                                 </div>
                             </div>
                             <div class="w-100 mt-5 text-center">
-                                <a href="javascript:void (0);" >立刻购买</a>
-                                <a class="ml-2" href="javascript:void (0);" >
+                                <a href="javascript:void (0);" v-on:click.once="buyNow">立刻购买</a>
+                                <a class="ml-2" href="javascript:void (0);" v-on:click="addShopCart">
                                     <span class="oi oi-cart" title="icon name" aria-hidden="true"></span>
                                     加入购物车
                                 </a>
                             </div>
                             <div class="w-100 mt-5">
-                                <span class="float-left deal-title">服务承诺</span>
+                                <span class="float-left deal-title mt-2">服务承诺</span>
                                 <div class="float-left">
                                     <span title="全国联保">
                                         <a href="javascript:void (0);" class="text-decoration-none">全国联保</a>
@@ -489,11 +533,5 @@
         <!-- footer page -->
         <div class="row mx-0" th:replace="include/footer::footerDetail"></div>
     </div>
-    <!-- admin main.css -->
-    <link rel="stylesheet" th:href="@{/css/fore/main.css}" href="../../static/css/fore/main.css"/>
-    <!-- util main.js -->
-    <script type="text/javascript" th:src="@{/js/utility/main.js}" src="../../static/js/utility/main.js"></script>
-    <!-- fore home.js -->
-    <script type="text/javascript" th:src="@{/js/fore/item.js}" src="../../static/js/fore/item.js"></script>
 </body>
 </html>

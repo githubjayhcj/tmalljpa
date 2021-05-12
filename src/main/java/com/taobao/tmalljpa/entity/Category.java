@@ -1,5 +1,7 @@
 package com.taobao.tmalljpa.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 
 @Table(name="category_")
@@ -8,6 +10,8 @@ public class Category {
     @Id
     @Column(name="id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //jpa 默认会使用 hibernate, 在 jpa 工作过程中，就会创造代理类来继承 Category ，并添加 handler 和 hibernateLazyInitializer 这两个无须 json 化的属性，所以这里需要用 JsonIgnoreProperties 把这两个属性忽略掉。
+    // @JsonIgnoreProperties({ "handler","hibernateLazyInitializer" })
     private int id;
 
     @Column(name = "name")

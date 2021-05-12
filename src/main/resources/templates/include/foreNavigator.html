@@ -13,7 +13,7 @@
         <div class="collapse navbar-collapse justify-content-between py-1" id="navbarNav">
             <ul th:if="${session.user != null}" class="navbar-nav py-0">
                 <li class="nav-item py-0" th:classappend="${show} ? '' : 'd-none'">
-                    <a class="nav-link py-0 d-flex" href="signOut">
+                    <a class="nav-link py-0 d-flex" href="home">
                         <!--<img src="../../static/css/open-iconic-master/svg/home.svg" th:src="@{/css/open-iconic-master/svg/home.svg}" alt="icon name">-->
                         <span class="oi oi-home go-home-logo" title="icon name" aria-hidden="true"></span>
                         <h6><small>天猫首页</small></h6>
@@ -28,7 +28,7 @@
             </ul>
             <ul th:if="${session.user == null}" class="navbar-nav py-0">
                 <li class="nav-item py-0" th:classappend="${show} ? '' : 'd-none'">
-                    <a class="nav-link py-0 d-flex" href="signOut">
+                    <a class="nav-link py-0 d-flex" href="home">
                         <!--<img src="../../static/css/open-iconic-master/svg/home.svg" th:src="@{/css/open-iconic-master/svg/home.svg}" alt="icon name">-->
                         <span class="oi oi-home go-home-logo" title="icon name" aria-hidden="true"></span>
                         <h6><small>天猫首页</small></h6>
@@ -44,10 +44,26 @@
             <!-- 右侧项 -->
             <ul class="navbar-nav py-0">
                 <li class="nav-item py-0">
-                    <a class="nav-link py-0" href="#"><h6><small>我的订单</small></h6><span class="sr-only">(current)</span></a>
+                    <a class="nav-link py-0" v-on:click="orderList" href="#">
+                        <h6>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" class="bi bi-card-checklist font-color-7" viewBox="0 0 16 16">
+                                <path d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h13zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-13z"/>
+                                <path d="M7 5.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm-1.496-.854a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0zM7 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm-1.496-.854a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 0 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0z"/>
+                            </svg>
+                            <small>我的订单</small>
+                        </h6>
+                        <span class="sr-only">(current)</span>
+                    </a>
                 </li>
                 <li class="nav-item py-0">
-                    <a class="nav-link py-0" href="#"><h6><small>购物车0件</small></h6></a>
+                    <a class="nav-link py-0" v-on:click="goShoppingCart" href="#">
+                        <h6>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" class="bi bi-cart-fill font-color-7" viewBox="0 0 16 16">
+                                <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                            </svg>
+                            <small>购物车0件</small>
+                        </h6>
+                    </a>
                 </li>
             </ul>
         </div>

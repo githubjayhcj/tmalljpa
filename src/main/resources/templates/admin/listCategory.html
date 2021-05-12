@@ -1,7 +1,13 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
     <!-- 引入依赖框架 -->
-    <head th:replace="include/header::head('分类管理')"></head>
+    <head th:replace="include/header :: head(~{::title},~{::link},~{::script})">
+        <title>分类管理</title>
+        <!-- admin main.css -->
+        <link rel="stylesheet" th:href="@{/css/admin/main.css}" href="../../static/css/admin/main.css"/>
+        <!-- util   main.js -->
+        <script type="text/javascript" th:src="@{/js/utility/main.js}" src="../../static/js/utility/main.js"></script>
+    </head>
     <body>
         <!-- navBar -->
         <div th:replace="include/navigator::adminNavigator"></div>
@@ -12,44 +18,44 @@
             <!-- category table -->
             <table class="table table-striped table-bordered table-hover">
                 <thead>
-                <tr class="table-primary">
-                    <th scope="col">ID</th>
-                    <th scope="col">分类名称</th>
-                    <th scope="col">图片</th>
-                    <th scope="col">属性管理</th>
-                    <th scope="col">产品管理</th>
-                    <th scope="col">编辑</th>
-                    <th scope="col">删除</th>
-                </tr>
+                    <tr class="table-primary">
+                        <th scope="col">ID</th>
+                        <th scope="col">分类名称</th>
+                        <th scope="col">图片</th>
+                        <th scope="col">属性管理</th>
+                        <th scope="col">产品管理</th>
+                        <th scope="col">编辑</th>
+                        <th scope="col">删除</th>
+                    </tr>
                 </thead>
                 <tbody>
-                <tr v-for="c in categories">
-                    <td v-text="c.id">id</td>
-                    <td v-text="c.name">name</td>
-                    <td>
-                        <img class="categoryImage" v-bind="{src:'image/category/'+c.id+'.jpg',alt:'category'+ c.name +'image'}">
-                    </td>
-                    <td>
-                        <a v-bind:href="'listProperty?id='+c.id">
-                            <span class="oi oi-grid-three-up" title="icon name" aria-hidden="true"></span>
-                        </a>
-                    </td>
-                    <td>
-                        <a v-bind:href="'listProduct?id='+c.id+'&categoryName='+c.name">
-                            <span class="oi oi-cart" title="icon name" aria-hidden="true"></span>
-                        </a>
-                    </td>
-                    <td>
-                        <a v-bind:href="'editCategory?id='+c.id+'&categoryName='+c.name">
-                            <span class="oi oi-pencil" title="icon name" aria-hidden="true"></span>
-                        </a>
-                    </td>
-                    <td>
-                        <a href="#" v-on:click="deleteCategories(c.id)">
-                            <span class="oi oi-trash" title="icon name" aria-hidden="true"></span>
-                        </a>
-                    </td>
-                </tr>
+                    <tr v-for="c in categories">
+                        <td v-text="c.id">id</td>
+                        <td v-text="c.name">name</td>
+                        <td>
+                            <img class="categoryImage" v-bind="{src:'image/category/'+c.id+'.jpg',alt:'category'+ c.name +'image'}">
+                        </td>
+                        <td>
+                            <a v-bind:href="'listProperty?id='+c.id">
+                                <span class="oi oi-grid-three-up" title="icon name" aria-hidden="true"></span>
+                            </a>
+                        </td>
+                        <td>
+                            <a v-bind:href="'listProduct?id='+c.id+'&categoryName='+c.name">
+                                <span class="oi oi-cart" title="icon name" aria-hidden="true"></span>
+                            </a>
+                        </td>
+                        <td>
+                            <a v-bind:href="'editCategory?id='+c.id+'&categoryName='+c.name">
+                                <span class="oi oi-pencil" title="icon name" aria-hidden="true"></span>
+                            </a>
+                        </td>
+                        <td>
+                            <a href="#" v-on:click="deleteCategories(c.id)">
+                                <span class="oi oi-trash" title="icon name" aria-hidden="true"></span>
+                            </a>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
             <!-- 分页导航 -->
@@ -80,11 +86,7 @@
                 </div>
             </div>
         </div>
-        <!-- admin main.css -->
-        <link rel="stylesheet" th:href="@{/css/admin/main.css}" href="../../static/css/admin/main.css"/>
-        <!-- util   main.js -->
-        <script type="text/javascript" th:src="@{/js/utility/main.js}" src="../../static/js/utility/main.js"></script>
-        <!-- current page -->
+        <!--current page js-->
         <script type="text/javascript">
             new Vue({
                 el:"#container",
@@ -120,6 +122,8 @@
                             vue.categories = response.data.result.content;
                             //outs(JSON.stringify(vue.page));
                         });
+                        //设置菜单导航高亮
+                        toggleClass($(".nav-item"),$(".nav-item").eq(0),"active");
                     },
                     setCategoryImage:function(event){
                         this.categoryImage = event.target.files[0];

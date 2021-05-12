@@ -22,6 +22,7 @@ public class ImageUtil {
                 file.mkdirs();
             }
             image.transferTo(file);
+            //图片转换格式，并覆盖
             if(fileOriginName.substring(fileOriginName.lastIndexOf(".")+1).equals("jpg")){
                 BufferedImage bufferedImage = ImageUtil.change2jpg(file);
                 ImageIO.write(bufferedImage,"jpg",file);

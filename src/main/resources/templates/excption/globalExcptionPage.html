@@ -7,8 +7,8 @@
 <body>
     globalExcptionPage
     <br/>
-    异常：<p th:text="${e}"></p><br>
-    原因：<p th:text="${e.printStackTrace()}"></p><br>
-    信息：<p th:text="${e.getMessage()}"></p><br>
+    异常：<p th:text="${session.e}"></p><br>
+    堆栈：<p th:text="${session.e.stackTrace}"></p><br>
+    信息：<p th:text="${session.e.message}"></p><br>
 </body>
 </html>
