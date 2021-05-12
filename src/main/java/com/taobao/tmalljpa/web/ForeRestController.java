@@ -2,7 +2,6 @@ package com.taobao.tmalljpa.web;
 
 
 import com.taobao.tmalljpa.entity.*;
-import com.taobao.tmalljpa.util.ImageUtil;
 import com.taobao.tmalljpa.util.NavigatorPage;
 import com.taobao.tmalljpa.util.OrderStatus;
 import com.taobao.tmalljpa.util.ToolClass;
@@ -13,15 +12,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -813,11 +807,11 @@ public class ForeRestController {
     public Response foreTest(){
         ToolClass.out("foreTest");
 
-//        List<Comment> comments = commentService.findAll();
-//        ToolClass.out(comments.size());
-//        for (Comment comment : comments){
-//            //commentService.delete(comment);
-//        }
+        List<Comment> comments = commentService.findAll();
+        ToolClass.out(comments.size());
+        for (Comment comment : comments){
+            //commentService.delete(comment);
+        }
 
         Response response = new Response();
         return response;
