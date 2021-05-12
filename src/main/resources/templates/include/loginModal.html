@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div th:fragment="loginModal" class="modal fade" id="exampleModal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content modal-content-init">
+                <div class="text-center">
+                    <div class="d-inline-block">
+                        <div class="d-inline-block">
+                            <div class="position-relative">
+                                <img class="position-absolute login-cat-head" src="image/site/tmallhead-bottom.png">
+                                <div class="d-inline-block"></div>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <div class="rounded-circle"></div>
+                                </button>
+                            </div>
+                            <!-- 登录页 核心页面-->
+                            <div class="text-left" th:insert="~{include/login::login}"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

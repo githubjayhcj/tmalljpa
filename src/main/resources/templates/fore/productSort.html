@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!-- 引入依赖框架 -->
+<head th:replace="include/header :: head(~{::title},~{::link},~{::script})">
+    <meta charset="UTF-8">
+    <!--viewport（视口）支持响应式布局的 标签-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Title</title>
+    <!-- admin main.css -->
+    <link rel="stylesheet" th:href="@{/css/fore/main.css}" href="../../static/css/fore/main.css"/>
+    <!-- util main.js -->
+    <script type="text/javascript" th:src="@{/js/utility/main.js}" src="../../static/js/utility/main.js"></script>
+    <!-- current page .js -->
+    <script type="text/javascript" th:src="@{/js/fore/productSort.js}" src="../../static/js/fore/productSort.js"></script>
+</head>
+<body>
+    <div class="container-fluid" id="container">
+        <!-- login Modal -->
+        <div th:replace="~{include/loginModal :: loginModal}"></div>
+        <!-- head nav -->
+        <div class="row">
+            <div class="col px-0" th:insert="include/foreNavigator::navigator(true)"></div>
+        </div>
+        <!-- search and  logo -->
+        <div th:replace="~{include/headCommonSearch :: headCommonSearch}"></div>
+        <!-- 分隔线-->
+        <div class="row px-5">
+            <div class="col p-0 my-2">
+                <div class="w-100 border-top"></div>
+            </div>
+        </div>
+        <!--全部-->
+        <div class="row px-5">
+            <div class="col p-0">
+                <a href="#" class="font-color-1 font-size-12">全部</a>
+                <!--bootstrap icons-->
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="10" fill="currentColor" class="bi bi-chevron-right text-muted" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/></svg>
+                <a href="#" class="font-color-1 font-size-12">精品男装</a>
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="10" fill="currentColor" class="bi bi-chevron-right text-muted" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/></svg>
+                <a href="#" class="font-color-1 font-size-12">查询结果：</a>
+            </div>
+            <div class="col p-0">
+                <span class="font-color-1 font-size-12 ml-2 float-right">共</span>
+                <span class="font-color-1 font-size-12 ml-2 float-right">169250</span>
+                <span class="font-color-1 font-size-12 ml-2 float-right">件相关商品</span>
+            </div>
+        </div>
+        <!--品牌-->
+        <div class="row px-5 pt-3">
+            <div class="col-1 p-0 my-border1 bg-light">
+                <span class="font-color-2 font-size-12 pl-3 pt-4">品牌</span>
+            </div>
+            <div class="col-10 px-0 py-2 my-border2">
+                <a href="#" class="pl-4 mt-2 font-size-12 font-color-3 d-inline-block" v-for="i in 12">HLA/海澜之家 </a>
+            </div>
+            <div class="col-1 p-0 my-border3">
+                <a href="#" class="font-size-12 font-color-3 float-right pr-3 pt-3">更多
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+        <!--男士T恤-->
+        <div class="row px-5">
+            <div class="col-1 p-0 my-border4 bg-light">
+                <a href="#" class="font-color-4 font-size-12 pl-3 pt-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
+                        <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                    </svg>
+                    男士T恤
+                </a>
+            </div>
+            <div class="col-11 px-0 py-2 my-border5">
+                <a href="#" class="px-4 pr-4 mr-5 mt-2 font-size-12 font-color-3 d-inline-block" v-for="i in 7">长袖T恤 </a>
+            </div>
+        </div>
+        <!--xxxxx-->
+        <div class="row px-5">
+            <div class="col-1 p-0 my-border4 bg-light font-color-2">
+                <a class=" font-size-12 pl-3 pt-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
+                        <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                    </svg>
+                    其他分类
+                </a>
+            </div>
+            <div class="col-11 px-0 py-2 my-border5">
+                <a href="#" class="px-4 pr-4 mr-5 mt-2 font-size-12 font-color-3 d-inline-block" v-for="i in 6">长袖T恤 </a>
+            </div>
+        </div>
+        <!--xxxxx-->
+        <div class="row px-5">
+            <div class="col-1 p-0 my-border4 bg-light font-color-2">
+                <a class="font-color-2 font-size-12 pl-3 pt-4">
+                    基础风格
+                </a>
+            </div>
+            <div class="col-3 px-0 py-2 my-border6">
+                <a href="#" class="px-4 pr-4 mt-2 font-size-12 font-color-3 d-inline-block" v-for="i in 3">时尚都市 </a>
+            </div>
+            <div class="col-8 p-0 bg-light my-border5">
+                <span class="font-color-2 font-size-12 pl-3 pt-4"></span>
+            </div>
+        </div>
+        <!--xxxxx-->
+        <div class="row px-5">
+            <div class="col p-0 my-border7">
+                <a href="#" class="font-color-4 font-size-12 float-right bg-color-1 px-2">更多选项
+                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+        <!--排序菜单-->
+        <div th:replace="~{include/productSortHead :: productSortHead}"></div>
+        <!--product list image-->
+        <div class="row px-5 font-size-0 mt-3">
+            <div class="col p-0" th:replace="~{include/productItemDetail :: productItemDetail}"></div>
+        </div>
+        <!-- pagenation  cart head-->
+        <div class="row px-5 mt-3 d-flex justify-content-center">
+            <img class="my-type-5" th:src="@{/image/site/cateye.png}">
+        </div>
+        <!-- pagenation-->
+        <div class="row px-5">
+            <div th:replace="~{include/forePagination :: pagination}"></div>
+        </div>
+        <!-- xxxxxxxx-->
+        <div class="row px-5 mt-2">
+            <div class="border-left-1 border-top-1 border-right-1 border-bottom-1 px-2 py-1">
+                <span class="font-size-12 font-color-2 pr-4">您是不是想找</span>
+                <span class="font-size-12 px-3 border-right-2">
+                    <a class="font-color-3 hover-type-2 text-decoration-none" href="#">
+                        长袖t恤女
+                    </a>
+                </span>
+                <span class="font-size-12 px-3 border-right-2">
+                    <a class="font-color-3 hover-type-2 text-decoration-none" href="#">
+                        长袖t恤男
+                    </a>
+                </span>
+                <span class="font-size-12 px-3 border-right-2">
+                    <a class="font-color-3 hover-type-2 text-decoration-none" href="#">
+                        优衣库
+                    </a>
+                </span>
+                <span class="font-size-12 px-3 border-right-2">
+                    <a class="font-color-3 hover-type-2 text-decoration-none" href="#">
+                        运动t恤
+                    </a>
+                </span>
+                <span class="font-size-12 px-3 border-right-2">
+                    <a class="font-color-3 hover-type-2 text-decoration-none" href="#">
+                        polo衫男长袖
+                    </a>
+                </span>
+                <span class="font-size-12 px-3 border-right-2">
+                    <a class="font-color-3 hover-type-2 text-decoration-none" href="#">
+                        卫衣
+                    </a>
+                </span>
+                <span class="font-size-12 px-3 border-right-2">
+                    <a class="font-color-3 hover-type-2 text-decoration-none" href="#">
+                        蕾丝打底衫长袖
+                    </a>
+                </span>
+                <span class="font-size-12 px-3 border-right-2">
+                    <a class="font-color-3 hover-type-2 text-decoration-none" href="#">
+                        长袖t恤宽松
+                    </a>
+                </span>
+            </div>
+        </div>
+        <!-- xxxxxxxx-->
+        <div class="row px-5 mt-2 justify-content-between" >
+            <span class="">
+                <a href="#" class="font-color-1 font-size-16 font-weight-bold py-3 pl-3">掌柜热卖</a>
+            </span>
+            <span class="">
+                <a href="#" class="font-color-1 font-size-12 font-weight-bold py-3 pr-3">更多热卖></a>
+            </span>
+        </div>
+        <!-- product -->
+        <div class="row px-5 mt-2 justify-content-between" >
+            <div th:replace="~{include/productItem :: productItem}"></div>
+        </div>
+        <!-- footer search-->
+        <div class="row px-5 mt-4 mb-5" >
+            <div th:replace="~{include/bottomSearch :: search}"></div>
+        </div>
+        <!-- footer page -->
+        <div th:replace="include/footer::footerDetail"></div>
+    </div>
+</body>
+</html>

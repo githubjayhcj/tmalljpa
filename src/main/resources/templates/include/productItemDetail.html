@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div th:fragment="productItemDetail" class="product-list-container mx-2 mb-1" >
+        <div class="product-item-box font-size-12 d-inline-block padding-around-4 mb-4 mr-3" v-for="p in products">
+            <!-- head image -->
+            <a  href="#" class="d-block">
+                <img v-bind:src="'image/productSingle_middle/'+p.productImages[0].id+'.jpg'">
+            </a>
+            <!-- thumbnail item -->
+            <div class="d-flex justify-content-between my-2">
+                <a href="#" class="my-type-1 rounded-circle bg-color-2 font-color-6 d-inline-block align-self-center" v-if="p.productImages.length > 5">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+                    </svg>
+                </a>
+                <div class="my-type-2 position-relative">
+                    <div class="my-type-3">
+                        <a href="#" class="product-thumbnail my-border12 my-margin-x-2" v-for="pi in p.productImages">
+                            <img class="w-100" v-bind:src="'image/productSingle_small/'+pi.id+'.jpg'">
+                        </a>
+                    </div>
+                </div>
+                <a href="#" class="my-type-1 rounded-circle bg-color-2 font-color-6 d-inline-block align-self-center" v-if="p.productImages.length > 5">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+                    </svg>
+                </a>
+            </div>
+            <!-- detail message -->
+            <span class="font-size-14 font-color-7 font-weight-bold ml-1">¥</span>
+            <span class="font-size-20 font-color-7 ml-1" v-text="p.promotePrice">168.00</span>
+            <div class="my-type-4">
+                <a class="font-size-12 my-2 hover-type-2 font-color-8" href="#" v-text="p.subTitle">啄木鸟春秋季上衣体恤男士桑蚕丝</a>
+            </div>
+            <div class="my-type-4">
+                <a class="font-size-12 hover-type-2 font-color-9 text-decoration-underline" href="#">tucano啄木鸟伊庄专卖店</a>
+            </div>
+            <div class="my-2 font-size-0 d-flex">
+                <span class="font-size-12 font-color-9 border-top-1 d-inline-block py-2 px-1">月成交</span>
+                <span class="font-size-12 font-color-10 pl-1 border-top-1 border-right-1 d-inline-block py-2 px-1">2260笔</span>
+                <span class="font-size-12 font-color-9 pl-1 border-top-1 d-inline-block py-2 px-1">评价</span>
+                <span class="font-color-11 font-size-12 pl-1 border-top-1 d-inline-block py-2 pl-1 pr-4"><a href="#" class="">5435</a></span>
+                <span class="d-inline-block padding-around-9 border-top-1 border-left-1 border-right-1">
+                    <a class="d-inline-block" href="#">
+                        <img th:src="@{/image/site/wangwang.png}" src="../../static/image/site/wangwang.png">
+                    </a>
+                </span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

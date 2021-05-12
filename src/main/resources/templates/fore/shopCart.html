@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!-- 引入依赖框架 -->
+<head th:replace="include/header :: head(~{::title},~{::link},~{::script})">
+    <meta charset="UTF-8">
+    <title>我的购物车</title>
+    <!-- admin main.css -->
+    <link rel="stylesheet" th:href="@{/css/fore/main.css}" href="../../static/css/fore/main.css"/>
+    <!-- util main.js -->
+    <script type="text/javascript" th:src="@{/js/utility/main.js}" src="../../static/js/utility/main.js"></script>
+    <!-- current page .js -->
+    <script type="text/javascript" th:src="@{/js/fore/shopCart.js}" src="../../static/js/fore/shopCart.js"></script>
+</head>
+<body>
+    <div class="container-fluid" id="container">
+        <!-- login Modal -->
+        <!--<div th:replace="~{include/loginModal :: loginModal}"></div>-->
+
+        <!-- head nav -->
+        <div class="row">
+            <div class="col px-0" th:insert="include/foreNavigator::navigator(true)"></div>
+        </div>
+        <!--xxx  -->
+        <div class="row d-flex justify-content-center">
+            <div class="my-width-990">
+                <!-- search and  logo -->
+                <div th:replace="~{include/headCommonSearch :: headCommonSearch}"></div>
+            </div>
+        </div>
+        <!--xxx  -->
+        <div class="row d-flex justify-content-center mt-4">
+            <div class="my-width-990 mb-2">
+                <div>
+                    <a href="javascrip:void(0)" class="text-decoration-none pl-2 pr-5">
+                        <span class="font-size-16 font-color-12 font-weight-bolder pl-2 pr-1">全部商品</span>
+                        <span class="font-size-14 font-color-7" v-text="orderItems.length">69</span>
+                    </a>
+                    <a href="javascrip:void(0)" class="text-decoration-none pl-2 pr-5 border-left-1 border-right-1">
+                        <span class="font-size-16 font-color-12 font-weight-bolder pl-2 pr-1">降价商品</span>
+                        <span class="font-size-14 font-color-7">2</span>
+                    </a>
+                    <a href="javascrip:void(0)" class="text-decoration-none pl-2 pr-5">
+                        <span class="font-size-16 font-color-12 font-weight-bolder pl-2 pr-1">库存紧张</span>
+                        <span class="font-size-14 font-color-7">0</span>
+                    </a>
+                    <div class="d-inline-block float-right">
+                        <span class="font-size-12 font-color-8 mr-1">已选商品（不含运费）</span>
+                        <span class="font-color-7 mr-1 total-price">0.00</span>
+                        <button type="button" class="btn  btn-sm font-color-5 bg-color-2 seal-button" disabled v-on:click.once="sentOrderItems">结 算</button>
+                    </div>
+                </div>
+                <div>
+                    <div class="bg-color-1 my-height-2 mt-3"></div>
+                </div>
+            </div>
+        </div>
+        <!--xxx  -->
+        <div class="row d-flex justify-content-center mt-4">
+            <div class="my-width-990 mb-2 font-size-12 font-color-8">
+                <div class="form-check d-inline-block ml-3 font-size-12 font-color-8" v-on:click.stop="checkAll($event)">
+                    <input type="checkbox" class="form-check-input check-all" id="exampleCheck1">
+                    <label class="form-check-label" for="exampleCheck1">全选</label>
+                </div>
+                <span class="m-5">商品信息</span>
+                <span class="my-type-6 mr-5">单价</span>
+                <span class="m-5">数量</span>
+                <span class="m-5">金额</span>
+                <span class="m-5">操作</span>
+            </div>
+        </div>
+        <!-- order item list container -->
+        <div class="row d-flex justify-content-center mt-4">
+            <div class="my-width-990 font-size-12 border-left-2 border-top-2 border-right-2 border-bottom-2">
+                <!--为空显示-->
+                <div class="text-align-center font-color-7 font-size-30" v-if="orderItems.length == 0">还没有添加购物车哦</div>
+                <!-- order item list -->   <!--不为空显示-->
+                <template v-else v-for="oi in orderItems">
+                    <div class="m-3 d-flex">
+                        <input type="checkbox" class="hover-type-3 check-box" v-bind:data-check-data-id="oi.id" v-on:click="checkOne($event)">
+                        <img class="my-width-80 ml-2" v-bind:src="'image/productSingle_middle/'+oi.product.productImage.id+'.jpg'" />
+                        <div class="d-inline-block my-width-186 ml-2 d-flex flex-column justify-content-between">
+                            <a href="javascrip:void(0);" class="font-color-8" v-text="oi.product.subTitle">富光双层家用带盖玻璃杯男女学生水杯便携泡茶杯透明杯子随手杯</a>
+                            <div class="">
+                                <img th:src="@{/image/site/xcard.png}">
+                                <a href="javascrip:void(0);">
+                                    <img th:src="@{/image/site/T1Vyl6FCBlXXaSQP_X-16-16.png}">
+                                </a>
+                                <a href="javascrip:void(0);">
+                                    <img th:src="@{/image/site/T1BCidFrNlXXaSQP_X-16-16.png}">
+                                </a>
+                            </div>
+                        </div>
+                        <span class="font-color-2 ml-4 mr-1">颜色分类：格调咖色500ml</span>
+                        <div class="d-inline-block ml-5 mr-4">
+                            <del class="d-block font-color-2" v-text="'￥'+oi.product.originalPrice">￥98.00</del>
+                            <span class="d-block font-weight-bold" v-text="'￥'+oi.product.promotePrice">￥32.90</span>
+                        </div>
+                        <div class="d-inline-block my-height-24 d-flex ml-5">
+                            <a v-on:click="subCount($event)" class="hover-type-3 font-color-2 font-size-12 bg-color-1 text-decoration-none d-flex align-items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash" viewBox="0 0 16 16">
+                                    <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z"/>
+                                </svg>
+                            </a>
+                            <input v-bind:id="'check-data-'+oi.id" v-bind="{'data-oiid':oi.id,'data-price':oi.product.promotePrice,'data-id':oi.id}" class="my-border9 my-width-42 h-100 text-align-center check-data-input" type="text" v-bind:value="oi.count" v-on:keyup="manualInputCount($event)"/>
+                            <a v-on:click="addCount($event)" class="hover-type-3 font-color-2 font-size-12 bg-color-1 text-decoration-none d-flex align-items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
+                                    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                                </svg>
+                            </a>
+                        </div>
+                        <div class="d-inline-block font-color-7 ml-5 mr-5">
+                            <span>￥<span v-bind:id="'count-price-'+oi.id" v-text="oi.product.promotePrice*oi.count">230.30</span></span>
+                        </div>
+                        <div class="d-inline-block ml-5">
+                            <a href="javascrip:void(0);" class="d-block font-color-8">移入收藏夹</a>
+                            <a href="javascrip:void(0);" class="d-block font-color-8">删除</a>
+                            <a href="javascrip:void(0);" class="d-block font-color-8">相似宝贝</a>
+                        </div>
+                    </div>
+                    <!--  line-->
+                    <div class="border-bottom-1 my-4" ></div>
+                </template>
+            </div>
+        </div>
+        <!--xxx  -->
+        <div class="row d-flex justify-content-center mt-4 my-sticky-bottom">
+            <div class="my-width-990 bg-color-1 d-flex justify-content-between">
+                <div class="d-flex align-items-center">
+                    <div class="form-check d-inline-block ml-3 font-size-12 font-color-8" v-on:click.stop="checkAll($event)">
+                        <input type="checkbox" class="form-check-input check-all" id="exampleCheck2">
+                        <label class="form-check-label" for="exampleCheck2">全选</label>
+                    </div>
+                    <a href="javascrip:void(0);" class="font-size-12 font-color-8 ml-5">删除</a>
+                    <a href="javascrip:void(0);" class="font-size-12 font-color-8 ml-5">清除失效宝贝</a>
+                    <a href="javascrip:void(0);" class="font-size-12 font-color-8 ml-5">移入收藏夹</a>
+                    <a href="javascrip:void(0);" class="font-size-12 font-color-8 ml-5">分享</a>
+                </div>
+                <div class="">
+                    <a href="javascrip:void(0);" class="font-size-12 font-color-8 mr-5">已选商品<span class="font-size-18 font-color-7 mx-1 total-count">0</span>件</a>
+                    <span href="javascrip:void(0);" class="font-size-12 font-color-8">合计（不含运费）：<span class="font-size-20 font-color-7 mx-1 total-price">0.00</span></span>
+                    <button type="button" class="btn  btn-lg font-color-5 bg-color-2 seal-button" disabled v-on:click.once="sentOrderItems">结 算</button>
+                </div>
+            </div>
+        </div>
+        <!-- xxxxxxxx-->
+        <div class="row px-5 mt-4 justify-content-between" >
+            <span class="">
+                <a href="#" class="font-color-1 font-size-16 font-weight-bold py-3 pl-3">掌柜热卖</a>
+            </span>
+            <span class="">
+                <a href="#" class="font-color-1 font-size-12 font-weight-bold py-3 pr-3">更多热卖></a>
+            </span>
+        </div>
+        <!--xxx  -->
+        <div class="row d-flex justify-content-center mt-4">
+            <div th:replace="~{include/productItem :: productItem}"></div>
+        </div>
+        <!-- footer page -->
+        <div th:replace="include/footer::footerDetail"></div>
+
+    </div>
+</body>
+</html>

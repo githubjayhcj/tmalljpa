@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div th:fragment="productItem" v-for="p in productsMap[c.id]" class="col p-0 m-0 d-flex justify-content-center product-card-item-col">
+        <a v-bind:href="'item?pid='+p.id" class="card my-2 p-3 rounded-0">
+            <img class="card-img-top" v-bind:src="'image/productSingle_middle/'+productImageMap[p.id].id+'.jpg'" alt="Card image cap">
+            <div class="card-body p-0 text-center">
+                <p class="card-text">{{p.name}}</p>
+                <h5 class="card-title" v-text="'￥'+p.originalPrice">price</h5>
+            </div>
+        </a>
+    </div>
+</body>
+</html>

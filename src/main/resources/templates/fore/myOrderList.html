@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!-- 引入依赖框架 -->
+<head th:replace="include/header :: head(~{::title},~{::link},~{::script})">
+    <meta charset="UTF-8">
+    <title>支付界面</title>
+    <!-- admin main.css -->
+    <link rel="stylesheet" th:href="@{/css/fore/main.css}" href="../../static/css/fore/main.css"/>
+    <!-- util main.js -->
+    <script type="text/javascript" th:src="@{/js/utility/main.js}" src="../../static/js/utility/main.js"></script>
+    <!-- current page .js -->
+    <script type="text/javascript" th:src="@{/js/fore/myOrderList.js}" src="../../static/js/fore/myOrderList.js"></script>
+</head>
+<body>
+    <div class="container-fluid" id="container">
+        <!-- xxxxx  -->
+        <!-- head nav -->
+        <div class="row">
+            <div class="col px-0" th:insert="include/foreNavigator::navigator(true)"></div>
+        </div>
+
+        <!-- search and  logo -->
+        <div th:replace="~{include/headCommonSearch :: headCommonSearch}"></div>
+
+        <!-- main row -->
+        <div class="row d-flex justify-content-center mt-5">
+            <!-- left menu -->
+            <div class="">
+
+            </div>
+            <!-- main content -->
+            <div class="my-width-870">
+                <!---->
+                <div class="">
+                    <div class="font-size-0 font-weight-700 my-type-23 d-inline-block">
+                        <span class="font-size-16 border-width border-b-w-2 font-color-7 border-style-solid border-color-2 px-4 pb-2 d-inline-block hover-type-2 hover-type-3">所有订单</span>
+                        <span class="font-size-16 border-width border-b-w-2 px-4 pb-2 d-inline-block hover-type-2 hover-type-3">待付款</span>
+                        <span class="font-size-16 border-width border-b-w-2 px-4 pb-2 d-inline-block hover-type-2 hover-type-3">待发货</span>
+                        <span class="font-size-16 border-width border-b-w-2 px-4 pb-2 d-inline-block hover-type-2 hover-type-3">待收货</span>
+                        <span class="font-size-16 border-width border-b-w-2 px-4 pb-2 d-inline-block hover-type-2 hover-type-3">待评价</span>
+                        <span class="font-size-14 border-width border-b-w-2 px-4 pb-2 d-inline-block hover-type-2 hover-type-3">分阶段</span>
+                    </div>
+                    <div class="d-inline-block float-right font-size-12 font-color-13">
+                        <div class="d-flex align-items-center hover-type-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-trash margin-top-1" viewBox="0 0 16 16">
+                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                                <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                            </svg>
+                            <span class="ml-1 hover-type-2">订单回收站</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- line -->
+                <div class="border-width border-t-w-2 border-style-solid border-color-4"></div>
+                <!---->
+                <div class="mt-4 row font-size-12 font-color-12 m-0 border-color-4 border-style-solid border-t-w-1 border-r-w-1 border-b-w-1 border-l-w-1 bg-color-8 py-2 mb-4">
+                    <span class="col-5 px-0 text-align-center">宝贝</span>
+                    <span class="col-1 px-0 text-align-center">单价</span>
+                    <span class="col-1 px-0 text-align-center">数量</span>
+                    <span class="col-1 px-0 text-align-center">商品操作</span>
+                    <span class="col-2 px-0 text-align-center">实付款</span>
+                    <span class="col-1 px-0 text-align-center">交易状态</span>
+                    <span class="col-1 px-0 text-align-center">交易操作</span>
+                </div>
+                <!---->
+                <div class="border-color-5 border-style-solid border-t-w-1 border-r-w-1 border-b-w-1 border-l-w-1 hover-type-4 mt-3" v-on="{mouseover:showFlag,mouseout:showFlag}" v-for="(o,index) in orders">
+                    <div class="row m-0 font-size-12 font-color-12 bg-color-8 pt-2 pb-3">
+                        <span class="col-5 pl-3 pr-0">
+                            <input type="checkbox" name="sex" id="male" disabled="disabled"/>
+                            <span class="font-weight-700" >{{o.createTime | setDate('&#45;&#45; ')}}</span>  <!-- 2021-04-18 -->
+                            <span class="mx-2">订单号 : </span>
+                            <span class="" v-text="o.orderCode">1731790803106841053</span>
+                        </span>
+                        <span class="col-1 px-0"></span>
+                        <span class="col-1 px-0"></span>
+                        <span class="col-1 px-0">
+                            <div class="my-type-24 hover-type-3"></div>
+                        </span>
+                        <span class="col-2 px-0"></span>
+                        <span class="col-1 px-0"></span>
+                        <span class="col-1 px-0 font-size-0 font-color-2 d-flex justify-content-center align-items-center">
+                            <span id="flag" class="oi oi-flag font-size-16 hover-type-3 mr-2 invisible" title="icon name" aria-hidden="true"></span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill hover-type-3" viewBox="0 0 16 16">
+                                <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+                            </svg>
+                        </span>
+                    </div>
+                    <!---->
+                    <div class="row font-size-12 font-color-12 m-0 " v-for="(oi,index) in o.orderItems">
+                        <span class="col-5 px-0 d-flex">
+                            <img class="my-width-80 ml-3 mt-3 mb-2" v-bind:src="'image/productSingle_middle/'+oi.product.productImage.id+'.jpg'">
+                            <div class="d-inline-block ml-3 mt-3 mr-2">
+                                <span class="hover-type-2 hover-type-3" v-text="oi.product.subTitle">浙江移动 手机 话费充值 50元 快充直充 24小时自动充值 快速到账</span>
+                                <div class="font-color-2 mt-2">
+                                    <span>颜色分类：</span>
+                                    <span>格调黑色400ml</span>
+                                </div>
+                                <div class="mt-2">
+                                    <img th:src="@{/image/site/xcard.png}">
+                                    <a href="javascrip:void(0);">
+                                        <img th:src="@{/image/site/T1Vyl6FCBlXXaSQP_X-16-16.png}">
+                                    </a>
+                                    <a href="javascrip:void(0);">
+                                        <img th:src="@{/image/site/T1BCidFrNlXXaSQP_X-16-16.png}">
+                                    </a>
+                                </div>
+                            </div>
+                        </span>
+                        <span class="col-1 px-0 text-align-center">
+                            <div class="font-color-2 mt-3">
+                                <del>
+                                    <span>￥</span>
+                                    <span v-text="oi.product.originalPrice">98.00</span>
+                                </del>
+                            </div>
+                            <div class="mt-1">
+                                <span>￥</span>
+                                <span v-text="oi.product.promotePrice">98.00</span>
+                            </div>
+                        </span>
+                        <span class="col-1 px-0 text-align-center">
+                            <span class="mt-3 d-inline-block" v-text="oi.count">1</span>
+                        </span>
+                        <span class="col-1 px-0 text-align-center">
+                            <div v-if="index == 0">
+                                <span class="hover-type-2 hover-type-3 d-block mt-3">申请售后</span>
+                                <span class="hover-type-2 hover-type-3 d-block mt-1">投诉商家</span>
+                                <span class="hover-type-2 hover-type-3 d-block mt-1">违规举报</span>
+                            </div>
+                        </span>
+                        <span class="col-2 px-0 text-align-center border-width border-style-solid border-color-5 border-l-w-1">
+                            <div v-if="index == 0">
+                                <div class="font-weight-700 mt-3">
+                                    <span>￥</span>
+                                    <span v-text="o.totalPrice"></span>
+                                </div>
+                                <div class="font-color-3">
+                                    <span>(含运费：￥0.00)</span>
+                                </div>
+                            </div>
+                        </span>
+                        <span class="col-1 px-0 text-align-center border-width border-style-solid border-color-5 border-l-w-1">
+                            <div v-if="index == 0">
+                                <span class="d-block mt-3">交易成功</span>
+                                <span class="hover-type-2 hover-type-3 d-block mt-1">订单详情</span>
+                                <span class="hover-type-2 hover-type-3 d-block mt-1">查看物流</span>
+                            </div>
+                        </span>
+                        <span class="col-1 px-0 text-align-center border-width border-style-solid border-color-5 border-l-w-1">
+                            <div v-if="index == 0">
+                                <div class="mt-3"></div>
+                                <div class="mb-1" v-if="o.status == 'waitPay'">
+                                    <div class="py-1 px-3 font-size-13 bg-color-9 font-color-5 d-inline-block hover-type-3 hover-type-6" v-on:click="payNow(o.id)">付款</div>
+                                </div>
+                                <span class="font-color-7 d-block mb-1" v-if="o.status == 'waitDelivery'">等待发货</span>
+                                <div class="mb-1" v-if="o.status == 'waitConfirm'">
+                                    <div class="py-1 px-1 font-size-12 bg-color-9 font-color-5 d-inline-block hover-type-3 hover-type-6" v-on:click.cone="confirmOrder(o.id,$event)">确认收货</div>
+                                </div>
+                                <div class="mb-1" v-if="o.status == 'waitComment'">
+                                    <div class="py-1 px-2 border-t-w-1 border-r-w-1 border-b-w-1 border-l-w-1 border-color-6 border-style-solid font-size-13 d-inline-block hover-type-2 hover-type-3 hover-type-5" v-on:click="comment(o.id)">评价</div>
+                                </div>
+                                <span class="mb-1 hover-type-3 d-block hover-type-2" v-if="o.status != 'waitPay'">再次购买</span>
+                                <span class="mb-1 hover-type-3 d-block hover-type-2" v-if="o.status == 'finish'">追加评论</span>
+                                <span class="hover-type-3 d-block hover-type-2">申请开票</span>
+                            </div>
+                        </span>
+                    </div>
+                </div>
+                <!-- pagenation -->
+                <div class="mt-4">
+                    <div th:replace="~{include/forePagination :: pagination}"></div>
+                </div>
+            </div>
+        </div>
+        <!--  推荐 ， 及更多 -->
+        <!-- xxxxxxxx-->
+        <div class="row px-5 mt-5 mx-4 justify-content-between" >
+            <span class="">
+                <a href="#" class="font-color-1 font-size-16 font-weight-bold py-3 pl-3">掌柜热卖</a>
+            </span>
+            <span class="">
+                <a href="#" class="font-color-1 font-size-12 font-weight-bold py-3 pr-3">更多热卖></a>
+            </span>
+        </div>
+        <!-- product -->
+        <div class="row px-5 mt-2 mb-5 justify-content-between" >
+            <div th:replace="~{include/productItem :: productItem}"></div>
+        </div>
+        <!-- footer page -->
+        <div th:replace="include/footer::footerDetail"></div>
+
+    </div>
+</body>
+</html>

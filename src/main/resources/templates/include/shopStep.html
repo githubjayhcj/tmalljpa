@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div th:fragment="shopStep(step)" class="w-100">
+        <img th:src="@{image/site/TB11ojWRXXXXXafaFXXXXXXXXXX-190-27.png}">
+        <div class="float-right">
+            <div class="font-size-14 d-flex justify-content-center align-items-center">
+                <div th:if="${step >= 1}" class="d-flex justify-content-center align-items-center rounded-circle my-width-32 my-height-32 border-color-1 border-t-w-1 border-r-w-1 border-b-w-1 border-l-w-1 border-style-solid bg-color-4 border-color-2 text-white">1</div>
+                <div th:unless="${step >= 1}" class="d-flex justify-content-center align-items-center rounded-circle my-width-32 my-height-32 border-color-1 border-t-w-1 border-r-w-1 border-b-w-1 border-l-w-1 border-style-solid">1</div>
+                <div class="my-width-94 border-style-solid border-color-1 border-width border-b-w-1 ml-2"></div>
+                <div th:if="${step >= 2}" class="d-flex justify-content-center align-items-center rounded-circle my-width-32 my-height-32 border-color-1 border-t-w-1 border-r-w-1 border-b-w-1 border-l-w-1 border-style-solid ml-2 bg-color-4 border-color-2 text-white">2</div>
+                <div th:unless="${step >= 2}" class="d-flex justify-content-center align-items-center rounded-circle my-width-32 my-height-32 border-color-1 border-t-w-1 border-r-w-1 border-b-w-1 border-l-w-1 border-style-solid ml-2">2</div>
+                <div class="my-width-94 border-style-solid border-color-1 border-width border-b-w-1 ml-2"></div>
+                <div th:if="${step >= 3}" class="d-flex justify-content-center align-items-center rounded-circle my-width-32 my-height-32 border-color-1 border-t-w-1 border-r-w-1 border-b-w-1 border-l-w-1 border-style-solid ml-2 bg-color-4 border-color-2 text-white">3</div>
+                <div th:unless="${step >= 3}" class="d-flex justify-content-center align-items-center rounded-circle my-width-32 my-height-32 border-color-1 border-t-w-1 border-r-w-1 border-b-w-1 border-l-w-1 border-style-solid ml-2">3</div>
+                <div class="my-width-94 border-style-solid border-color-1 border-width border-b-w-1 ml-2"></div>
+                <div th:if="${step >= 4}" class="d-flex justify-content-center align-items-center rounded-circle my-width-32 my-height-32 border-color-1 border-t-w-1 border-r-w-1 border-b-w-1 border-l-w-1 border-style-solid ml-2 bg-color-4 border-color-2 text-white">4</div>
+                <div th:unless="${step >= 4}" class="d-flex justify-content-center align-items-center rounded-circle my-width-32 my-height-32 border-color-1 border-t-w-1 border-r-w-1 border-b-w-1 border-l-w-1 border-style-solid ml-2">4</div>
+                <div class="my-width-94 border-style-solid border-color-1 border-width border-b-w-1 ml-2"></div>
+                <div th:if="${step >= 5}" class="d-flex justify-content-center align-items-center rounded-circle my-width-32 my-height-32 border-color-1 border-t-w-1 border-r-w-1 border-b-w-1 border-l-w-1 border-style-solid ml-2 bg-color-4 border-color-2 text-white">5</div>
+                <div th:unless="${step >= 5}" class="d-flex justify-content-center align-items-center rounded-circle my-width-32 my-height-32 border-color-1 border-t-w-1 border-r-w-1 border-b-w-1 border-l-w-1 border-style-solid ml-2">5</div>
+            </div>
+            <div class="font-size-16 font-weight-700 font-color-1 mt-1">
+                <span th:if="${step >=1}" class="my-type-7 font-color-8">查看购物车</span>
+                <span th:unless="${step >= 1}" class="my-type-7">查看购物车</span>
+                <span th:if="${step >=2}" class="my-type-8 font-color-8">拍下商品</span>
+                <span th:unless="${step >= 2}" class="my-type-8">拍下商品</span>
+                <span th:if="${step >=3}" class="my-type-9 font-color-8">付款到支付宝</span>
+                <span th:unless="${step >= 3}" class="my-type-9">付款到支付宝</span>
+                <span th:if="${step >=4}" class="my-type-10 font-color-8">确认收货</span>
+                <span th:unless="${step >= 4}" class="my-type-10">确认收货</span>
+                <span th:if="${step >=5}" class="my-type-11 font-color-8">评价</span>
+                <span th:unless="${step >= 5}" class="my-type-11">评价</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
