@@ -77,7 +77,7 @@ var bodyScrollEvent = function () {
 var toggleClass = function (removeTarget,addTarget,class_) {
     removeTarget.removeClass(class_);
     addTarget.addClass(class_);
-}
+};
 
 //日期格式转换
 var dataFormat = function (date,template) {
@@ -114,7 +114,7 @@ var dataFormat = function (date,template) {
         tempDate+=template[6];
     }
     return tempDate;
-}
+};
 
 //账号登录 验证方法
 var signIn = function (user) {

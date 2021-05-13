@@ -1,5 +1,7 @@
 package com.taobao.tmalljpa.web;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,6 +36,8 @@ public class ForePageController {
     @RequestMapping("signOut")
     public String signOut(HttpSession httpSession){
         httpSession.removeAttribute("user");
+        Subject subject = SecurityUtils.getSubject();
+        subject.logout();
         return "redirect:home";
     }
 

@@ -139,8 +139,6 @@
             <artifactId>shiro-core</artifactId>
             <version>1.4.1</version>
         </dependency>
-
-        <!--
         <dependency>
             <groupId>org.apache.shiro</groupId>
             <artifactId>shiro-web</artifactId>
@@ -151,16 +149,18 @@
             <artifactId>shiro-spring</artifactId>
             <version>1.4.1</version>
         </dependency>
-        <dependency>
-            <groupId>org.apache.shiro</groupId>
-            <artifactId>shiro-spring-boot-starter</artifactId>
-            <version>1.4.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.shiro</groupId>
-            <artifactId>shiro-spring-boot-web-starter</artifactId>
-            <version>1.4.1</version>
-        </dependency>-->
+
+        <!-- 如下包会和自定义注册的org.apache.shiro.mgt.SecurityManager组件冲突（如下包会自主注册SecurityManager组件）  -->
+        <!--<dependency>-->
+            <!--<groupId>org.apache.shiro</groupId>-->
+            <!--<artifactId>shiro-spring-boot-starter</artifactId>-->
+            <!--<version>1.4.1</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>org.apache.shiro</groupId>-->
+            <!--<artifactId>shiro-spring-boot-web-starter</artifactId>-->
+            <!--<version>1.4.1</version>-->
+        <!--</dependency>-->
 
     </dependencies>
 

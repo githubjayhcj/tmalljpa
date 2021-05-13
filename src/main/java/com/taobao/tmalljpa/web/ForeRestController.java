@@ -2,20 +2,33 @@ package com.taobao.tmalljpa.web;
 
 
 import com.taobao.tmalljpa.entity.*;
+import com.taobao.tmalljpa.util.ImageUtil;
 import com.taobao.tmalljpa.util.NavigatorPage;
 import com.taobao.tmalljpa.util.OrderStatus;
 import com.taobao.tmalljpa.util.ToolClass;
 
 import com.taobao.tmalljpa.service.*;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.crypto.SecureRandomNumberGenerator;
+import org.apache.shiro.crypto.hash.SimpleHash;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.HtmlUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -92,9 +105,11 @@ public class ForeRestController {
     // signUp
     @PostMapping("signUp")
     public Response signUp(@RequestBody User user){
-        ToolClass.out("signUp");
+        ToolClass.err("signUp");
         ToolClass.out(user.toString());
         user.setName(user.getName().trim());
+        // html 字符过滤，防止注入攻击
+        user.setName(HtmlUtils.htmlEscape(user.getName()));
         user.setPassword(user.getPassword().trim());
         if(user.getName().equals("")){
             return new Response<Boolean>("userName is empty",false);
@@ -106,34 +121,51 @@ public class ForeRestController {
         if(inferUser != null){
             return new Response<Boolean>("userName is exist",false);
         }
+        String salt = new SecureRandomNumberGenerator().nextBytes().toString();
+        //  密码验证的核心步骤
+        String encodePassword = new SimpleHash("md5",user.getPassword(),salt,2).toString();//最后参数为加密迭代次数
+        ToolClass.out("password="+user.getPassword()+",salt="+salt+",encodePassword="+encodePassword);
+        user.setSalt(salt);
+        user.setPassword(encodePassword);
         userService.save(user);
-        ToolClass.out("salt="+user.getPassword());
         return new Response<Boolean>("register successful",true);
     }
 
     // signIn
     @PostMapping("signIn")
-    public Response signIn(@RequestBody User user,HttpSession httpSession){
-        ToolClass.out("signIn");
-        ToolClass.out(user.toString());
+    public Response signIn(@RequestBody User inferUser,HttpSession httpSession){
+        ToolClass.err("signIn");
+        ToolClass.out(inferUser.toString());
 
-        user.setName(user.getName().trim());
-        user.setPassword(user.getPassword().trim());
-        if(user.getName().equals("")){
+        inferUser.setName(inferUser.getName().trim());
+        inferUser.setPassword(inferUser.getPassword().trim());
+        if(inferUser.getName().equals("")){
             return new Response<Integer>(2,"userName is empty");
         }
-        if(user.getPassword().equals("")){
+        if(inferUser.getPassword().equals("")){
             return new Response<Integer>(3,"password is empty");
         }
-        User inferUser = userService.findByName(user.getName());
-        if(inferUser == null){
-            return new Response<Integer>(4,"userName is ont find");
+        User user = userService.findByName(inferUser.getName());
+        if (user == null){
+            return new Response<Integer>(4,"username not exist");
         }
-        if(!user.getPassword().equals(inferUser.getPassword())){
+        //向shirorealm注入账号密码
+        UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(inferUser.getName(),inferUser.getPassword());
+        ToolClass.out("su=="+SecurityUtils.getSubject());
+        Subject subject = SecurityUtils.getSubject();
+        //如果已经登录过了，退出
+        if (subject.isAuthenticated()){
+            subject.logout();
+        }
+        try {
+            subject.login(usernamePasswordToken);
+            httpSession.setAttribute("user",user);
+            return new Response<Integer>(Response.SUCCESS,"sign in successful");
+        }catch (AuthenticationException ae){
+            ToolClass.out("用户密码错误");
             return new Response<Integer>(5,"password is wrong");
         }
-        httpSession.setAttribute("user",inferUser);
-        return new Response<Integer>(Response.SUCCESS,"sign in successful");
+
     }
 
     //sign out
@@ -239,11 +271,12 @@ public class ForeRestController {
     @GetMapping("inferSignIn")
     public Response inferSignIn(HttpServletRequest request){
         ToolClass.out("inferSigIn");
-        HttpSession httpSession = request.getSession();
-        User user = (User) httpSession.getAttribute("user");
         Response<User> response = new Response();
-        if(user != null){
+        Subject subject = SecurityUtils.getSubject();
+        if(subject.isAuthenticated()){//  login
             response.setCode(Response.SUCCESS);
+            HttpSession httpSession = request.getSession();
+            User user = (User) httpSession.getAttribute("user");
             response.setResult(user);
             response.setMessage("user login");
         }else {
@@ -605,7 +638,7 @@ public class ForeRestController {
             // 自定义分页对象(整理成自己需要的数据字段，方便取值显示)
             NavigatorPage<Order> navigatorPage = new NavigatorPage<Order>(page,5);
 
-//        ToolClass.out(navigatorPage.toString());
+       ToolClass.out(navigatorPage.toString());
 //        List<Order> orders = orderService.findAll();
 //        ToolClass.out(orders.toString());
 
@@ -807,11 +840,11 @@ public class ForeRestController {
     public Response foreTest(){
         ToolClass.out("foreTest");
 
-        List<Comment> comments = commentService.findAll();
-        ToolClass.out(comments.size());
-        for (Comment comment : comments){
-            //commentService.delete(comment);
-        }
+//        List<Comment> comments = commentService.findAll();
+//        ToolClass.out(comments.size());
+//        for (Comment comment : comments){
+//            //commentService.delete(comment);
+//        }
 
         Response response = new Response();
         return response;

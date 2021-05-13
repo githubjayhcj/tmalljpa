@@ -1,7 +1,13 @@
 package com.taobao.tmalljpa.interceptor;
 
+import com.taobao.tmalljpa.entity.Order;
+import com.taobao.tmalljpa.entity.OrderItem;
+import com.taobao.tmalljpa.entity.User;
+import com.taobao.tmalljpa.service.OrderItemService;
 import com.taobao.tmalljpa.service.ProductService;
 import com.taobao.tmalljpa.util.ToolClass;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -9,17 +15,22 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.util.List;
 
 public class GlobalInterceptor implements HandlerInterceptor {
 
     @Autowired
     private ProductService productService;
+    @Autowired
+    private OrderItemService orderItemService;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String url = request.getRequestURL().toString();
         url = url.substring(url.lastIndexOf("/")+1);
         ToolClass.out("url g ="+url);
+        //product item title
         if (url.equals("item")){
             String params = request.getQueryString();
             params = params.substring(params.lastIndexOf("pid")+4);
@@ -28,6 +39,14 @@ public class GlobalInterceptor implements HandlerInterceptor {
             }
             ToolClass.out("param g ="+params);
             request.getSession().setAttribute("currentProduct",productService.findById(Integer.parseInt(params)));
+        }
+        //cart shop count
+        Subject subject = SecurityUtils.getSubject();
+        if (subject.isAuthenticated()){
+            HttpSession session = request.getSession();
+            User user = (User) session.getAttribute("user");
+            List<OrderItem> orderItems = orderItemService.findOrderItemsByUserAndOrderIsNull(user);
+            session.setAttribute("orderItems",orderItems);
         }
         return true;
     }

@@ -62,6 +62,8 @@
                     <span class="col-1 px-0 text-align-center">交易状态</span>
                     <span class="col-1 px-0 text-align-center">交易操作</span>
                 </div>
+                <!--为空显示-->
+                <div class="text-align-center font-color-7 font-size-30" v-if="orders.length == 0">还没有生成订单哦</div>
                 <!---->
                 <div class="border-color-5 border-style-solid border-t-w-1 border-r-w-1 border-b-w-1 border-l-w-1 hover-type-4 mt-3" v-on="{mouseover:showFlag,mouseout:showFlag}" v-for="(o,index) in orders">
                     <div class="row m-0 font-size-12 font-color-12 bg-color-8 pt-2 pb-3">

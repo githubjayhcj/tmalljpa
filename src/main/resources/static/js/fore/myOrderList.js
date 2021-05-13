@@ -19,7 +19,7 @@ $(function () {
                 var vue = this;
                 axios.get("getMyOrder",{params:{start:start}}).then(function (value) {
                     outs(value.data.message);
-                    outs(JSON.stringify(value.data.result.productImagesMap));
+                    outs(JSON.stringify(value.data.result.navigatorPage.content));
                     if (value.data.code == 1){
                         vue.page = value.data.result.navigatorPage;
                         vue.orders = value.data.result.navigatorPage.content;

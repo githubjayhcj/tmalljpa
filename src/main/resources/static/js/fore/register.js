@@ -36,6 +36,12 @@ var vue = new Vue({
                 username.popover("show");
                 return;
             }
+            if(this.passwordAgain !== this.passwordFirst){//两次不一致
+                password.popover("dispose");
+                popoverInit(password,"两次密码不一致");
+                password.popover("show");
+                return;
+            }
             if(!notNull(this.user.password)){
                 password.popover("dispose");
                 popoverInit(password,"密码不能为空");

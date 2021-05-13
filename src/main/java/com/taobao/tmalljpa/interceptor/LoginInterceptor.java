@@ -2,6 +2,8 @@ package com.taobao.tmalljpa.interceptor;
 
 import com.taobao.tmalljpa.entity.User;
 import com.taobao.tmalljpa.util.ToolClass;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -17,7 +19,6 @@ public class LoginInterceptor implements HandlerInterceptor {
         //需要登录url
         String[] loginUrl = new String[]{
                 //请求页面
-                "registerSuccessful",
                 "shopCart",
                 "orderDetail",
                 "payPage",
@@ -38,8 +39,9 @@ public class LoginInterceptor implements HandlerInterceptor {
                 "postComment"
 
         };
-        HttpSession session = request.getSession();
-        if ((User)session.getAttribute("user") == null){
+        Subject subject = SecurityUtils.getSubject();
+        ToolClass.out("interceptor login="+subject.isAuthenticated());
+        if (!subject.isAuthenticated()){
             String url = request.getRequestURI();
             url = url.substring(url.lastIndexOf("/")+1);
             ToolClass.out("url="+url);
