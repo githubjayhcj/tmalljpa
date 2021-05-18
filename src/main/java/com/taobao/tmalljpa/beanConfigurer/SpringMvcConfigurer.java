@@ -26,9 +26,9 @@ public class SpringMvcConfigurer implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(globalInterceptor())
-                .addPathPatterns("/**").excludePathPatterns("/**/image/**","/**/js/**","/**/css/**");
+                .addPathPatterns("/**").excludePathPatterns("/**/image/**","/**/js/**","/**/css/**","/**/...","/*.ico","/error");
         registry.addInterceptor(loginInterceptor)
-                .addPathPatterns("/**").excludePathPatterns("/**/image/**","/**/js/**","/**/css/**");// 需要全(绝对)路径匹配
+                .addPathPatterns("/**").excludePathPatterns("/**/image/**","/**/js/**","/**/css/**","/**/...","/*.ico","/error");// 需要全(绝对)路径匹配
     }
 
     //静态资源映射

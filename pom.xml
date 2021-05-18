@@ -102,7 +102,7 @@
             <version>1.9.22</version>
         </dependency>
 
-        <!-- jstl -->
+        <!-- jstl  标签库-->
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>jstl</artifactId>
@@ -120,6 +120,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
+        <!--<dependency>-->
+            <!--<groupId>redis.clients</groupId>-->
+            <!--<artifactId>jedis</artifactId>-->
+            <!--&lt;!&ndash;<version>3.6.0</version>&ndash;&gt;-->
+        <!--</dependency>-->
 
         <!--spring data elasticsearch-->
         <dependency>
@@ -133,21 +138,21 @@
             <version>3.0.9</version>
         </dependency>
 
-        <!-- shiro -->
+        <!-- shiro 用户权限管理 -->
         <dependency>
             <groupId>org.apache.shiro</groupId>
             <artifactId>shiro-core</artifactId>
-            <!--<version>1.4.1</version>-->
+            <version>1.4.1</version>
         </dependency>
         <dependency>
             <groupId>org.apache.shiro</groupId>
             <artifactId>shiro-web</artifactId>
-            <!--<version>1.4.1</version>-->
+            <version>1.4.1</version>
         </dependency>
         <dependency>
             <groupId>org.apache.shiro</groupId>
             <artifactId>shiro-spring</artifactId>
-            <!--<version>1.4.1</version>-->
+            <version>1.4.1</version>
         </dependency>
 
         <!-- 如下包会和自定义注册的org.apache.shiro.mgt.SecurityManager组件冲突（如下包会自主注册SecurityManager组件）  -->

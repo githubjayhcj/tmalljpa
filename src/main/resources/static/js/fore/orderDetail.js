@@ -9,7 +9,12 @@ $(function () {
                 receiver:"天猫客户",
                 mobile:"15088659428",
                 userMessage:""
-            }
+            },
+            user:{
+                name:"",
+                password:""
+            },
+            signInRedirectUrl:"home"
         },
         mounted:function(){
             this.getSessionOrderItem();
@@ -18,27 +23,62 @@ $(function () {
         methods:{
             getSessionOrderItem:function () {
                 outs("getSessionOrderItem");
-                var vue = this;
-                axios.post("getSessionOrderItem").then(function (value) {
-                    outs(JSON.stringify(value.data.message));
-                    outs(JSON.stringify(value.data.result));
-                    vue.orderItems = value.data.result.orderItems;
-                    vue.totalPrice = value.data.result.totalPrice;
-                    vue.order.receiver = value.data.result.userName;
-                    Vue.nextTick(function () {
-                        vue.startInit();
+                // 判断是否登录
+                var value = inferSignIn();
+                outs("login infer code :"+value.code);
+                if (value.code === 1) {//登录
+                    var vue = this;
+                    axios.post("getSessionOrderItem").then(function (value) {
+                        outs(JSON.stringify(value.data));
+                        if (value.data.code === 1){
+                            outs(JSON.stringify(value.data.message));
+                            outs(JSON.stringify(value.data.result));
+                            vue.orderItems = value.data.result.orderItems;
+                            vue.totalPrice = value.data.result.totalPrice;
+                            vue.order.receiver = value.data.result.userName;
+                            Vue.nextTick(function () {
+                                vue.startInit();
+                            });
+                        }else if (value.data.code === 3){//session 中没有订单信息
+                            window.location.href="home";
+                        }
                     });
-                });
+                }else {
+                    window.location.href="login";
+                }
+            },
+            signIn:function () {
+                var value = signIn(this.user);
+                //value = JSON.stringify(value);
+                outs("home value2="+value.code);
+                if (value.code === 1) {
+                    //登录成功 ,返回首页
+                    outs(" go url");
+                    window.location.href=this.signInRedirectUrl;
+                }
             },
             //购物车
             goShoppingCart:function () {
                 outs(" shoppig cart ");
-                shoppingCart();
+                this.signInRedirectUrl = "shopCart";
+                var value = shoppingCart();
+                outs("home value2="+value.code);
+                if (value.code === 1) {
+                    //登录成功 ,返回首页
+                    outs(" go url");
+                    window.location.href=this.signInRedirectUrl;
+                }
             },
             //我的订单
             orderList:function () {
                 outs(" my order list ");
-                orderList();
+                this.signInRedirectUrl = "myOrderList";
+                var value = orderList();
+                if (value.code === 1) {
+                    //登录成功 ,返回首页
+                    outs(" go url");
+                    window.location.href=this.signInRedirectUrl;
+                }
             },
             //提交订单
             confirmOrderItem:function () {
@@ -50,15 +90,24 @@ $(function () {
                         outs(this.order.mobile);
                         if(notNull(this.order.mobile)){
                             var pattern = new RegExp("^1[34578][0-9]{9}$", 'i');
-                            if (this.order.mobile.length == 11 && pattern.test(this.order.mobile)){
-                                axios.post("addOrder",this.order).then(function (value) {
-                                    outs(value.data.message);
-                                    if (value.data.code == 1){
-                                        window.location.href = "payPage?oid="+value.data.result;
-                                    }else {
+                            if (this.order.mobile.length === 11 && pattern.test(this.order.mobile)){
+                                // 判断是否登录
+                                var value = inferSignIn();
+                                outs("login infer code :"+value.code);
+                                // 是否登录
+                                if (value.code === 1){//登录
+                                    axios.post("addOrder",this.order).then(function (value) {
                                         outs(value.data.message);
-                                    }
-                                });
+                                        if (value.data.code === 1){
+                                            window.location.href = "payPage?oid="+value.data.result;
+                                        }else {
+                                            outs(value.data.message);
+                                        }
+                                    });
+                                }else {//没登录
+                                    window.location.href = "login";
+                                }
+
                             }else {
                                 $("#mobile").attr('data-original-title', '手机号格式错误')
                                     .tooltip("enable").tooltip("show").tooltip("disable");

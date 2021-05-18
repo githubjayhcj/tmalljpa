@@ -19,7 +19,8 @@ jQuery( function () {
             productImageMap:{},
             c:{
                 id:""
-            }
+            },
+            signInRedirectUrl:"home"
         },
         mounted:function () {
             this.cid = getPathParams().cid;
@@ -40,18 +41,32 @@ jQuery( function () {
                 if (value.code === 1) {
                     //登录成功 ,返回首页
                     outs(" go product sort");
-                    window.location.href="productSort";
+                    // window.location.href="shopCart";
+                    window.location.href=this.signInRedirectUrl;
                 }
             },
             //购物车
             goShoppingCart:function () {
                 outs(" shoppig cart ");
-                shoppingCart();
+                this.signInRedirectUrl = "shopCart";
+                var value = shoppingCart();
+                outs("home value2="+value.code);
+                if (value.code === 1) {
+                    //登录成功 ,返回首页
+                    outs(" go url");
+                    window.location.href=this.signInRedirectUrl;
+                }
             },
             //我的订单
             orderList:function () {
                 outs(" my order list ");
-                orderList();
+                this.signInRedirectUrl = "myOrderList";
+                var value = orderList();
+                if (value.code === 1) {
+                    //登录成功 ,返回首页
+                    outs(" go url");
+                    window.location.href=this.signInRedirectUrl;
+                }
             },
             //综合查询
             productSortByZH:function (start,size,cid) {

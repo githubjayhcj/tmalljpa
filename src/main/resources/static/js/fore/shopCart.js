@@ -12,37 +12,75 @@ $(function () {
             },
             c:{
                 id:"2"
-            }
+            },
+            user:{
+                name:"",
+                password:""
+            },
+            signInRedirectUrl:"home"
 
         },
         mounted:function () {
             this.getOrderItem();
+            // 底部推荐栏 5 条 ---------
+            this.getRecommendProduct();
         },
         methods:{
             getOrderItem:function(){
+                // 判断是否登录
+                var value = inferSignIn();
+                outs("login infer code :"+value.code);
+                if (value.code === 1) {//登录
+                    var vue = this;
+                    axios.get("getOrderItem").then(function (value) {
+                        outs(" getOrderItem ");
+                        outs(value.data);
+                        if (value.data.code === 1){
+                            vue.orderItems = value.data.result;
+                        }else {
+                            outs(value.data.message);
+                        }
+                    });
+                }else {
+                    window.location.href="login";
+                }
+            },
+            // 底部推荐栏 5 条 ---------
+            getRecommendProduct:function(){
                 var vue = this;
-                axios.get("getOrderItem").then(function (value) {
-                    outs(" getOrderItem ");
+                axios.get("getRecommendProduct").then(function (value) {
+                    outs(" getRecommendProduct ");
                     outs(value.data);
-                    if (value.data.code == 1){
-                        vue.orderItems = value.data.result.orderItems;
+                    if (value.data.code === 1){
                         vue.productsMap[vue.c.id] = value.data.result.products;
                         vue.productImageMap = value.data.result.productImageMap;
                     }else {
                         outs(value.data.message);
                     }
                 });
-
             },
             //购物车
             goShoppingCart:function () {
                 outs(" shoppig cart ");
-                shoppingCart();
+                this.signInRedirectUrl = "shopCart";
+                var value = shoppingCart();
+                outs("home value2="+value.code);
+                if (value.code === 1) {
+                    //登录成功 ,返回首页
+                    outs(" go url");
+                    window.location.href=this.signInRedirectUrl;
+                }
             },
             //我的订单
             orderList:function () {
                 outs(" my order list ");
-                orderList();
+                this.signInRedirectUrl = "myOrderList";
+                var value = orderList();
+                if (value.code === 1) {
+                    //登录成功 ,返回首页
+                    outs(" go url");
+                    window.location.href=this.signInRedirectUrl;
+                }
             },
             signIn:function () {
                 var value = signIn(this.user);
@@ -51,7 +89,7 @@ $(function () {
                 if (value.code === 1) {
                     //登录成功 ,返回首页
                     outs(" go item");
-                    window.location.href="item?pid="+this.pid;
+                    window.location.href=this.signInRedirectUrl;
                 }
             },
             countTotalPrice:function(){
@@ -174,22 +212,29 @@ $(function () {
             },
             sentOrderItems:function () {
                 outs(" sentOrderItems now ");
-                var checkData = $(".check-data"),oiids=[];
-                checkData.each(function (index,el) {
-                    outs($(el).data("id"));
-                    oiids.push($(el).data("id"));
-                });
-                outs("oiids");
-                outs(oiids);
-                axios.post("sentOrderItems",oiids).then(function (value) {
-                    outs(value.data.message);
-                    if (value.data.code == 1){
-                        // 跳转结算确认页面 ( 更改浏览器地址栏 )
-                        window.location.href = "orderDetail";
-                    }else {
+                // 判断是否登录
+                var value = inferSignIn();
+                outs("login infer code :"+value.code);
+                if (value.code === 1) {//登录
+                    var checkData = $(".check-data"),oiids=[];
+                    checkData.each(function (index,el) {
+                        outs($(el).data("id"));
+                        oiids.push($(el).data("id"));
+                    });
+                    outs("oiids");
+                    outs(oiids);
+                    axios.post("sentOrderItems",oiids).then(function (value) {
                         outs(value.data.message);
-                    }
-                });
+                        if (value.data.code === 1){
+                            // 跳转结算确认页面 ( 更改浏览器地址栏 )
+                            window.location.href = "orderDetail";
+                        }else {
+                            outs(value.data.message);
+                        }
+                    });
+                }else {
+                    window.location.href="login";
+                }
             }
 
         }

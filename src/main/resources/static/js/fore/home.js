@@ -88,7 +88,8 @@ var vue = new Vue({
         user:{
             name:"",
             password:""
-        }
+        },
+        signInRedirectUrl:"home"
     },
     mounted:function(){
         this.homeData();
@@ -135,19 +136,32 @@ var vue = new Vue({
             outs("home value2="+value.code);
             if (value.code === 1) {
                 //登录成功 ,返回首页
-                outs(" go home");
-                window.location.href="home";
+                outs(" go url");
+                window.location.href=this.signInRedirectUrl;
             }
         },
         //购物车
         goShoppingCart:function () {
             outs(" shoppig cart ");
-            shoppingCart();
+            this.signInRedirectUrl = "shopCart";
+            var value = shoppingCart();
+            outs("home value2="+value.code);
+            if (value.code === 1) {
+                //登录成功 ,返回首页
+                outs(" go url");
+                window.location.href=this.signInRedirectUrl;
+            }
         },
         //我的订单
         orderList:function () {
             outs(" my order list ");
-            orderList();
+            this.signInRedirectUrl = "myOrderList";
+            var value = orderList();
+            if (value.code === 1) {
+                //登录成功 ,返回首页
+                outs(" go url");
+                window.location.href=this.signInRedirectUrl;
+            }
         }
     }
 });

@@ -120,7 +120,7 @@
                         axios.get("categories",{params:params}).then(function (response) {
                             vue.page = response.data.result;
                             vue.categories = response.data.result.content;
-                            //outs(JSON.stringify(vue.page));
+                            outs(JSON.stringify(response.data));
                         });
                         //设置菜单导航高亮
                         toggleClass($(".nav-item"),$(".nav-item").eq(0),"active");
@@ -138,6 +138,9 @@
                                 var vue = this;
                                 axios.post("categories",formData).then(function (response) {
                                     if(response.data.code==1){//成功
+                                        outs("add category");
+                                        outs(response.data.message);
+                                        alert("添加成功！");
                                         //获取全部分类(分页)
                                         vue.getCategories();
                                     }else {

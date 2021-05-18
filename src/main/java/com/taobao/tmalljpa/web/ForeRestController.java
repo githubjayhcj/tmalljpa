@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.HtmlUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -64,11 +65,9 @@ public class ForeRestController {
         List<Category> categories = categoryService.findAll();
         //find five product by category one by one
         Map<Integer,List<Product>> productsMap = new HashMap<>();
-        Sort sort = new Sort(Sort.Direction.DESC,"id");
-        Pageable pageable = PageRequest.of(0,5,sort);
         Map<Integer, ProductImage> productImageMap = new HashMap<>();
         for (Category category : categories){
-            List<Product> products = productService.findByCategoryId(category.getId(),pageable).getContent();
+            List<Product> products = productService.findByCategoryId(category.getId(),0,5,3).getContent();
             if (products.size() > 0){// products size > 0
                 productsMap.put(category.getId(),products);
                 //get single Image by product one by one
@@ -221,9 +220,9 @@ public class ForeRestController {
         ToolClass.out("properties");
         ToolClass.out(properties);
         //推荐产品列表，随机10个
-        Sort sort = new Sort(Sort.Direction.DESC,"id");
-        Pageable pageable = PageRequest.of(2,10,sort);
-        List<Product> products = productService.findAll(pageable).getContent();
+//        Sort sort = new Sort(Sort.Direction.DESC,"id");
+//        Pageable pageable = PageRequest.of(2,10,sort);
+        List<Product> products = productService.findAll(2,10,3).getContent();
         Map<String,ProductImage> productImageMap = new HashMap();
         for(Product p : products){
             List<ProductImage> pis = productImageService.findByProductIdAndType(p.getId(),ProductImage.SINGLE_TYPE);
@@ -249,10 +248,7 @@ public class ForeRestController {
     @GetMapping("productSortByZH")
     public Response productSortByZH(@RequestParam(name = "start",defaultValue = "0")int start,@RequestParam(name = "size",defaultValue = "5")int size,int cid){
         ToolClass.out("cid = "+ cid);
-        Sort sort = new Sort(Sort.Direction.ASC,"id");
-        Pageable pageable = PageRequest.of(start,size,sort);//页码基0
-        Page<Product> page = productService.findByCategoryId(cid,pageable);
-        NavigatorPage<Product> navigatorPage = new NavigatorPage<Product>(page,3);
+        NavigatorPage<Product> navigatorPage = productService.findByCategoryId(cid,start,size,3);
         // set image
         List<Product> products = navigatorPage.getContent();
         List<ProductImage> images = productImageService.findByProductInAndType(products,ProductImage.SINGLE_TYPE);
@@ -352,33 +348,14 @@ public class ForeRestController {
                     products.add(orderItem.getProduct());
                 }
                 List<ProductImage> images = productImageService.findByProductInAndType(products,ProductImage.SINGLE_TYPE);
+                ToolClass.err(" images ====");
+                ToolClass.out(images.toString());
                 productService.setProductImage(products,images);
                 response.setCode(Response.SUCCESS);
-                Map<String,Object> result = new HashMap();
-                result.put("orderItems",orderItems);
+//                Map<String,Object> result = new HashMap();
+//                result.put("orderItems",orderItems);
 
-                // 底部推荐栏 5 条 ---------
-                Sort sort = new Sort(Sort.Direction.ASC,"id");
-                Pageable pageable = PageRequest.of(0,5,sort);//页码基0
-                Page<Product> page = productService.findByCategoryId(1,pageable);
-                result.put("products",page.getContent());
-                ToolClass.out("products ====");
-                //ToolClass.out(page.getContent().toString());
-                List<Product> ps = new ArrayList<>(page.getContent());
-                List<ProductImage> productImages = productImageService.findByProductInAndType(ps,ProductImage.SINGLE_TYPE);
-                Map<String,ProductImage> productImageMap = new HashMap<>();
-                for (Product product : ps){
-                    for (ProductImage productImage : productImages){
-                        if (product.getId() == productImage.getProduct().getId()){
-                            productImageMap.put(String.valueOf(product.getId()),productImage);
-                            break;
-                        }
-                    }
-                }
-                result.put("productImageMap",productImageMap);
-                // -------------------
-
-                response.setResult(result);
+                response.setResult(orderItems);
                 response.setMessage("getOrderItem success");
                 ToolClass.out(orderItems.toString());
             }else {
@@ -386,9 +363,36 @@ public class ForeRestController {
                 response.setMessage(" current no OrderItem ");
             }
         }else {
-            response.setCode(Response.FAIL);
+            response.setCode(2);
             response.setMessage("getOrderItem fail please login");
         }
+        return response;
+    }
+
+    // 底部推荐栏 5 条 ---------
+    @GetMapping("getRecommendProduct")
+    public Response getRecommendProduct(){
+        NavigatorPage<Product> navigatorPage = productService.findByCategoryId(1,0,5,3);
+        Map<String,Object> result = new HashMap();
+        result.put("products",navigatorPage.getContent());
+        ToolClass.out("products ===="+navigatorPage.getContent());
+        //ToolClass.out(page.getContent().toString());
+        List<Product> ps = new ArrayList<>(navigatorPage.getContent());
+        List<ProductImage> productImages = productImageService.findByProductInAndType(ps,ProductImage.SINGLE_TYPE);
+        ToolClass.out("products images ====");
+        ToolClass.out(productImages.toString());
+        Map<String,ProductImage> productImageMap = new HashMap<>();
+        for (Product product : ps){
+            for (ProductImage productImage : productImages){
+                if (product.getId() == productImage.getProduct().getId()){
+                    productImageMap.put(String.valueOf(product.getId()),productImage);
+                    break;
+                }
+            }
+        }
+        result.put("productImageMap",productImageMap);
+        Response response = new Response();
+        response.setResult(result);
         return response;
     }
 
@@ -456,14 +460,18 @@ public class ForeRestController {
 
     //  获取 session 存储 orderitems
     @PostMapping("getSessionOrderItem")
-    public Response getSessionOrderItem(HttpSession session){
+    public Response getSessionOrderItem(HttpSession session, HttpServletResponse httpServletResponse){
         ToolClass.out("getSessionOrderItem");
         Response response = new Response();
         User user =(User) session.getAttribute("user");
         if (user != null){
             List<Integer> oiids = (List<Integer>) session.getAttribute("oiids");
             ToolClass.out("getSessionOrderItem = "+oiids);
-            if (oiids.size() > 0){
+            if (oiids == null || oiids.size() == 0){
+                ToolClass.out("oiids is empty");
+                response.setCode(3);
+                response.setMessage(" SessionOrderItem id is empty ");
+            }else {
                 List<OrderItem> orderItems = orderItemService.findOrderItemsByIdInAndOrderIsNull(oiids);
                 if (orderItems.size() == oiids.size()){
                     //set single image
@@ -486,9 +494,6 @@ public class ForeRestController {
                     response.setCode(2);
                     response.setMessage(" SessionOrderItem is changed (请重新选择购物车中的商品)  ");
                 }
-            }else {
-                response.setCode(2);
-                response.setMessage(" SessionOrderItem id is empty ");
             }
         }else {
             response.setCode(2);
@@ -506,10 +511,11 @@ public class ForeRestController {
         User user =(User) session.getAttribute("user");
         if (user != null){
             List<Integer> oiids = (List<Integer>) session.getAttribute("oiids");
+            session.removeAttribute("oiids");
             ToolClass.out("addorder = "+oiids);
             if (oiids.size() > 0){
                 List<OrderItem> orderItems = orderItemService.findOrderItemsByIdInAndOrderIsNull(oiids);
-                ToolClass.out("orderItems = "+orderItems.toString());
+                ToolClass.out("orderItems = "+orderItems.size());
                 if (orderItems.size() == oiids.size()){
                     if (order.getAddress().trim() != ""){
                         if (order.getReceiver().trim() != ""){
@@ -656,31 +662,10 @@ public class ForeRestController {
             orderService.setOrderItems(navigatorPage.getContent(),orderItems);
             //去除笛卡尔积，对象相互绑定(内存溢出)
             orderService.setOrderNull(navigatorPage.getContent());
-            Map<String,Object> map = new HashMap<>();
-            map.put("navigatorPage",navigatorPage);
-
-            // 推荐产品
-            Page<Product> psPage = productService.findAll(pageable);
-            ToolClass.out("psPage="+psPage.getContent().toString());
-            List<ProductImage> pis = productImageService.findByProductInAndType(psPage.getContent(),ProductImage.SINGLE_TYPE);
-            ToolClass.out("pis="+pis.toString());
-            Map<String,ProductImage> mapPis = new HashMap<>();
-            for (Product product : psPage.getContent()){
-                for (ProductImage productImage : pis){
-                    if (product.getId() == productImage.getProduct().getId()){
-                        mapPis.put(String.valueOf(product.getId()),productImage);
-                        break;
-                    }
-                }
-            }
-            ToolClass.out("mapPis");
-            ToolClass.out(mapPis.toString());
-            map.put("products",psPage.getContent());
-            map.put("productImagesMap",mapPis);
 
             response.setCode(1);
             response.setMessage("select orders success");
-            response.setResult(map);
+            response.setResult(navigatorPage);
             ToolClass.out(" --- --- - - - - - - - ");
             ToolClass.out(page.getContent().toString());
             ToolClass.out(orderItems.toString());

@@ -2,13 +2,12 @@ package com.taobao.tmalljpa.web;
 
 
 import com.taobao.tmalljpa.entity.*;
-import com.taobao.tmalljpa.util.ImageUtil;
-import com.taobao.tmalljpa.util.NavigatorPage;
-import com.taobao.tmalljpa.util.OrderStatus;
-import com.taobao.tmalljpa.util.ToolClass;
+import com.taobao.tmalljpa.util.*;
 
 import com.taobao.tmalljpa.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.dao.InvalidDataAccessResourceUsageException;
 import org.springframework.data.domain.*;
 import org.springframework.util.ResourceUtils;
@@ -24,6 +23,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping()
+@CacheConfig(cacheNames = {"category","product"})//指定默认缓存区
 public class AdminController {
     public static final BigDecimal TOP_PRICE = BigDecimal.valueOf(9999999999.99);
 
@@ -252,6 +252,7 @@ public class AdminController {
 
     //delete product
     @DeleteMapping("products")
+    @CacheEvict(allEntries = true)//cacheNames = "category"
     public Response deleteProduct(@RequestParam("id")int id){
         ToolClass.out(" @DeleteMapping(\"products\")");
         ToolClass.out("id="+id);
@@ -271,6 +272,7 @@ public class AdminController {
 
     //update product
     @PutMapping("products")
+    @CacheEvict(allEntries = true)
     public Response updateProduct(@RequestBody Product product){
         ToolClass.out("updateProduct");
         //product.setOriginalPrice(1100124.99f);
@@ -291,13 +293,11 @@ public class AdminController {
         ToolClass.out("cid="+cid);
         ToolClass.out("start="+start);
         try {
-            Sort sort = new Sort(Sort.Direction.ASC,"id");
-            Pageable pageable = PageRequest.of(start,size,sort);
-            Page<Product> page = productService.findByCategoryId(cid,pageable);
-            ToolClass.out(page.getContent().toString());
-            if(page.getContent() != null){
+            NavigatorPage<Product> navigatorPage = productService.findByCategoryId(cid,start,size,3);
+            ToolClass.out(navigatorPage.getContent().toString());
+            if(navigatorPage.getContent() != null){
                 //获取product 图片做封面（默认第一张）
-                List<Product> products = page.getContent();
+                List<Product> products = navigatorPage.getContent();
                 Map<Integer,ProductImage> productFirstImages = new HashMap<>();
                 List<ProductImage> productImages = new ArrayList<>();
                 for (Product product : products){
@@ -309,7 +309,6 @@ public class AdminController {
                     }
                 }
                 //获取分页页码
-                NavigatorPage<Product> navigatorPage = new NavigatorPage<Product>(page,3);
                 Map<String,Object> map = new HashMap<>();
                 map.put("navigatorPage",navigatorPage);
                 map.put("productFirstImages",productFirstImages);
@@ -325,6 +324,7 @@ public class AdminController {
 
     //add product
     @PostMapping("products/{cid}")
+    @CacheEvict(allEntries = true)
     public Response addProduct(@PathVariable(name = "cid")int cid,@RequestBody Product product){
         ToolClass.out("cid="+cid);
         ToolClass.out("@PostMapping(\"products\")");
@@ -408,20 +408,14 @@ public class AdminController {
         }else {
             return new Response(Response.FAIL,"category not find by id ="+cid);
         }
-
     }
 
     //getByPage
     @GetMapping("categories")
     public Response listCategory(@RequestParam(value = "start" ,defaultValue = "0") int start ,@RequestParam(value = "size" ,defaultValue = "3") int size) {
         ToolClass.out("start=="+start);
-
-        Sort sort = new Sort(Sort.Direction.ASC,"id");
-        Pageable pageable = PageRequest.of(start,size,sort);//页码基0
-        Page<Category> page = categoryService.findAll(pageable);
-        NavigatorPage<Category> categoryPage = new NavigatorPage<Category>(page,5);//显示页码数量
-        Response<NavigatorPage<Category>> response = new Response<>("categoryPageNavigator",categoryPage);
-        //response.getResult().
+        NavigatorPage<Category> navigatorPage = categoryService.findByPage(start,size,5);//显示页码数量 ,//5表示导航分页最多有5个，像 [1,2,3,4,5] 这样
+        Response<NavigatorPage<Category>> response = new Response<>("categoryPageNavigator",navigatorPage);
         return response;
     }
 
@@ -434,6 +428,7 @@ public class AdminController {
     }
 
     @DeleteMapping("categories/{id}")
+    @CacheEvict(allEntries = true)//cacheNames = "category"
     public Response deleteCategory(@PathVariable(value = "id") int id){
         // 删除category ，image， property ， product ， productImage ，propertyValue
         ToolClass.out("id="+id);
@@ -441,43 +436,9 @@ public class AdminController {
         return new Response("category remove successful");
     }
 
-//    //  save/update category
-//    @PostMapping("categories")
-//    public Response upLoadCategoryImage(Category category , MultipartFile image){
-//        ToolClass.out("categories");
-//        ToolClass.out("name="+category.getName());
-//        ToolClass.out("image="+image);
-//        ToolClass.out("image size="+image.getSize());
-//        //ToolClass.out(category.getId());
-//        //存储图片
-//        //因为新增和更改共用当前处理类，新增必须有图片，更改不一定有图片，通过是否存在id 判断两者。
-//        try {
-//            String filePath = ResourceUtils.getURL("classpath:static").getPath();
-//            ToolClass.out("filePath="+filePath);
-//            String lastStr = String.valueOf(filePath.charAt(filePath.length()-1));
-//            ToolClass.out("lastStr="+lastStr);
-//            if (lastStr.equals("/") || lastStr.equals("\\")){
-//                filePath = filePath.substring(0,filePath.length()-1);
-//            }
-//            filePath += "/image"+"/category";
-//            ToolClass.out("filePath 2="+filePath);
-//            File categoryImage = new File(filePath,"999.jpg");
-//            ToolClass.out("categoryImage url="+categoryImage);
-//            ToolClass.out("categoryImage exist="+categoryImage.exists());
-//            if (!categoryImage.exists()){
-//                ToolClass.out("image create");
-//                categoryImage.mkdirs();
-//            }
-//            image.transferTo(categoryImage);
-//        }catch (IOException ioe){
-//            ioe.getMessage();
-//        }
-//
-//
-//        return new Response("update category successful");
-//    }
-
+    //  save/update category
     @PostMapping("categories")
+    @CacheEvict(allEntries = true)
     public Response upLoadCategoryImage(Category category , MultipartFile image){
         ToolClass.out("categories");
         ToolClass.out("name="+category.getName());
@@ -487,7 +448,7 @@ public class AdminController {
         //因为新增和更改共用当前处理类，新增必须有图片，更改不一定有图片，通过是否存在id 判断两者。
         if(category.getId() > 0){//修改
             //  执行修改
-            category = categoryService.save(category);
+            categoryService.save(category);
             if(image != null){//如果图片不为空
                 ImageUtil.saveImage("static/image/category",String.valueOf(category.getId()),image);
             }
@@ -495,9 +456,11 @@ public class AdminController {
         }else {//新增
             //是否重复 name
             Category inferCategory = categoryService.findByName(category.getName());
+            ToolClass.out("controller category findbyname");
             if(inferCategory == null){//不重复
                 //  执行新增
-                category = categoryService.save(category);
+                categoryService.save(category);
+                ToolClass.out("controller category save");
                 if(image != null){//图片不为空
                     ImageUtil.saveImage("static/image/category",String.valueOf(category.getId()),image);
                     return new Response("addition category successful");
@@ -576,18 +539,45 @@ public class AdminController {
     }
 
     // 数据测试路径
-    //@GetMapping("test")
-    public void test(){
+    @GetMapping("adminTest")
+    public Response<Category> test(@RequestParam(value = "id") int id){
         ToolClass.out("test---------------------");
-        //ToolClass.out(OrderStatus.WAIT_PAY);
-        List<Order> orders = orderService.findAll();
-        for (Order o : orders){
-            o.setStatus(OrderStatus.WAIT_DELIVERY);
+        ToolClass.out("id="+id);
+        NavigatorPage<Product> bean = productService.findAll(2,10,3);
+        ToolClass.out("bean null ? "+bean);
+        if (bean != null){
+            ToolClass.out(bean.toString());
         }
-        orders.get(0).setStatus(OrderStatus.WAIT_DELIVERY);
-        ToolClass.out(orders.toString());
-        ToolClass.out(orders.get(0).getStatus());
-        orderService.saveAll(orders);
 
+//        List<Category> categories = categoryService.findAll();
+//        ToolClass.out(categories.toString());
+
+        //Page4Navigator<Category> categories = categoryService.list(0,3,5);
+//        List<Product> ps = new ArrayList<>();
+//        Product p1 = productService.findById(1);
+//        ps.add(p1);
+//
+//        Product p2 = productService.findById(2);
+//        ps.add(p2);
+//
+//        Product p105 = productService.findById(105);
+//        ps.add(p105);
+//
+//        Product p106 = productService.findById(106);
+//        ps.add(p106);
+//
+//        Product p107 = productService.findById(107);
+//        ps.add(p107);
+//
+//        ToolClass.out("test--ps-------------------");
+//        ToolClass.out(ps.toString());
+//
+//        List<ProductImage> productImages = productImageService.findByProductInAndType(ps,ProductImage.SINGLE_TYPE);
+//        ToolClass.out("test--pis by p-------------------");
+//        ToolClass.out(productImages.toString());
+        Response response = new Response();
+        response.setMessage(" test server message");
+        //response.setResult(productImages);
+        return  response;
     }
 }

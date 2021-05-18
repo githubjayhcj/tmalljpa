@@ -9,16 +9,17 @@ import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @Configuration
 public class ShiroConfigurer {
-
-    @Bean
-    public static LifecycleBeanPostProcessor getLifecycleBeanPostProcessor(){
-        return new LifecycleBeanPostProcessor();
-    }
 
     //HashedCredentialsMatcher 进行自动校验
 //    @Bean
@@ -47,7 +48,26 @@ public class ShiroConfigurer {
     public ShiroFilterFactoryBean shiroFilterFactoryBean(SecurityManager securityManager){
         ShiroFilterFactoryBean shiroFilterFactoryBean  = new ShiroFilterFactoryBean();
         shiroFilterFactoryBean.setSecurityManager(securityManager);
+        //可设置过滤路径
+//        Map<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
+        // <!-- anon:所有url都都可以匿名访问 ；authc:所有url都必须认证通过才可以访问-->
+        //主要这行代码必须放在所有权限设置的最后，不然会导致所有 url 都被拦截 剩余的都需要认证
+//        filterChainDefinitionMap.put("/**", "authc");
+//        shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         return shiroFilterFactoryBean;
+    }
+
+    @Bean
+    public static LifecycleBeanPostProcessor lifecycleBeanPostProcessor(){
+        return new LifecycleBeanPostProcessor();
+    }
+
+    @Bean
+    @DependsOn("lifecycleBeanPostProcessor")
+    public DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator(){
+        DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator = new DefaultAdvisorAutoProxyCreator();
+        defaultAdvisorAutoProxyCreator.setProxyTargetClass(true);
+        return defaultAdvisorAutoProxyCreator;
     }
 
     /**
@@ -62,4 +82,5 @@ public class ShiroConfigurer {
         authorizationAttributeSourceAdvisor.setSecurityManager(securityManager);
         return  authorizationAttributeSourceAdvisor;
     }
+
 }

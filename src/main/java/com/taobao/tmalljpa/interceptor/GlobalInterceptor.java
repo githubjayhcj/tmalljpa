@@ -28,8 +28,9 @@ public class GlobalInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String url = request.getRequestURL().toString();
-        url = url.substring(url.lastIndexOf("/")+1);
         ToolClass.out("url g ="+url);
+        url = url.substring(url.lastIndexOf("/")+1);
+        ToolClass.out("url g sub="+url);
         //product item title
         if (url.equals("item")){
             String params = request.getQueryString();
@@ -41,12 +42,13 @@ public class GlobalInterceptor implements HandlerInterceptor {
             request.getSession().setAttribute("currentProduct",productService.findById(Integer.parseInt(params)));
         }
         //cart shop count
+        ToolClass.out("subject ="+SecurityUtils.getSubject());
         Subject subject = SecurityUtils.getSubject();
         if (subject.isAuthenticated()){
             HttpSession session = request.getSession();
             User user = (User) session.getAttribute("user");
             List<OrderItem> orderItems = orderItemService.findOrderItemsByUserAndOrderIsNull(user);
-            session.setAttribute("orderItems",orderItems);
+            session.setAttribute("orderItems",orderItems);//用户购物车商品数量
         }
         return true;
     }

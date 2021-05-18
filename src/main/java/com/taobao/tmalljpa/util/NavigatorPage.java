@@ -1,29 +1,28 @@
 package com.taobao.tmalljpa.util;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 import java.util.Arrays;
 import java.util.List;
 
+/*因为redis反序列化时，需要数据返回对象的无参构造方法，而 org.springframework.data.domain.Page;的实现类 PageImpl没有无参构造函数，所以需
+  重写page对象。
+  重写要点：将page对象的所有成员变量重新赋值该类，起到替代page的作用，中不能包括包含有page对象的成员变量。
+* */
 public class NavigatorPage<T> {
     private long totalElements;
     private int totalPages;
     private List<T> content;
     private int number;
     private int numberOfElements;
-    private Pageable pageable;
     private int size;
-    private Sort sort;
     private boolean hasContent;
     private boolean hasNext;
     private boolean hasPrevious;
     private boolean isEmpty;
     private boolean isFirst;
     private boolean isLast;
-    private Pageable nextPageable;
-    private Pageable previousPageable;
     private int pageNumbs;
     private int[] pageElements;
     public NavigatorPage(){
@@ -32,23 +31,20 @@ public class NavigatorPage<T> {
 
 
     public NavigatorPage(Page<T> page , int pageNumbs) {
+        //this.page = page;
         this.pageNumbs = pageNumbs;
         this.totalElements = page.getTotalElements();
         this.totalPages = page.getTotalPages();
         this.content = page.getContent();
         this.number = page.getNumber();
         this.numberOfElements = page.getNumberOfElements();
-        this.pageable = page.getPageable();
         this.size = page.getSize();
-        this.sort = page.getSort();
         this.hasContent = page.hasContent();
         this.hasNext = page.hasNext();
         this.hasPrevious = page.hasPrevious();
         this.isEmpty = page.isEmpty();
         this.isFirst = page.isFirst();
         this.isLast = page.isLast();
-        this.nextPageable = page.nextPageable();
-        this.previousPageable = page.previousPageable();
         //调用计算页码
         this.calculatePageElements();
     }
@@ -151,28 +147,12 @@ public class NavigatorPage<T> {
         this.numberOfElements = numberOfElements;
     }
 
-    public Pageable getPageable() {
-        return pageable;
-    }
-
-    public void setPageable(Pageable pageable) {
-        this.pageable = pageable;
-    }
-
     public int getSize() {
         return size;
     }
 
     public void setSize(int size) {
         this.size = size;
-    }
-
-    public Sort getSort() {
-        return sort;
-    }
-
-    public void setSort(Sort sort) {
-        this.sort = sort;
     }
 
     public boolean isHasContent() {
@@ -223,22 +203,6 @@ public class NavigatorPage<T> {
         isLast = last;
     }
 
-    public Pageable getNextPageable() {
-        return nextPageable;
-    }
-
-    public void setNextPageable(Pageable nextPageable) {
-        this.nextPageable = nextPageable;
-    }
-
-    public Pageable getPreviousPageable() {
-        return previousPageable;
-    }
-
-    public void setPreviousPageable(Pageable previousPageable) {
-        this.previousPageable = previousPageable;
-    }
-
     public int getPageNumbs() {
         return pageNumbs;
     }
@@ -263,17 +227,13 @@ public class NavigatorPage<T> {
                 ", content=" + content +
                 ", number=" + number +
                 ", numberOfElements=" + numberOfElements +
-                ", pageable=" + pageable +
                 ", size=" + size +
-                ", sort=" + sort +
                 ", hasContent=" + hasContent +
                 ", hasNext=" + hasNext +
                 ", hasPrevious=" + hasPrevious +
                 ", isEmpty=" + isEmpty +
                 ", isFirst=" + isFirst +
                 ", isLast=" + isLast +
-                ", nextPageable=" + nextPageable +
-                ", previousPageable=" + previousPageable +
                 ", pageNumbs=" + pageNumbs +
                 ", pageElements=" + Arrays.toString(pageElements) +
                 '}';

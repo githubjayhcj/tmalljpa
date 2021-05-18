@@ -182,12 +182,11 @@ var shoppingCart = function () {
     var value = inferSignIn();
     outs("user code :"+value.code);
     // 是否登录
-    if (value.code == 1){
-        window.location.href="shopCart";
-    }else {
+    if (value.code !== 1){//没登录
         //open login modal
         $("#exampleModal").modal("show");
     }
+    return value;
 };
 
 //我的订单
@@ -197,12 +196,11 @@ var orderList = function () {
     var value = inferSignIn();
     outs("user code :"+value.code);
     // 是否登录
-    if (value.code == 1){
-        window.location.href="myOrderList";
-    }else {
+    if (value.code !== 1){
         //open login modal
         $("#exampleModal").modal("show");
     }
+    return value;
 };
 
 // 判断是否登录

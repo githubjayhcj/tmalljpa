@@ -39,15 +39,18 @@ public class LoginInterceptor implements HandlerInterceptor {
                 "postComment"
 
         };
+        ToolClass.out("interceptor login");
         Subject subject = SecurityUtils.getSubject();
-        ToolClass.out("interceptor login="+subject.isAuthenticated());
+        ToolClass.out("interceptor login subject="+subject.isAuthenticated());
         if (!subject.isAuthenticated()){
             String url = request.getRequestURI();
-            url = url.substring(url.lastIndexOf("/")+1);
             ToolClass.out("url="+url);
+            url = url.substring(url.lastIndexOf("/")+1);
+            ToolClass.out("url sub="+url);
             for (String signUrl : loginUrl){
                 if (signUrl.equals(url)){
 //                    request.getRequestDispatcher("login").forward(request,response);  // 转发
+                    ToolClass.out("跳转登录页");
                     response.sendRedirect("login");  // 重定向
                     return false;
                 }

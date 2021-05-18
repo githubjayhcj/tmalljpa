@@ -6,17 +6,26 @@ import com.taobao.tmalljpa.entity.Product;
 import com.taobao.tmalljpa.entity.ProductImage;
 import com.taobao.tmalljpa.entity.Property;
 import com.taobao.tmalljpa.util.ImageUtil;
+import com.taobao.tmalljpa.util.NavigatorPage;
+import com.taobao.tmalljpa.util.ToolClass;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 //@Transactional(propagation = Propagation.REQUIRED,readOnly = false)
+@CacheConfig(cacheNames = {"category"})//指定默认缓存区
 public class CategoryService{
     @Autowired
     private CategoryDao categoryDao;
@@ -29,30 +38,45 @@ public class CategoryService{
     @Autowired
     private ProductImageDao productImageDao;
 
+    @Cacheable(key = "'all'",unless = "#result != null")//@Cacheable 缓存有数据时，从缓存获取；没有数据时，执行方法，并将返回值保存到缓存中
     public List<Category> findAll(){
         return categoryDao.findAll();
     }
 
+    @Cacheable(key = "'name='+#name" ,unless = "#result != null")//(condition 主语不缓存 , unless : 主语缓存)
     public Category findByName(String name){
         return categoryDao.findByName(name);
     }
 
-    public Page findAll(Pageable pageable){
+    @Cacheable(key = "'start-'+#start+',size-'+#size",unless = "#result != null")// 根据key查询redis库，有缓存，则不执行方法，直接返回缓存中的json字符串/json对象，返回对象需要具备空构造器
+    public NavigatorPage<Category> findByPage(int start,int size,int pageNumb){
+        Sort sort = new Sort(Sort.Direction.ASC,"id");
+        Pageable pageable = PageRequest.of(start,size,sort);//页码基0
         Page<Category> page = categoryDao.findAll(pageable);
-        return page;
+        return new NavigatorPage<>(page,pageNumb);
     }
 
     @Transactional(propagation = Propagation.REQUIRED,readOnly = false)
-    public Category save(Category category){
-        return categoryDao.save(category);
+    //@CacheEvict(allEntries = true,cacheNames = "category")//每次调用时，就会根据指定的key触发删除操作。当值为allEntries = true ：删除整个缓存区的所有值，此时指定的key无效
+    public void save(Category category){
+        ToolClass.out("category save");
+        categoryDao.save(category);
     }
 
+    @Transactional(propagation = Propagation.REQUIRED,readOnly = false)
+    //@CacheEvict(allEntries = true,cacheNames = "category")
     public void delete(Category category){
         categoryDao.delete(category);
     }
 
+    @Cacheable(key = "'id='+#id",unless = "#result != null")//(condition 主语不缓存 , unless : 主语缓存)
     public Category findById(int id){
-        return categoryDao.findById(id).get();
+        ToolClass.out("category find by id");
+        Optional<Category> optionalCategory = categoryDao.findById(id);
+        if (optionalCategory.isPresent()){
+            return optionalCategory.get();
+        }
+        return new Category();
     }
 
     //删除分类，需要删除分类下关联的所有数据，即资源文件(图片)

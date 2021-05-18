@@ -8,9 +8,13 @@ import com.taobao.tmalljpa.entity.Product;
 import com.taobao.tmalljpa.entity.ProductImage;
 import com.taobao.tmalljpa.entity.Response;
 import com.taobao.tmalljpa.util.ImageUtil;
+import com.taobao.tmalljpa.util.NavigatorPage;
 import com.taobao.tmalljpa.util.ToolClass;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -19,8 +23,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service()
+@CacheConfig(cacheNames = {"product"})//指定默认缓存区
 public class ProductService {
 
     @Autowired
@@ -30,40 +36,68 @@ public class ProductService {
     @Autowired
     private ProductImageDao productImageDao;
 
+
     public void save(Product product){
         productDao.save(product);
     }
 
+    @Cacheable(key = "'id='+#id",unless = "#result != null")//(condition 主语不缓存 , unless : 主语缓存)
     public Product findById(int id){
-        return productDao.findById(id).get();
+        Optional<Product> optionalProduct = productDao.findById(id);
+        if (optionalProduct.isPresent()){
+            return optionalProduct.get();
+        }
+        return new Product();
     }
 
+    @Cacheable(key = "'count='+#result")
     public long count(){
         return productDao.count();
     }
 
+    @Cacheable(key = "'name='+#name",unless="#result != null")
     public Product findByName(String name){
         return productDao.findByName(name);
     }
 
+    @Cacheable(key = "'all'",unless="#result != null")
     public List<Product> finAll(){
         return productDao.findAll();
     }
 
-    public Page<Product> findByCategoryId(int cid, Pageable pageable){
-        return productDao.findByCategoryId(cid,pageable);
+    @Cacheable(key = "'cid='+#cid+',start='+#start+',size='+#size")
+    public NavigatorPage<Product> findByCategoryId(int cid, int start, int size, int pageNumb){
+        Sort sort = new Sort(Sort.Direction.ASC,"id");
+        Pageable pageable = PageRequest.of(start,size,sort);
+        Page<Product> page = productDao.findByCategoryId(cid,pageable);
+        NavigatorPage<Product> navigatorPage = new NavigatorPage<>(page,pageNumb);
+        return navigatorPage;
     }
 
     //根据分页获取
-    public Page<Product> findAll(Pageable pageable){
-        return productDao.findAll(pageable);
+//    public Page<Product> findAll(Pageable pageable){
+//        return productDao.findAll(pageable);
+//    };
+
+    //根据分页获取
+    @Cacheable(key = "'start-'+#start+',size-'+#size")
+    public NavigatorPage<Product> findAll(int start,int size,int pageNumb){
+        Sort sort = new Sort(Sort.Direction.ASC,"id");
+        Pageable pageable = PageRequest.of(start,size,sort);//页码基0
+        Page<Product> page = productDao.findAll(pageable);
+        NavigatorPage<Product> navigatorPage = new NavigatorPage<Product>(page,pageNumb);
+        return navigatorPage;
     };
 
     //删除  product 资源
     @Transactional(propagation = Propagation.REQUIRED,readOnly = false)
     public Response deleteProductResource(int id){//删除product ， productImage ， propertyValue
         //查询当前product
-        Product product = productDao.findById(id).get();
+        Optional<Product> optionalProduct = productDao.findById(id);
+        Product product = new Product();
+        if (optionalProduct.isPresent()){
+            optionalProduct.get();
+        }
         if(product !=null){
             //删除productValue
             propertyValueDao.deleteAllByProduct(product);

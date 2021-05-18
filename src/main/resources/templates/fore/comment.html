@@ -13,6 +13,8 @@
 </head>
 <body>
     <div class="container-fluid" id="container">
+        <!-- login Modal -->
+        <div th:replace="~{include/loginModal :: loginModal}"></div>
         <!-- head nav -->
         <div class="row">
             <div class="col px-0" th:insert="include/foreNavigator::navigator(true)"></div>

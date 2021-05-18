@@ -17,7 +17,8 @@ $(function () {
                 uid:"",
                 pid:"",
                 count:1
-            }
+            },
+            signInRedirectUrl:"home"
         },
         watch:{
             pid:function (val,oldVal) {
@@ -217,25 +218,27 @@ $(function () {
                 if (value.code === 1) {
                     //登录成功 ,返回首页
                     outs(" go item");
-                    window.location.href="item?pid="+this.pid;
+                    //window.location.href="item?pid="+this.pid;
+                    window.location.href=this.signInRedirectUrl;
                 }
             },
             // 加入购物车
             addShopCart:function(){
                 outs("add shopcart ");
+                this.signInRedirectUrl = "item?pid="+this.pid;
                 outs(JSON.stringify(this.orderItem));
                 var vue = this;
                 // 判断是否登录
                 var value = inferSignIn();
                 outs("user code :"+value.code);
                 // 是否登录
-                if (value.code == 1){ //  不要带 0 ，其在程序中是八进制值，具有 boolean  false 的含义
+                if (value.code === 1){ //  不要带 0 ，其在程序中是八进制值，具有 boolean  false 的含义
                     outs("yes login");
                     vue.orderItem.uid = value.result.id;
                     //add order item
                     //alert(JSON.stringify(this.orderItem));
                     axios.post("addOrderItem",this.orderItem).then(function (value1) {
-                        if(value1.data.code == 1){
+                        if(value1.data.code === 1){
                             outs("yes login addOrderItem");
                             // open light window
                             openLightWindow();
@@ -250,19 +253,20 @@ $(function () {
             },
             // 立刻购买
             buyNow:function(){
+                this.signInRedirectUrl = "item?pid="+this.pid;
                 var vue = this;
                 // 判断是否登录
                 var value = inferSignIn();
                 outs("user code :"+value.code);
                 // 是否登录
-                if (value.code == 1){ //  不要带 0 ，其在程序中是八进制值，具有 boolean  false 的含义
+                if (value.code === 1){ //  不要带 0 ，其在程序中是八进制值，具有 boolean  false 的含义
                     outs("yes login");
                     vue.orderItem.uid = value.result.id;
                     //add order item
                     //alert(JSON.stringify(this.orderItem));
                     axios.post("addOrderItem",this.orderItem).then(function (value1) {
                         outs(JSON.stringify(value1.data.result));
-                        if(value1.data.code == 1){
+                        if(value1.data.code === 1){
                             outs("yes login addOrderItem");
                             // get orderitems id
                             var oiids = [],orderItems = value1.data.result.orderItems;
@@ -274,7 +278,7 @@ $(function () {
                             outs("oiids="+oiids);
                             axios.post("sentOrderItems",oiids).then(function (value2) {
                                 outs(value2.data.message);
-                                if (value2.data.code == 1){
+                                if (value2.data.code === 1){
                                     // 跳转结算确认页面 ( 更改浏览器地址栏 )
                                     window.location.href = "orderDetail";
                                 }else {
@@ -296,12 +300,25 @@ $(function () {
             //购物车
             goShoppingCart:function () {
                 outs(" shoppig cart ");
-                shoppingCart();
+                this.signInRedirectUrl = "shopCart";
+                var value = shoppingCart();
+                outs("home value2="+value.code);
+                if (value.code === 1) {
+                    //登录成功 ,返回首页
+                    outs(" go url");
+                    window.location.href=this.signInRedirectUrl;
+                }
             },
             //我的订单
             orderList:function () {
                 outs(" my order list ");
-                orderList();
+                this.signInRedirectUrl = "myOrderList";
+                var value = orderList();
+                if (value.code === 1) {
+                    //登录成功 ,返回首页
+                    outs(" go url");
+                    window.location.href=this.signInRedirectUrl;
+                }
             },
             //add count
             addCount:function () {

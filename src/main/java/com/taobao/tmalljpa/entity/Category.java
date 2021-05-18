@@ -3,10 +3,11 @@ package com.taobao.tmalljpa.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Table(name="category_")
 @Entity
-public class Category {
+public class Category implements Serializable {//序列化对象
     @Id
     @Column(name="id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -6,27 +6,48 @@
     <link rel="stylesheet" th:href="@{/css/bootstrap/4.6/bootstrap.css}" href="../../static/css/bootstrap/4.6/bootstrap.css"/>
     <script type="text/javascript" th:src="@{/js/jquery/jquery-3.4.1.js}" src="../../static/js/jquery/jquery-3.4.1.js"></script>
     <script type="text/javascript" th:src="@{/js/bootstrap/4.6/bootstrap.js}" src="../../static/js/bootstrap/4.6/bootstrap.js"></script>
+    <script type="text/javascript" th:src="@{/js/ajax/axios.min.js}" src="../../static/js/ajax/axios.min.js"></script>
     <script>
+
+        function sent(){
+            var id = $("#input1").val();
+            console.log("id = "+id);
+            axios.get("adminTest",{
+                params: {
+                    id: id
+                }}).then(function (value) {
+                console.log("test");
+                console.log(JSON.stringify(value.data));
+            });
+        }
+
+
         $(function () {
 
-            $('.toast').toast({
-                animation:true,
-                autohide:true,
-                delay:500
-            })
+            // var id = $("#input1").val();
+            // console.log("id = "+id);
+            // axios.get("adminTest",{
+            //     params: {
+            //         id: 2
+            //     }}).then(function (value) {
+            //     console.log("test");
+            //     console.log(JSON.stringify(value.data));
+            // });
+
 
         })
     </script>
 </head>
 <body style="width: 500px; height: 700px;">
     <span>
-        asdjaknsdjansdasd
+        test
     </span>
 
 
 
 
-    <button type="button" class="btn btn-primary" id="liveToastBtn">Show live toast</button>
+    <button type="button" onclick="sent()">Show live toast</button>
+    <input id="input1" type="text" />
 
     <div class="position-fixed bottom-0 right-0 p-3" style="z-index: 5; right: 0; bottom: 0;">
         <div id="liveToast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true" data-delay="2000">
@@ -44,18 +65,5 @@
         </div>
     </div>
 
-
-
-
-    <script>
-        $('.toast').toast({
-            animation:true,
-            autohide:true,
-            delay:500
-        })
-
-
-
-    </script>
 </body>
 </html>
