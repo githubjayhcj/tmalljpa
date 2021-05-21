@@ -7,9 +7,12 @@ import com.taobao.tmalljpa.entity.Category;
 import com.taobao.tmalljpa.entity.Product;
 import com.taobao.tmalljpa.entity.ProductImage;
 import com.taobao.tmalljpa.entity.Response;
+import com.taobao.tmalljpa.es.ProductES_Dao;
 import com.taobao.tmalljpa.util.ImageUtil;
 import com.taobao.tmalljpa.util.NavigatorPage;
 import com.taobao.tmalljpa.util.ToolClass;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
@@ -17,6 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,10 +39,21 @@ public class ProductService {
     private PropertyValueDao propertyValueDao;
     @Autowired
     private ProductImageDao productImageDao;
+    //elasticsearch dao
+    @Autowired
+    ProductES_Dao productES_dao;
 
 
+    //关键字搜索（elasticsearch）
+//    public NavigatorPage<Product> searchProduct(String keyWord,int start ,int size,int pageNumb){
+//        SearchQuery searchQuery =new Sear
+//    }
+
+    // 同步更新elasticsearch (查询)数据库
     public void save(Product product){
-        productDao.save(product);
+        //productDao.save(product);
+        productES_dao.delete(product);
+        productES_dao.save(product);
     }
 
     @Cacheable(key = "'id='+#id",unless = "#result != null")//(condition 主语不缓存 , unless : 主语缓存)
@@ -125,6 +140,9 @@ public class ProductService {
             productImageDao.deleteAllByProduct(product);
             //删除product
             productDao.deleteById(product.getId());
+            // 同步更新elasticsearch (查询)数据库
+            productES_dao.delete(product);
+
             return new Response("delete product successful");
         }else {
             return new Response(Response.FAIL,"delete product , not find product by id="+id);

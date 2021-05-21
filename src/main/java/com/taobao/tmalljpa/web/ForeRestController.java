@@ -825,11 +825,10 @@ public class ForeRestController {
     public Response foreTest(){
         ToolClass.out("foreTest");
 
-//        List<Comment> comments = commentService.findAll();
-//        ToolClass.out(comments.size());
-//        for (Comment comment : comments){
-//            //commentService.delete(comment);
-//        }
+        Product product = new Product();
+        product.setName("test es product");
+        productService.save(product);
+
 
         Response response = new Response();
         return response;

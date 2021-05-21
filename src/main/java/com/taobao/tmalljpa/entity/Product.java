@@ -1,5 +1,7 @@
 package com.taobao.tmalljpa.entity;
 
+import org.springframework.data.elasticsearch.annotations.Document;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -7,6 +9,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "product_")
+@Document(indexName = "tmall_jpa",type = "product")// elasticsearch ,document - index and type name
 public class Product {
 
     @Id
